@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+output=$1
+method=$2
+
+mkdir -p $1/$2/matrices
+mkdir -p $1/$2/Rda/decontaminated_samples
+mkdir $1/$2/plots
