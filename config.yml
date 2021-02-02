@@ -1,0 +1,70 @@
+default:
+  input_dir: ""
+  output_dir: ""
+  # ARRAY available options = ["decontaminate" "integrate" "analyse"
+  process: ""
+  # ARRAY available options = ["no_decontamination" "soupx:autoEstCont" "soupx:background_genes" "soupx:top_background_genes" 
+  #                            "decontX:no_cell_types" "decontX:with_cell_types" "cellbender"]
+  methods: ""
+  dataset: ""
+  sample_ids: "BG1_BG20C|BG3_BG21C|BG5_BG22C|BG52_BG20C_MeOH|BG54_BG21C_MeOH|BG56_BG22C_MeOH"
+  # optional params
+  original_cell_annotations: "" #only used for comparison for reclustering w/ no decont
+  new_cell_annotations: "" #used for decontamination and comparison
+  gene_signatures: ""
+  recluster: False
+  quiet: False
+  alpha: 0.05
+  threads: 1
+  # list of genes separated by `|`
+  genes_>=9_cts: "Gpx3|Hbb-bs|Hbb-bt|Hba-a2|AY036118|Fxyd2|Gpx1|Hba-a1|Spink1"
+  ct_order_dotplots: "PT|Endo|CD_IC|MC|B|DCT_CNT|CNT|DCT|NK|T|CD_PC|Unknown|aLOH|Podo|MPH|Fib"
+  pie_plot_cts: "PT|Endo|MPH|CD_IC|DCT_CNT"
+
+harry:
+  input_dir: "/home/harry/gdrive/Education/Uni/GCRL2000/data"
+  output_dir: "/home/harry/gdrive/Education/Uni/GCRL2000/results/testing_new"
+  process:
+    - "decontaminate"
+  methods: 
+    - "no_decontamination"
+  dataset: "mouse_kidney"
+  original_cell_annotations: "cell_annotations.xlsx"
+  gene_signatures: "cell_type_gene_signatures.xlsx"
+  ocra_dir: "../../results/testing_new"
+
+pawsey:
+  input_dir: "/data/harry_decontx/new_script_testing/input"
+  output_dir: "/data/harry_decontx/new_script_testing/output"
+  process:
+    - "decontaminate"
+    - "integrate"
+  methods: 
+    - "soupx:background_genes"
+    - "soupx:top_background_genes"
+    - "decontx:no_cell_types"
+    - "decontx:with_cell_types"
+    - "cellbender"
+  dataset: "mouse_kidney"
+  original_cell_annotations: "cell_annotations.xlsx"
+  gene_signatures: "gene_signatures.xlsx"
+  threads: 4
+
+pawsey_reclus:
+  input_dir: "/data/harry_decontx/new_script_testing/input"
+  output_dir: "/data/harry_decontx/new_script_testing/output_reclus"
+  process:
+    - "decontaminate"
+  methods: 
+  - "soupx:autoEstCont"
+  - "soupx:background_genes"
+  - "soupx:top_background_genes"
+  - "decontx:no_cell_types"
+  - "decontx:with_cell_types"
+  - "cellbender"
+  dataset: "mouse_kidney"
+  original_cell_annotations: "cell_annotations.xlsx"
+  new_cell_annotations: "../output_reclus/no_decontamination/new_clus.tsv"
+  gene_signatures: "gene_signatures.xlsx"
+  recluster: True
+  threads: 4
