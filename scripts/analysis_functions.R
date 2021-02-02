@@ -1,5 +1,13 @@
+# Functions relating to the analysis / plotting
+
+
+
+################################################################################################
+# Plots of differentially expressed genes
+################################################################################################
 analyse_DEGs <- function(files, samples.combined) {
- DEGs = get_DEGs(samples.combined, paste(files$output,"/Rda/DEGs_per_celltype.Rda",sep=""))
+  # Getting DEGs
+  DEGs = get_DEGs(samples.combined, paste(files$output,"/Rda/DEGs_per_celltype.Rda",sep=""))
 
   # Seperating all DEGs into overexpressed and underexpressed
   DEGs.over = get_over_under_DEGs(DEGs, TRUE)   #DEGs, bool_whether_overexpressed
@@ -18,12 +26,22 @@ analyse_DEGs <- function(files, samples.combined) {
   DEGs_dotplot_over_under_expression(samples.combined, paste(files$output,"/plots/DEG_higher_expression_9_celltypes.png",sep=""), order_paper) #DEGs, f_name, order
 }
 
+
+
+################################################################################################
+# UMAP plots
+################################################################################################
 analyse_UMAPs <- function(files, samples.combined) {
   Idents(samples.combined) = "celltype"
   p = DimPlot(samples.combined, reduction = "umap",label=F)
   ggsave(paste(files$output, "/plots/umap_plot.png",sep=""),p,width=9,height=7)
 }
 
+
+
+################################################################################################
+# Plots related to reclustering
+################################################################################################
 analyse_recluster <- function(files, samples.combined) {
   print("Plotting CT after reclustering")
   # Plotting pie charts of cell types
@@ -32,7 +50,7 @@ analyse_recluster <- function(files, samples.combined) {
   })
 
   
-  # save & get contingency table
+  # save & get contingency table of ct numbers
   tables = contigency_table_ct(config$sample_ids, files$CellAnnotations, 
                                paste(files$output, "/new_clus.tsv",sep=""), 
                                paste(files$output, "/clus_contingency_table.xlsx",sep=""))

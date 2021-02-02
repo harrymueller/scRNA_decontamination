@@ -1,6 +1,6 @@
 args = commandArgs(trailingOnly=TRUE)
 
-# loading general functions
+# loading functions from separate scripts
 source("../improved_scripts/scripts/general_functions.R")
 source("../improved_scripts/scripts/decontamination_functions.R")
 source("../improved_scripts/scripts/analysis_functions.R")
@@ -8,34 +8,9 @@ source("../improved_scripts/scripts/analysis_functions.R")
 if (!requireNamespace('config', quietly=T))
   stop("R Package 'config' not installed.")
 # DO NOT LOAD CONFIG - CLASHES W/ SEURAT MERGE
+
 config <- get_config(args)
-if (F) {
-#load_libraries()
-required_libs = c(
-  c("Seurat", "readxl", "varhandle", "MASS", "dplyr", "tidyverse"),
-  if ("decontaminate" %in% config$process) c("SoupX", "celda") else NULL,
-  if ("analyse" %in% config$process) c("ggplot2", "xlsx", "reshape2","plotly","cowplot","patchwork") else NULL
-)
-uninstalled = c()
 
-for (i in required_libs) {
-  if (!requireNamespace(i, quietly=T)) {
-    # lib not found
-    uninstalled = append(uninstalled, i)
-  } else {
-    # loading lib
-    suppressMessages({suppressWarnings({
-      library(i, character.only=T)
-    })})
-  }
-}
-
-if (!is.null(uninstalled)) {
-  stop(paste("The following packages are required but not installed:",paste(uninstalled, collapse=", ")))
-} else {
-  log_print("All libraries loaded successfully")
-}
-}
 load_libraries()
 
 decontaminate_samples <- function (config, files, current_method) {
@@ -43,22 +18,19 @@ decontaminate_samples <- function (config, files, current_method) {
   names(samples) <- config$sample_ids
   
   ## Creates and saves individual R list objects <- previously used `soupx_processing.R` to create the Rda for each sample
-  #method = ["none", "soupx:autoEstCont", "soupx:gene"]
   for (i in seq(length(config$sample_ids))) {
     sample_id = config$sample_ids[i]
     
     print(paste("Starting",sample_id))
     samples[[sample_id]] = get_sample(sample_id, files$dir[i], current_method, files$CellAnnotations, files$special[i], !(config$recluster == F || (current_method == "none" || current_method == "no_decontamination")))
-                                      # ^ Dont use new clusters if current method is no decontamination
+
     # ensuring formatting of cell barcodes is the same (across all analyses)
     samples[[sample_id]]$seurat = fix_barcodes(samples[[sample_id]]$seurat)
   }
   
-  #save_matrices(samples, paste(files$output, "/matrices/",sep=""))
+  save_matrices(samples, paste(files$output, "/matrices/",sep=""))
   
-  ################################################################################################
   ### Combining seurat objects
-  ################################################################################################
   print("Combining seurat objects")
   
   # loops through each object in samples <- adds metadata to `seurat.decont` 
@@ -78,9 +50,8 @@ decontaminate_samples <- function (config, files, current_method) {
   samples.combined@meta.data$preservation = factor(samples.combined@meta.data$preservation)
   samples.combined@meta.data$method = factor(samples.combined@meta.data$method)
   
-  ################################################################################################
+
   ### Processing prior to integration
-  ################################################################################################
   print("Processing prior to integration")
   # splits combined seurat object into each individual seurat
   samples.combined = SplitObject(samples.combined, split.by="orig.ident")

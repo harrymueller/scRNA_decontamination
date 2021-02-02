@@ -1,3 +1,10 @@
+# All functions related to decontaminating samples
+
+
+
+################################################################################################
+# Returns a list containing a $seurat & $sample_id
+################################################################################################
 get_sample <- function(sample_id, dir, method, cell_annotations_path, special_files, use_new_clus) {
   ## Cell Annotations
   if (method != "none")
@@ -35,6 +42,7 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
     decont_matrix = adjustCounts(sc)
     cont_matrix = sc$toc
   } 
+  # DECONTX
   else if (substring(method,0,7) == "decontx") {
     filtered = read.csv(dir,header = TRUE,sep = "\t")
     cont_matrix = as.matrix(filtered)
@@ -49,6 +57,7 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
     }
     
   } 
+  # CELLBENDER
   else if (method == "cellbender") {
     if (special_files == FALSE) {
       stop("No special_files given, but path to filtered files is required for no decontamination")
@@ -74,6 +83,7 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
     cell_annotations = cell_annotations[names(cell_annotations) %in% names(Idents(out$seurat.decont))]
     cell_annotations = cell_annotations[order(match(names(cell_annotations), names(Idents(out$seurat.decont))))]
   } 
+  # NO DECONTAMINATION
   else {
     filtered = read.csv(special_files, header = TRUE, sep = "\t")
     decont_matrix = as.matrix(filtered) # not actually "decontaminated" - however named this way
