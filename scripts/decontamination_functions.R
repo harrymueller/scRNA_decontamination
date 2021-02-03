@@ -11,9 +11,10 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
     cell_annotations = get_clusters(cell_annotations_path, sample_id, use_new_clus)
   
   out = list("sample_id"=sample_id)
-  
+  print("gree")
   # SOUPX
   if (substring(method,0,5)=="soupx") {
+	print("test")
     # loads dir in 'SoupChannel' object
     sc = load10X(dir)
     sc = setClusters(sc, setNames(cell_annotations, names(cell_annotations)))
@@ -78,10 +79,6 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
     # reformatting cell barcodes to match barcodes in cell_annotations
     l = sapply(str_split(colnames(decont_matrix),"_"), function(n) paste(tail(n,1),"-1",sep=""))
     colnames(decont_matrix) = l
-    
-    # "fixing" cell annotations
-    cell_annotations = cell_annotations[names(cell_annotations) %in% names(Idents(out$seurat.decont))]
-    cell_annotations = cell_annotations[order(match(names(cell_annotations), names(Idents(out$seurat.decont))))]
   } 
   # NO DECONTAMINATION
   else {
@@ -91,6 +88,11 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
   
   out$seurat = CreateSeuratObject(decont_matrix)
   
+  if (method == "cellbender") {
+    # "fixing" cell annotations
+    cell_annotations = cell_annotations[names(cell_annotations) %in% names(Idents(out$seurat))]
+    cell_annotations = cell_annotations[order(match(names(cell_annotations), names(Idents(out$seurat))))]
+  }
   # Add cluster information
   if (method != "none")
     Idents(out$seurat) <- cell_annotations
