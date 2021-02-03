@@ -1,3 +1,4 @@
+# command line args
 args = commandArgs(trailingOnly=TRUE)
 
 # loading functions from separate scripts
@@ -9,10 +10,14 @@ if (!requireNamespace('config', quietly=T))
   stop("R Package 'config' not installed.")
 # DO NOT LOAD CONFIG - CLASHES W/ SEURAT MERGE
 
+# getting config and loading libs
 config <- get_config(args)
-
 load_libraries()
 
+
+################################################################################################
+# Function to decontaminate samples, save the feature barcode matrix, and return a seurat object
+################################################################################################
 decontaminate_samples <- function (config, files, current_method) {
   samples = as.list(config$sample_ids)
   names(samples) <- config$sample_ids
@@ -22,7 +27,8 @@ decontaminate_samples <- function (config, files, current_method) {
     sample_id = config$sample_ids[i]
     
     print(paste("Starting",sample_id))
-    samples[[sample_id]] = get_sample(sample_id, files$dir[i], current_method, files$CellAnnotations, files$special[i], !(config$recluster == F || (current_method == "none" || current_method == "no_decontamination")))
+    samples[[sample_id]] = get_sample(sample_id, files$dir[i], current_method, files$CellAnnotations, files$special[i], 
+									  !(config$recluster == F || (current_method == "none" || current_method == "no_decontamination")))
 
     # ensuring formatting of cell barcodes is the same (across all analyses)
     samples[[sample_id]]$seurat = fix_barcodes(samples[[sample_id]]$seurat)
@@ -41,8 +47,7 @@ decontaminate_samples <- function (config, files, current_method) {
     return(x$seurat)
   })
   
-
-  # combining
+  # merging
   samples.combined <- merge(samples.seurat[[1]], samples.seurat[2:6], add.cell.ids = config$sample_ids)
 
   # factoring metadata
@@ -73,7 +78,9 @@ decontaminate_samples <- function (config, files, current_method) {
 
 
 
-# Integrating samples
+################################################################################################
+# Integrating samples via Seurat::IntegrateData
+################################################################################################
 integrate_samples <- function (config, files, samples.combined) {
   print("Finding integration anchors")
   samples.anchors <- FindIntegrationAnchors(object.list = samples.combined)
@@ -81,7 +88,7 @@ integrate_samples <- function (config, files, samples.combined) {
   print("Integrating")
   samples.combined <- IntegrateData(anchorset = samples.anchors)
   
-  # Saving new cts
+  # If reclustered <- saves new cell annotations
   if (config$recluster)
     write.table(as.matrix(Idents(samples.combined)), paste(files$output, "/new_clus.tsv", sep=""), sep="\t")
   
@@ -89,28 +96,47 @@ integrate_samples <- function (config, files, samples.combined) {
   
   #### Dimension Reduction
   print("Dimension reduction")
-  
   samples.combined <- ScaleData(samples.combined, verbose = FALSE)
   samples.combined <- RunPCA(samples.combined, npcs = 30, verbose = FALSE)
   samples.combined <- RunUMAP(samples.combined, reduction = "pca", dims=1:30)
   
+  # adding metadata <- mostly for plotting the dotplots
   samples.combined <- adding_metadata(samples.combined)
   
+  # saves the object as an rda
   saveRDS(samples.combined,paste(files$output, "Rda/integrated_rd.Rda", sep="/"))
-
   return(samples.combined)
 }
 
-analyse_samples <- function (config) {
+
+
+################################################################################################
+# Analysing samples; mostly plotting
+################################################################################################
+analyse_samples <- function (config, files, samples.combined) {
+  # Differentially expressed genes
   analyse_DEGs()
+  # UMAP
   analyse_UMAPs()
+  # Reclustered plots / tables / etc.
   if (config$recluster)
     analyse_recluster()
 }
 
-################
+
+
+################################################################################################
+# Summarising samples
+################################################################################################
+summarise_samples <- function (config, files, samples.combined) {
+  # TODO
+}
+
+
+
+################################################################################################
 #start
-################
+################################################################################################
 # multithreading
 if (config$threads != 1) {
   options(future.globals.maxSize = 4 * 1024^3)
@@ -124,6 +150,9 @@ if (config$threads != 1) {
   plan("multiprocess", workers = config$threads)
 }
 
+
+
+# Looping through methods
 for (current_method in config$methods) {
   print(paste(rep("#",30),collapse=""))
   print(paste("Starting",current_method))
@@ -131,34 +160,38 @@ for (current_method in config$methods) {
   
   files = get_files(config, current_method)
   samples.combined=NULL
+	
+  # Decontamination
   if ("decontaminate" %in% config$process) {
     print("Decontaminating")
     samples.combined = decontaminate_samples(config, files, current_method)
     print("Decontamination completed")
   }
   
+  # Integration
   if ("integrate" %in% config$process) {
-    if (is.null(samples.combined)) {
-      print("Reading Rda from file...")
-      samples.combined <- readRDS(paste(files$output, "Rda/decontaminated_samples.Rda", sep="/"))
-    }
+	samples.combined <- load_rda(samples.combined, "Rda/decontaminated_samples.Rda")
     
     print("Integrating")
     samples.combined = integrate_samples(config, files, samples.combined)
     print("Integration completed")
   }
   
+  # Analysis
   if ("analyse" %in% config$process) {
-    if (is.null(samples.combined)) {
-      print("Reading Rda from file...")
-      samples.combined <- readRDS(paste(files$output, "Rda/integrated_rd.Rda", sep="/"))
-    }
+	samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
     
     print("Analysing")
     samples.combined = analyse_samples(config, files, samples.combined)
     print("Analysis completed")
   }
   
+  # Summary
+  if ("summarise" %in% config$process) {
+	samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
+    
+    print("Summarising")
+    samples.combined = summarise_samples(config, files, samples.combined)
+    print("Summary completed")
+  }
 }
-# for each method...
-# decont, integ, analyse ...

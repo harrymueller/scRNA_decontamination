@@ -65,8 +65,7 @@ analyse_recluster <- function(files, samples.combined) {
 
 
 ################################################################################################
-# TODO 
-# plot a density histogram of the differences in module score - from
+# plot a density histogram of the differences in module score between two highest scores
 ################################################################################################
 plot_module_score_hist <- function (seurat, tables, output) {
   plots = list()
@@ -152,7 +151,8 @@ contigency_table_ct <- function (all_sample_ids, cell_annotations_path, new_clus
   ### Getting contigency tables (and cts)
   fresh = get_cont_table(all_sample_ids[1:3], cell_annotations_path, new_clus_path, T)
   meoh = get_cont_table(all_sample_ids[4:6], cell_annotations_path, new_clus_path, T)
-  ###
+  
+  ### Dataframe containing ARI / NMI / Change in num unknowns -> for adding to workbook
   stat_df = data.frame(
     "Data"= c("Fresh", "MeOH"),
     "ARI" = c(aricode::ARI(fresh$o_ct, fresh$r_ct),aricode::ARI(meoh$o_ct, meoh$r_ct)),
@@ -168,23 +168,24 @@ contigency_table_ct <- function (all_sample_ids, cell_annotations_path, new_clus
   s <- createSheet(wb, "ari_nmi")
   addDataFrame(t(stat_df), s, row.names = T, col.names = F)
   
+  # adding fresh contigency table
   s <- createSheet(wb, "Fresh")
   addDataFrame(
     t(data.frame("1"="*Cell types on the top are the cell types after reclustering post-decontamination", "2"="*Cell types on the left are the original cell types")),s, row.names=F, col.names=F
   )
   addDataFrame(data.frame(rbind(fresh$tab)), s, row.names = T, col.names = T,startRow = 4)
   
+  # adding meoh contigency table
   s <- createSheet(wb, "MeOH")
   addDataFrame(
     t(data.frame("1"="*Cell types on the top are the cell types after reclustering post-decontamination", "2"="*Cell types on the left are the original cell types")),s, row.names=F, col.names=F
   )
   addDataFrame(data.frame(rbind(meoh$tab)), s, row.names = T, col.names = T,startRow = 4)
   
+  # save workbook
   saveWorkbook(wb, output_file)
   
-  return(list(
-    fresh=fresh,meoh=meoh
-  ))
+  return(list(fresh=fresh, meoh=meoh))
 }
 
 

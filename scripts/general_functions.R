@@ -114,6 +114,10 @@ get_files <- function (config, current_method) {
 
 
 
+									
+									
+									
+									
 ################################################################################################
 # Log function
 # TODO improve
@@ -213,5 +217,19 @@ adding_metadata <- function(samples.combined) {
     x <- if (end) str_sub(x,end=-6) else x
   }))
   
+  return(samples.combined)
+}
+
+									   
+
+################################################################################################
+# Checks if samples.combined is loaded, if not -> loads it from the file
+################################################################################################
+load_rda <- function (samples.combined, file) {
+  if (is.null(samples.combined)) {
+    print("Reading Rda from file...")
+    samples.combined <- readRDS(paste(files$output, file, sep="/"))
+  }
+	
   return(samples.combined)
 }
