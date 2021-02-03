@@ -3,21 +3,26 @@
 ################################################################################################
 args = commandArgs(trailingOnly=TRUE)
 
-print(paste("Starting",args[[2]],args[[1]]))
+# sample id and current method from arguments
+sample_id = args[[1]]
+current_method = args[[2]]
+
+
+print(paste("Starting", current_method, sample_id))
 
 
 # loading functions from separate scripts
 source("scripts/general_functions.R")
 source("scripts/decontamination_functions.R")
 
+# getting config
 config <- get_config("benchmarking")
-config$sample_ids = args[[1]]
-sample_id = args[[1]]
-current_method = args[[2]]
+config$sample_ids = sample_id
 
+# libs
 load_libraries()
 
-
+# files
 files=get_files(config, current_method)
 
 

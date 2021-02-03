@@ -73,7 +73,7 @@ pawsey_reclus:
 benchmarking:
   input_dir: "/home/harry/perkins/benchmarking/input"
   output_dir: "/home/harry/perkins/benchmarking/output"
-  process: "null"
+  process: "decontaminate"
   methods: "null"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
