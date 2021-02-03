@@ -142,7 +142,9 @@ save_matrices <- function(samples, file_dir) {
   # file_dir = "../data/output/no_decont/"
   lapply(samples, function(x) {
     print(paste("Saving",x$sample_id))
-    write.table(as.matrix(x$seurat@assays$RNA@counts), file=paste(file_dir,x$sample_id,".tsv",sep=""),quote=FALSE,sep="\t")
+    suppressMessages({
+	  write.table(as.matrix(x$seurat@assays$RNA@counts), file=paste(file_dir,x$sample_id,".tsv",sep=""),quote=FALSE,sep="\t")
+    })
   })
 }
 

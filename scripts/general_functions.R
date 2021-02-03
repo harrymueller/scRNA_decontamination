@@ -49,7 +49,7 @@ get_config <- function(args, testing=F) {
   
   # checking for empty variables
   required =c("alpha", "threads", "quiet", "genes_>=9_cts", "ct_order_dotplots", "pie_plot_cts", "input_dir",
-               "output_dir", "process", "method", "sample_ids")
+               "output_dir", "process", "methods", "sample_ids")
   for (i in required) {
     if (config[[i]] == "" || is.null(config[[i]]))
       stop(paste("Config is empty @ ", i,sep=""))

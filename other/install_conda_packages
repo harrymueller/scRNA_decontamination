@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+
+conda install -c r r-base r-essentials r-mass r-dplyr r-tidyverse -y
+# NEED TO INSTALL libgcc-ng | libstdcxx-ng | xz
+conda install -c bioconda r-seurat -y
+
+# Couldn't get celda to install -> install r-biocmanager via `conda install -c conda-forge r-biocmanager` -> then installed via R
+#conda install -c bioconda bioconductor-celda -y
+conda install -c conda-forge r-readxl r-varhandle r-soupx -y
+
+# analysis as well \/
+if [ $1 = all ]; then
+	conda install -c r r-ggplot2 r-xlsx r-reshape2 -y
+	conda install -c conda-forge r-plotly r-cowplot r-patchwork -y
+fi
+
