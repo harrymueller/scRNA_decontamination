@@ -9,8 +9,8 @@ if [ $opt = -r ] || [ $opt = --rPackages ]; then
 	# Basic packages
 	echo "r-base & r-essentials"
 	conda install -c r r-base r-essentials -y
-	echo "varhandle"
-	conda install -c conda-forge r-varhandle -y
+	echo "varhandle & config"
+	conda install -c conda-forge r-varhandle r-config -y
 
 	# Seurat
 	echo "seurat"
@@ -34,6 +34,8 @@ if [ $opt = -r ] || [ $opt = --rPackages ]; then
 	echo "orca"
 	conda install -c plotly plotly-orca -y
 
+	# others
+	conda install -c conda-forge r-htmlwidgets r-vctrs -y
 ############################################################
 # CellBender (CPU)
 ############################################################
