@@ -5,10 +5,10 @@
 ################################################################################################
 # Returns a list containing a $seurat & $sample_id
 ################################################################################################
-get_sample <- function(sample_id, dir, method, cell_annotations_path, special_files, use_new_clus) {
+get_sample <- function(sample_id, dir, method, cell_annotations_path, special_files, annotations_is_xlsx) {
   ## Cell Annotations
   if (method != "none")
-    cell_annotations = get_clusters(cell_annotations_path, sample_id, use_new_clus)
+    cell_annotations = get_clusters(cell_annotations_path, sample_id, annotations_is_xlsx)
   
   out = list("sample_id"=sample_id)
   print("gree")

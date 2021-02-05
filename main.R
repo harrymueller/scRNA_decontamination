@@ -5,6 +5,7 @@ args = commandArgs(trailingOnly=TRUE)
 source("../improved_scripts/scripts/general_functions.R")
 source("../improved_scripts/scripts/decontamination_functions.R")
 source("../improved_scripts/scripts/analysis_functions.R")
+source("../improved_scripts/scripts/DEGs.R")
 
 if (!requireNamespace('config', quietly=T))
   stop("R Package 'config' not installed.")
@@ -27,8 +28,7 @@ decontaminate_samples <- function (config, files, current_method) {
     sample_id = config$sample_ids[i]
     
     print(paste("Starting",sample_id))
-    samples[[sample_id]] = get_sample(sample_id, files$dir[i], current_method, files$CellAnnotations, files$special[i], 
-									  !(config$recluster == F || (current_method == "none" || current_method == "no_decontamination")))
+    samples[[sample_id]] = get_sample(sample_id, files$dir[i], current_method, files$CellAnnotations, files$special[i], config$is_xlsx[[current_method]])
 
     # ensuring formatting of cell barcodes is the same (across all analyses)
     samples[[sample_id]]$seurat = fix_barcodes(samples[[sample_id]]$seurat)
@@ -115,12 +115,14 @@ integrate_samples <- function (config, files, samples.combined) {
 ################################################################################################
 analyse_samples <- function (config, files, samples.combined) {
   # Differentially expressed genes
-  analyse_DEGs()
+  analyse_DEGs(config, files, samples.combined)
+  
   # UMAP
-  analyse_UMAPs()
+  analyse_UMAPs(files, samples.combined)
+  
   # Reclustered plots / tables / etc.
-  if (config$recluster)
-    analyse_recluster()
+  if (config$recluster == T)
+    analyse_recluster(config, files, samples.combined, current_method)
 }
 
 
@@ -179,7 +181,7 @@ for (current_method in config$methods) {
   
   # Analysis
   if ("analyse" %in% config$process) {
-	samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
+	  samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
     
     print("Analysing")
     samples.combined = analyse_samples(config, files, samples.combined)

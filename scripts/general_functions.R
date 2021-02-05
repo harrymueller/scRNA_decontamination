@@ -48,7 +48,7 @@ get_config <- function(args, testing=F) {
     config <- config::get(config="harry")
   
   # checking for empty variables
-  required =c("alpha", "threads", "quiet", "genes_>=9_cts", "ct_order_dotplots", "pie_plot_cts", "input_dir",
+  required =c("alpha", "threads", "quiet", "genes_ct_dotplots", "ct_order_dotplots", "pie_plot_cts", "input_dir",
                "output_dir", "process", "methods", "sample_ids")
   for (i in required) {
     if (config[[i]] == "" || is.null(config[[i]]))
@@ -56,9 +56,15 @@ get_config <- function(args, testing=F) {
   }
   
   # splitting "arrays"
-  for (i in c("sample_ids", "genes_>=9_cts", "ct_order_dotplots", "pie_plot_cts")) {
+  for (i in c("sample_ids", "genes_ct_dotplots", "ct_order_dotplots", "pie_plot_cts")) {
     config[[i]] = strsplit(config[[i]], split="|",fixed=T)[[1]]
   }
+  
+  # original cell annotations file is xlsx
+  config$is_xlsx = sapply(config$methods, function(x) {
+    return(config$recluster == F || x == "none" || x == "no_decontamination")
+  })
+  
   return(config)
 }
 
@@ -72,14 +78,14 @@ get_files <- function (config, current_method) {
     "CellRanger" = paste(config$input_dir, "CellRanger", sep="/"),
     "Filtered" = paste(config$input_dir, "Filtered_Feature_Barcode_Matrices", sep="/"),
     "CellBender" = paste(config$input_dir, "CellBender", sep="/"),
-    "CellAnnotations" = if (config$recluster == F || (current_method == "none" || current_method == "no_decontamination")) 
+    "CellAnnotations" = if (config$is_xlsx[[current_method]]) 
                           paste(config$input_dir, config$original_cell_annotations, sep="/") 
                         else paste(config$input_dir, config$new_cell_annotations, sep="/"),
     "GeneSignatures" = paste(config$input_dir, config$gene_signatures, sep="/"),
     "output" = paste(config$output_dir, current_method, sep="/"),
     "OcraRelDir" = paste(config$ocra_dir, current_method, sep="/")
   )
-  
+
   # specific locations based on the current method and the sample ids
   if (substring(current_method,0,5) == "soupx") {
     files$dir = sapply(config$sample_ids, FUN = function(x) {
@@ -137,8 +143,8 @@ log_print <- function (msg) {
     # if use_new -> reads from a tsv of the same format as reclustered cell annotations are saved as
     # else -> reads a xlsx file of the same format as the cell annotations from the kidney paper
 ##########################################
-get_clusters <- function(path, sample_id, use_new=FALSE) {
-  if (!use_new) {
+get_clusters <- function(path, sample_id, is_xlsx) {
+  if (is_xlsx) {
     is_preserved = length(str_split(sample_id, "_",simplify=TRUE))>2
     
     # Annotations for preserved cells are on a separate sheet within the file
