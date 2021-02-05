@@ -40,6 +40,7 @@ get_DEGs <- function(samples.combined, save_name=FALSE) {
   cell_types = cell_types[which(cell_types != "Unknown")] #removing unknown cell type
   DEGs = as.list(cell_types)
   names(DEGs) <- cell_types
+
   for (ct in cell_types) {
     # logfc.threshold = 1
     tryCatch({

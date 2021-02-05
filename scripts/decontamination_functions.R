@@ -50,9 +50,7 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
     
     if (method == "decontx:with_cell_types") {
       ## Cell Annotations
-      cell_annotations = as.numeric(factor(cell_annotations))
-      
-      decont_matrix = decontX(cont_matrix, z=cell_annotations)$resList$estNativeCounts
+      decont_matrix = decontX(cont_matrix, z=as.numeric(factor(cell_annotations)))$resList$estNativeCounts
     } else {
       decont_matrix = decontX(cont_matrix)$resList$estNativeCounts
     }
