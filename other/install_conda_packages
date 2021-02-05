@@ -1,16 +1,57 @@
 #!/usr/bin/bash
+# Getting input
+[ -z "$1" ] && opt=-h || opt=$1
 
-conda install -c r r-base r-essentials r-mass r-dplyr r-tidyverse -y
-# NEED TO INSTALL libgcc-ng | libstdcxx-ng | xz
-conda install -c bioconda r-seurat -y
+############################################################
+# R packages
+############################################################
+if [ $opt = -r ] || [ $opt = --rPackages ]; then
+	# Basic packages
+	echo "r-base & r-essentials"
+	conda install -c r r-base r-essentials -y
+	echo "varhandle"
+	conda install -c conda-forge r-varhandle -y
 
-# Couldn't get celda to install -> install r-biocmanager via `conda install -c conda-forge r-biocmanager` -> then installed via R
-#conda install -c bioconda bioconductor-celda -y
-conda install -c conda-forge r-readxl r-varhandle r-soupx -y
+	# Seurat
+	echo "seurat"
+	conda install -c conda-forge r-seurat=3.2.3 -y
 
-# analysis as well \/
-if [ $1 = all ]; then
+	# soupx
+	echo "soupx"
+	conda install -c conda-forge r-soupx -y
+
+	# decontx via celda & biocmanager
+	echo "biocmanager"
+	conda install -c conda-forge r-biocmanager -y
+	echo "celda"
+	Rscript -e 'BiocManager::install("celda")'
+
+	# packages required for analysis
+	echo "ggplot2, xlsx, reshape2"
 	conda install -c r r-ggplot2 r-xlsx r-reshape2 -y
+	echo "plotly, cowplot, patchwork"
 	conda install -c conda-forge r-plotly r-cowplot r-patchwork -y
-fi
+	echo "orca"
+	conda install -c plotly plotly-orca -y
 
+############################################################
+# CellBender (CPU)
+############################################################
+elif [ $opt = -c ] || [ $opt = --cellbenderCPU ]; then
+	echo "WIP"
+
+############################################################
+# CellBender (GPU)
+############################################################
+elif [ $opt = -g ] || [ $opt = --cellbenderGPU ]; then
+	echo "WIP"
+
+############################################################
+# Options
+############################################################
+else
+	echo "Options:"
+	echo "  -r || --rPackages     > install R packages in current conda environment"
+	echo "  -c || --cellbenderCPU > install cellbender (CPU version) in the current conda environment"
+	echo "  -g || --cellbenderGPU > install cellbender (GPU version) in the current conda environment"
+fi
