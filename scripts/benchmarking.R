@@ -7,6 +7,7 @@ args = commandArgs(trailingOnly=TRUE)
 sample_id = args[[1]]
 current_method = args[[2]]
 
+print(paste(rep("#", 25),collapse=""))
 print(paste("Starting", current_method, sample_id))
 
 # loading functions from separate scripts
@@ -17,6 +18,11 @@ source("scripts/decontamination_functions.R")
 config <- get_config("benchmarking")
 config$sample_ids = sample_id
 config$methods=c(current_method)
+
+# fixing config$is_xlsx
+config$is_xlsx = sapply(config$methods, function(x) {
+  return(config$recluster == F || x == "none" || x == "no_decontamination")
+})
 
 # libs
 load_libraries()
@@ -31,7 +37,7 @@ files=get_files(config, current_method)
 ################################################################################################
 print("Decontaminating")
 # Creates and saves individual R list objects <- previously used `soupx_processing.R` to create the Rda for each sample
-sample = get_sample(sample_id, files$dir, current_method, files$CellAnnotations, files$special, !(config$recluster == F || (current_method == "none" || current_method == "no_decontamination")))
+sample = get_sample(sample_id, files$dir, current_method, files$CellAnnotations, files$special, config$is_xlsx[[current_method]])
 
 # ensuring formatting of cell barcodes is the same (across all analyses)
 sample$seurat = fix_barcodes(sample$seurat)
