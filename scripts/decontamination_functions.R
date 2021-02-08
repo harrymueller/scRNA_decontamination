@@ -11,7 +11,6 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
     cell_annotations = get_clusters(cell_annotations_path, sample_id, annotations_is_xlsx)
   
   out = list("sample_id"=sample_id)
-  print("gree")
   # SOUPX
   if (substring(method,0,5)=="soupx") {
 	print("test")

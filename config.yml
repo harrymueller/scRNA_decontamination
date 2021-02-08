@@ -29,7 +29,6 @@ harry:
     - "analyse"
   methods: 
     - "decontx:with_cell_types"
-    - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
   new_cell_annotations: "../testing_improved_scripts/no_reclus/no_decontamination/new_clus.tsv"
