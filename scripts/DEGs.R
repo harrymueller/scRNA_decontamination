@@ -1,34 +1,4 @@
 ################################################################################################
-### Adds some metadata to the combined seurat object
-################################################################################################
-adding_metadata <- function(samples.combined) {
-  #order_paper <- rev(c("Fib", "MPH", "Podo", "aLOH", "Unknown","CD_PC", "T","NK","DCT","CNT","B","MC","CD_IC","Endo","PT","CD_Trans"))
-  Idents(samples.combined)[which(Idents(samples.combined)=="CD_Trans")] = "Unknown"
-  order_paper = order_paper[which(order_paper %in% levels(samples.combined))]
-  
-  #samples.combined <- readRDS(paste(output, "samples_integrated_rd.Rda", sep="/"))
-  DefaultAssay(samples.combined) <- "RNA"
-  
-  # adding metadata for `celltype_method`, `celltype`, and changing default ident to `celltype_method`
-  samples.combined$celltype_method <- paste(Idents(samples.combined), samples.combined$preservation, sep = "_")
-  samples.combined$celltype <- Idents(samples.combined)
-  Idents(samples.combined) <- "celltype_method"
-  
-  samples.combined$celltype.fresh = unlist(lapply(samples.combined$celltype_method, function(x) {
-    end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="fresh")
-    x <- if (end) str_sub(x,end=-7) else x
-  }))
-  samples.combined$celltype.meoh = unlist(lapply(samples.combined$celltype_method, function(x) {
-    end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="MeOH")
-    x <- if (end) str_sub(x,end=-6) else x
-  }))
-  
-  return(samples.combined)
-}
-
-
-
-################################################################################################
 ## Gets all the DEGs and returns a list object
 ################################################################################################
 get_DEGs <- function(samples.combined, save_name=FALSE) {
@@ -40,7 +10,7 @@ get_DEGs <- function(samples.combined, save_name=FALSE) {
   cell_types = cell_types[which(cell_types != "Unknown")] #removing unknown cell type
   DEGs = as.list(cell_types)
   names(DEGs) <- cell_types
-
+  print(DEGs)
   for (ct in cell_types) {
     # logfc.threshold = 1
     tryCatch({
@@ -49,11 +19,11 @@ get_DEGs <- function(samples.combined, save_name=FALSE) {
                               verbose = F, logfc.threshold = 1, min.pct=0.5,test.use = "wilcox")
 	}, error = function(e) {
 		print(e)
-	  log_warning(paste(e), paste(output, "errors.txt", sep="/")) #TODO improve
-      DEGs[ct] = 0
+	  log_print(paste(e))
+    DEGs[ct] = 0
 	}) 
   }
-
+  
   # adding cell type to individual df and filtering out genes w/ FDR > 0.05
   DEGs = lapply(names(DEGs), function(x) {
 	if (is.null(dim(DEGs[[x]]))) {
@@ -142,18 +112,13 @@ save_DEGs <- function(DEGs, f_name, genes.over, genes.under) {
 ################################################################################################
 ### barplots of number of DEGs by (celltype, over/under expression)
 ################################################################################################
-DEGs_histogram <- function(DEGs, f_name) {
+DEGs_histogram <- function(DEGs, f_name, ct_order) {
   DEGs.c = do.call("rbind", DEGs)
-  ct_order = rev(c("Fib", "MPH", "Podo", "aLOH", "Unknown","CD_PC", "T","NK","DCT","CNT","DCT_CNT","B","MC","CD_IC","Endo","PT"))
   ct_order = ct_order[which(ct_order %in% names(DEGs))]
   
   DEGs.c$cell_type <- ordered(DEGs.c$cell_type,ct_order)
-  
   DEGs.c = DEGs.c[order(DEGs.c$cell_type, decreasing=F),]
-  #DEGs.c$gene = factor(sapply(rownames(DEGs.c), function(x) str_split(x,fixed("."),simplify = T)[2]))
-  
-  #temp = data.frame(table(DEGs.c$cell_type), DEGs.c$)
-  #names(temp) <- c("celltype", "degs")
+
   p1 <-ggplot(data.frame(table(DEGs.c[DEGs.c$avg_logFC < 0,]$cell_type)), aes(x = Var1, y = Freq)) +
     geom_bar(stat = "identity") +
     coord_flip() + ylab("Number of DEGs") +
@@ -165,10 +130,8 @@ DEGs_histogram <- function(DEGs, f_name) {
     coord_flip() + ylab("Number of DEGs") +
     scale_x_discrete(name="Cell Type") + ggtitle("DEGs down-regulated in MeOH samples") + 
     (if (max(sapply(DEGs,function(x) length(x$avg_logFC[x$avg_logFC>0]),USE.NAMES = F)) < 21) ggplot2:::limits(c(0,20),"y"))
-  p <- p1 + p2 #+ plot_annotation(
-  #  title="Differentially Expressed Genes from Methanol-Fixed Samples Compared to Fresh Samples"
-  #)
-#  p
+  p <- p1 + p2
+                    
   ggsave(f_name,p,width=9, height=5)
 }
 

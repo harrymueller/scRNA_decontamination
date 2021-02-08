@@ -22,7 +22,7 @@ analyse_DEGs <- function(config, files, samples.combined) {
 
   ## Plotting DEGs
   print("Plotting DEGs")
-  DEGs_histogram(DEGs, paste(files$output,"/plots/DEG_histograms.png",sep="")) #DEGs, f_name
+  DEGs_histogram(DEGs, paste(files$output,"/plots/DEG_histograms.png",sep=""), config$ct_order_dotplots) #DEGs, f_name
   DEGs_dotplot_over_under_expression(samples.combined, paste(files$output,"/plots/DEG_higher_expression_9_celltypes.png",sep=""), 
                                      config$ct_order_dotplots, config$genes_ct_dotplots,
                                      genes.over, genes.under)

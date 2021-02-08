@@ -182,7 +182,7 @@ for (current_method in config$methods) {
   # Analysis
   if ("analyse" %in% config$process) {
 	  samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
-    
+
     print("Analysing")
     samples.combined = analyse_samples(config, files, samples.combined)
     print("Analysis completed")
@@ -190,7 +190,7 @@ for (current_method in config$methods) {
   
   # Summary
   if ("summarise" %in% config$process) {
-	samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
+	  samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
     
     print("Summarising")
     samples.combined = summarise_samples(config, files, samples.combined)
