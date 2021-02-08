@@ -13,7 +13,6 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
   out = list("sample_id"=sample_id)
   # SOUPX
   if (substring(method,0,5)=="soupx") {
-	print("test")
     # loads dir in 'SoupChannel' object
     sc = load10X(dir)
     sc = setClusters(sc, setNames(cell_annotations, names(cell_annotations)))

@@ -10,7 +10,7 @@ get_DEGs <- function(samples.combined, save_name=FALSE) {
   cell_types = cell_types[which(cell_types != "Unknown")] #removing unknown cell type
   DEGs = as.list(cell_types)
   names(DEGs) <- cell_types
-  print(DEGs)
+
   for (ct in cell_types) {
     # logfc.threshold = 1
     tryCatch({
@@ -152,19 +152,38 @@ num_DEGs <- function() {
 ################################################################################################
 DEGs_dotplot_over_under_expression <- function(samples.combined, f_name, order_paper, genes_paper, genes.over, genes.under) {
   Idents(samples.combined) <- "celltype"
-  #Idents(samples.combined) = factor(Idents(samples.combined))
-  order_paper = order_paper[which(order_paper %in% levels(samples.combined))]
-
-  s=20
-  Idents(samples.combined) <- "celltype.fresh"
-  levels(samples.combined) <-  c(order_paper,paste(order_paper,"MeOH",sep="_"))
-
-  p1 <- DotPlot(samples.combined,idents=order_paper,features = genes_paper, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=s), axis.text.x = element_text(size=s, angle = 60, hjust = 1)) + ggtitle("A. DEGs detected in the paper;\n   Expression in fresh samples after decontamination")
-  p3 <- DotPlot(samples.combined,idents=order_paper,features = c(genes.under,genes.over), cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + ggtitle("B. DEGs detected after decontamination;\n   Expression in fresh samples after decontamination")
   
+  # order of ct for dotplot
+  order_paper = order_paper[which(order_paper %in% levels(samples.combined))]
+  s=20 # text size
+ 
+  # ct not included in dot plot
+  not_inc = unique(Idents(samples.combined))[which(!(unique(Idents(samples.combined)) %in% order_paper))]
+	
+  # Expression in FRESH
+  # celltype.fresh <- normal ct for fresh sample | ct_meoh for rest <- selects only fresh
+  Idents(samples.combined) <- "celltype.fresh"
+
+  # changing levels of samples.combined to be correct order
+  l = c(order_paper, paste(order_paper,"MeOH",sep="_"), paste(not_inc, "", sep=""), paste(not_inc, "MeOH", sep="_"), use.names=F)
+  levels(samples.combined) <- l
+  
+  # genes from paper dotplot
+  p1 <- DotPlot(samples.combined,idents=order_paper,features = genes_paper, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=s), axis.text.x = element_text(size=s, angle = 60, hjust = 1)) + ggtitle("A. DEGs detected in the paper;\n   Expression in fresh samples after decontamination")
+  # DEGs from this analysis dotplot
+  p3 <- DotPlot(samples.combined,idents=order_paper,features = c(genes.under,genes.over), cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + ggtitle("B. DEGs detected after decontamination;\n   Expression in fresh samples after decontamination")
+	
+	
+  # Expression in MEOH
   Idents(samples.combined) <- "celltype.meoh"
-  levels(samples.combined) <-  c(order_paper,paste(order_paper,"fresh",sep="_"))
+
+  # changing levels of samples.combined to be correct order
+  l = c(order_paper, paste(order_paper,"fresh",sep="_"), paste(not_inc, "", sep=""), paste(not_inc, "fresh", sep="_"), use.names=F)
+  levels(samples.combined) <- l
+
+  # genes from paper dotplot
   p2 <- DotPlot(samples.combined,idents=order_paper,features = genes_paper, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + ggtitle("C. DEGs detected in the paper;\n   Expression in MeOH samples after decontamination")
+  # degs from this analysis dotplot
   p4 <- DotPlot(samples.combined,idents=order_paper,features = c(genes.under, genes.over), cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=20), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + ggtitle("D. DEGs detected after decontamination;\n   Expression in MeOH samples after decontamination")
   
   p <- (p1+p2)/(p3+p4)

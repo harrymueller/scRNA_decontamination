@@ -181,7 +181,7 @@ for (current_method in config$methods) {
   
   # Analysis
   if ("analyse" %in% config$process) {
-	  samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
+	samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
 
     print("Analysing")
     samples.combined = analyse_samples(config, files, samples.combined)
