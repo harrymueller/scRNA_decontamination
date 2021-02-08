@@ -1,7 +1,8 @@
 #!/usr/bin/bash
+# nohup ./run_benchmarking > ../benchmarking_output/log.out &; echo $! > pid
 sample_ids=("BG1_BG20C" "BG3_BG21C" "BG5_BG22C" "BG52_BG20C_MeOH" "BG54_BG21C_MeOH" "BG56_BG22C_MeOH")
 #sample_ids=("BG1_BG20C")
-methods=("no_decontamination" "soupx:autoEstCont" "soupx:background_genes" "soupx:top_background_genes" "decontx:no_cell_types" "decontx:with_cell_types")
+methods=("no_decontamination" "soupx:autoEstCont" "soupx:background_genes" "soupx:top_background_genes") # "decontx:no_cell_types" "decontx:with_cell_types")
 # "cellbender")
 #methods=("soupx:autoEstCont")
 
