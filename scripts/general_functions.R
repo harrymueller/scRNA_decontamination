@@ -41,11 +41,11 @@ load_libraries <- function () {
 # Returns config list containing all required variables
   # Throws an error if a required config variable is empty
 ################################################################################################
-get_config <- function(args, testing=F) {
-  if (!testing)
+get_config <- function(args, file=F) {
+  if (!file)
     config <- config::get(config = (if (length(args) > 0) args[[1]]), file = "config.yml")
   else
-    config <- config::get(config="harry")
+    config <- config::get(config = (if (length(args) > 0) args[[1]]), file = "config.yml", file=file)
   
   # checking for empty variables
   required =c("alpha", "threads", "quiet", "genes_ct_dotplots", "ct_order_dotplots", "pie_plot_cts", "input_dir",

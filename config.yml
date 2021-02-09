@@ -24,17 +24,23 @@ default:
 
 harry:
   input_dir: "/home/harry/gdrive/Education/Uni/GCRL2000/data"
-  output_dir: "/home/harry/gdrive/Education/Uni/GCRL2000/new_results/no_reclus"
+  output_dir: "/home/harry/gdrive/Education/Uni/GCRL2000/new_results/reclus"
   process:
     - "analyse"
   methods: 
+    - "no_decontamination"
+    - "soupx:autoEstCont"
+    - "soupx:background_genes"
+    - "soupx:top_background_genes"
+    - "decontx:no_cell_types"
     - "decontx:with_cell_types"
+    - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
-  new_cell_annotations: "../new_results/no_reclus/no_decontamination/new_clus.tsv"
+  new_cell_annotations: "../new_results/reclus/no_decontamination/new_clus.tsv"
   gene_signatures: "cell_type_gene_signatures.xlsx"
-  ocra_dir: "../../new_results/no_reclus"
-  recluster: False
+  ocra_dir: "../../new_results/reclus"
+  recluster: True
 
 pawsey:
   input_dir: "/data/harry_decontx/new_script_testing/input"
