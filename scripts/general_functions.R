@@ -10,8 +10,11 @@ load_libraries <- function () {
   required_libs = c(
     c("Seurat", "readxl", "varhandle", "MASS", "dplyr", "tidyverse"),
     if ("decontaminate" %in% config$process) c("SoupX", "celda") else NULL,
-    if ("analyse" %in% config$process) c("ggplot2", "xlsx", "reshape2","plotly","cowplot","patchwork") else NULL
+    if ("analyse" %in% config$process) c("ggplot2", "xlsx", "reshape2","plotly","cowplot","patchwork") else NULL,
+	if ("summarise" %in% config$process) c("ggplot2", "xlsx", "reshape2", "stringr", "ggforce") else NULL
   )
+  required_libs = unique(required_libs)
+		
   uninstalled = c()
   
   # looping through each lib, check if installed then loading
@@ -31,7 +34,6 @@ load_libraries <- function () {
     stop(paste("The following packages are required but not installed:",paste(uninstalled, collapse=", ")))
   } else {
     config = data.frame(quiet=F)
-    log_print("All libraries loaded successfully")
   }
 }
 
@@ -49,7 +51,8 @@ get_config <- function(args, file=F) {
   
   # checking for empty variables
   required =c("alpha", "threads", "quiet", "genes_ct_dotplots", "ct_order_dotplots", "pie_plot_cts", "input_dir",
-               "output_dir", "process", "methods", "sample_ids")
+               "output_dir", "process", "methods", "sample_ids", "summary_histogram_labels")
+                                    
   for (i in required) {
     if (config[[i]] == "" || is.null(config[[i]]))
       stop(paste("Config is empty @ ", i,sep=""))

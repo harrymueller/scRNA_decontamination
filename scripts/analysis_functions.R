@@ -104,10 +104,10 @@ plot_pie_ct <- function (samples, method, output, plot_cts) {
 
     # plotting
     fig <- plot_ly(df, labels = ~labels, values = ~prop, type = 'pie',textinfo = 'label+percent', sort=F, textfont = list(size = 20))
-    fig <- fig %>% layout(title = paste(method, " (", type,"); Cell type proportions", sep=""),
+    fig <- fig %>% layout(#title = paste(method, " (", type,"); Cell type proportions", sep=""),
                           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
                           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-                          margin=list(l=50, r=50, t=80, b=80),
+                          margin=list(l=50, r=50, t=120, b=80),
                           showlegend = F)
 
     # using ocra to save as image

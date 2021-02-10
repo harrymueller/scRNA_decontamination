@@ -16,17 +16,26 @@ default:
   quiet: False
   alpha: 0.05
   threads: 1
-  RAM: 4 #GB
   # list of genes separated by `|`
   genes_ct_dotplots: "Gpx3|Hbb-bs|Hbb-bt|Hba-a2|AY036118|Fxyd2|Gpx1|Hba-a1|Spink1"
   ct_order_dotplots: "PT|Endo|CD_IC|MC|B|DCT_CNT|CNT|DCT|NK|T|CD_PC|aLOH|Podo|MPH|Fib"
   pie_plot_cts: "PT|Endo|MPH|CD_IC|DCT_CNT"
+  summary_histogram_labels: # labels for the summary histogram - must be in same order as methods
+    - "No Decont-amination"
+    - "SoupX: Using autoEstCont"
+    - "SoupX: 3 Markers per Cell Type"
+    - "SoupX: Top 25 Marker Genes"
+    - "DecontX: No Cell Types"
+    - "DecontX: With Cell Types"
+    - "CellBender"
+                              
 
 harry:
   input_dir: "/home/harry/gdrive/Education/Uni/GCRL2000/data"
-  output_dir: "/home/harry/gdrive/Education/Uni/GCRL2000/new_results/reclus"
+  output_dir: "/home/harry/gdrive/Education/Uni/GCRL2000/new_results/reclus123"
   process:
-    - "analyse"
+    - "decontaminate"
+    - "summarise"
   methods: 
     - "no_decontamination"
     - "soupx:autoEstCont"
