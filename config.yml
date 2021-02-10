@@ -45,9 +45,9 @@ harry:
     - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
-  new_cell_annotations: "../new_results/reclus/no_decontamination/new_clus.tsv"
+  new_cell_annotations: "../new_results/no_reclus/no_decontamination/new_clus.tsv"
   gene_signatures: "cell_type_gene_signatures.xlsx"
-  ocra_dir: "../../new_results/reclus"
+  ocra_dir: "../../new_results/no_reclus"
   recluster: True
 
 pawsey:
