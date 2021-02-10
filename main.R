@@ -231,6 +231,7 @@ if (length(intersect(c("decontaminate", "integrate", "analyse"), config$process)
     }
   }
 }
+                 
 # Summary
 if ("summarise" %in% config$process) {    
   print("Summarising")
