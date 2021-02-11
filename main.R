@@ -165,14 +165,16 @@ summarise_samples <- function (config) {
               config$methods, 
               config$summary_histogram_labels)
   
-  # ARI / NMI -> 1 doc
-  ari_nmi = concat_ari_nmi(config$output_dir,
-                           paste(config$output_dir, "summary", "ARI_NMI_Summary.xlsx", sep="/"),
-                           config$methods)
-  
-  # ARI / NMI histograms
-  plot_ari_nmi(ari_nmi, c(paste(config$output_dir, "summary", "ARI_Histogram.png", sep="/"),
-                          paste(config$output_dir, "summary", "NMI_Histogram.png", sep="/")))
+  if (config$recluster) {
+	  # ARI / NMI -> 1 doc
+	  ari_nmi = concat_ari_nmi(config$output_dir,
+							   paste(config$output_dir, "summary", "ARI_NMI_Summary.xlsx", sep="/"),
+							   config$methods)
+
+	  # ARI / NMI histograms
+	  plot_ari_nmi(ari_nmi, c(paste(config$output_dir, "summary", "ARI_Histogram.png", sep="/"),
+							  paste(config$output_dir, "summary", "NMI_Histogram.png", sep="/")))
+  }
 }
 
 

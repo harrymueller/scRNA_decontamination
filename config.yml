@@ -32,7 +32,7 @@ default:
 
 harry:
   input_dir: "/home/harry/gdrive/Education/Uni/GCRL2000/data"
-  output_dir: "/home/harry/gdrive/Education/Uni/GCRL2000/new_results/no_reclus"
+  output_dir: "/home/harry/gdrive/Education/Uni/GCRL2000/new_results/no_mt"
   process:
     - "summarise"
   methods: 
@@ -45,9 +45,9 @@ harry:
     - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
-  new_cell_annotations: "../new_results/no_reclus/no_decontamination/new_clus.tsv"
+  new_cell_annotations: "../new_results/no_mt/no_decontamination/new_clus.tsv"
   gene_signatures: "cell_type_gene_signatures.xlsx"
-  ocra_dir: "../../new_results/no_reclus"
+  ocra_dir: "../../new_results/no_mt"
   recluster: True
 
 pawsey:
