@@ -107,10 +107,8 @@ plot_pie_ct <- function (samples, method, output, plot_cts, ident_name) {
                           showlegend = F)
 
     # using ocra to save as image
-    suppressMessages({ # always displays error - even though it saves
-      print(paste(output, "/plots/", ident_name, "_", method, "_", type, "_ct_pie.png",sep=""))
-      orca(fig, file=paste(output, "/plots/", ident_name, "_", method, "_", type, "_ct_pie.png",sep=""),scale=3)
-    })
+    # always displays error - even though it saves
+    orca(fig, file=paste(output, "/plots/", ident_name, "_", method, "_", type, "_ct_pie.png",sep=""),scale=3)
   })
 }
 
