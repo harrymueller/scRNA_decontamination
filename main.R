@@ -141,6 +141,10 @@ analyse_samples <- function (config, files, samples.combined) {
   # UMAP
   analyse_UMAPs(files, samples.combined)
   
+  # Plotting pie charts of cell types
+  plot_pie_ct(samples.combined, current_method, files$OcraRelDir, config$pie_plot_cts, "preservation")
+  plot_pie_ct(samples.combined, current_method, files$OcraRelDir, config$pie_plot_cts, "method")
+	
   # Reclustered plots / tables / etc.
   if (config$recluster == T)
     analyse_recluster(config, files, samples.combined, current_method)
@@ -159,11 +163,11 @@ summarise_samples <- function (config) {
     dir.create(paste(config$output_dir, "summary", sep="/"))
   
   # summary histogram + summary degs
-  deg_summary(config$output_dir, 
-              c(paste(config$output_dir, "summary", "Summary_Histogram.png", sep="/"),
-                paste(config$output_dir, "summary", "DEGs_Summary.xlsx", sep="/")),
-              config$methods, 
-              config$summary_histogram_labels)
+  #deg_summary(config$output_dir, 
+  #            c(paste(config$output_dir, "summary", "Summary_Histogram.png", sep="/"),
+  #              paste(config$output_dir, "summary", "DEGs_Summary.xlsx", sep="/")),
+  #            config$methods, 
+  #            config$summary_histogram_labels)
   
   if (config$recluster) {
 	  # ARI / NMI -> 1 doc

@@ -46,12 +46,6 @@ analyse_UMAPs <- function(files, samples.combined) {
 ################################################################################################
 analyse_recluster <- function(config, files, samples.combined, current_method) {
   print("Plotting CT after reclustering")
-  # Plotting pie charts of cell types
-  suppressWarnings({
-    plot_pie_ct(samples.combined, current_method, files$OcraRelDir, config$pie_plot_cts)
-  })
-
-  
   # save & get contingency table of ct numbers
   tables = contigency_table_ct(config$sample_ids, files$CellAnnotations, 
                                paste(files$output, "/new_clus.tsv",sep=""), 
@@ -75,15 +69,16 @@ analyse_recluster <- function(config, files, samples.combined, current_method) {
 # Plots a pie chart showing the relative proportions of cell-types within all samples
 # Plots a pie chart for each preservation method
 ################################################################################################
-plot_pie_ct <- function (samples, method, output, plot_cts) {
+plot_pie_ct <- function (samples, method, output, plot_cts, ident_name) {
   # plotting pie charts for each preservation technique
-  Idents(samples) = "preservation"
+  Idents(samples) = ident_name
   samples <- SplitObject(samples)
-
+  plot_cts = plot_cts[which(plot_cts %in% unique(samples[[1]]@meta.data$celltype))]
+	
   lapply(samples, function(x) {
-    type=unique(x@meta.data$preservation)
+    type=unique(x@meta.data[[ident_name]])
     df = data.frame(xtabs(~x@meta.data$celltype))
-    
+	  
     df$labels = unfactor(df[,1])
     df[,1]=NULL
 
@@ -97,7 +92,8 @@ plot_pie_ct <- function (samples, method, output, plot_cts) {
     
     # ordering cts - for comparing different analyses
     df = df[order(match(df$labels, c(plot_cts, "Other"))),]
-    df$labels = c("PT", "Endothelial", "Macrophages", "CD_IC", "DCT-CNT", "Other")
+
+    df$labels = c(plot_cts, "Other")
     
     # Labels 
     df$labels = factor(df$labels, levels=df$labels)
@@ -107,12 +103,13 @@ plot_pie_ct <- function (samples, method, output, plot_cts) {
     fig <- fig %>% layout(#title = paste(method, " (", type,"); Cell type proportions", sep=""),
                           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
                           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-                          margin=list(l=50, r=50, t=120, b=80),
+                          margin=list(l=50, r=50, t=150, b=50),
                           showlegend = F)
 
     # using ocra to save as image
     suppressMessages({ # always displays error - even though it saves
-      orca(fig, file=paste(output, "/plots/", method, "_", type, "_ct_pie.png",sep=""),scale=3)
+      print(paste(output, "/plots/", ident_name, "_", method, "_", type, "_ct_pie.png",sep=""))
+      orca(fig, file=paste(output, "/plots/", ident_name, "_", method, "_", type, "_ct_pie.png",sep=""),scale=3)
     })
   })
 }
