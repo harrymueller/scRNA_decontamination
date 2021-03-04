@@ -40,14 +40,30 @@ if [ $opt = -r ] || [ $opt = --rPackages ]; then
 # CellBender (CPU)
 ############################################################
 elif [ $opt = -c ] || [ $opt = --cellbenderCPU ]; then
-	echo "WIP"
+	echo "Ensure that python 3.7 is installed"
+	echo ""
+	echo "pytables, pytorch (CPU)"
+	conda install -c anaconda pytables -y
+	conda install pytorch torchvision -c pytorch -y
 
+	echo "cellbender"
+	cd $2
+	git clone https://github.com/broadinstitute/CellBender.git
+	pip install -e CellBender
 ############################################################
 # CellBender (GPU)
 ############################################################
 elif [ $opt = -g ] || [ $opt = --cellbenderGPU ]; then
-	echo "WIP"
+	echo "Ensure that python3.7 installed"
+	echo ""
+	echo "pytables, pytorch (CPU)"
+	conda install -c anaconda pytables -y
+	conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch -y
 
+	echo "cellbender"
+	cd $2
+	git clone https://github.com/broadinstitute/CellBender.git
+	pip install -e CellBender
 ############################################################
 # Options
 ############################################################
@@ -56,4 +72,6 @@ else
 	echo "  -r || --rPackages     > install R packages in current conda environment"
 	echo "  -c || --cellbenderCPU > install cellbender (CPU version) in the current conda environment"
 	echo "  -g || --cellbenderGPU > install cellbender (GPU version) in the current conda environment"
+	echo ""
+	echo "  <dir>                 > directory to install Celbender in"
 fi
