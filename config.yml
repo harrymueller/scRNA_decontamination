@@ -45,8 +45,8 @@ harry:
   recluster: True
 
 pawsey:
-  input_dir: "/data/harry_decontx/new_script_testing/input"
-  output_dir: "/data/harry_decontx/new_script_testing/output"
+  input_dir: "/data/harry_decontx/decont_project/mouse_kidney/input"
+  output_dir: "/data/harry_decontx/decont_project/mouse_kidney/output"
   process:
     - "decontaminate"
     - "integrate"
@@ -62,8 +62,8 @@ pawsey:
   threads: 4
 
 pawsey_reclus:
-  input_dir: "/data/harry_decontx/new_script_testing/input"
-  output_dir: "/data/harry_decontx/new_script_testing/output_reclus"
+  input_dir: "/data/harry_decontx/decont_project/mouse_kidney/input"
+  output_dir: "/data/harry_decontx/decont_project/mouse_kidney/output_reclus"
   process:
     - "decontaminate"
   methods: 
@@ -75,7 +75,7 @@ pawsey_reclus:
   - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
-  new_cell_annotations: "../output_reclus/no_decontamination/new_clus.tsv"
+  new_cell_annotations: "../mouse_kidney/output_reclus/no_decontamination/new_clus.tsv"
   gene_signatures: "gene_signatures.xlsx"
   recluster: True
   threads: 4
