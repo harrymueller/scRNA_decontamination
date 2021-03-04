@@ -1,0 +1,43 @@
+#!/usr/bin/bash
+# nohup ./run_benchmarking > ../benchmarking_output/log.out &; echo $! > pid
+if [ -z $2 ]; then
+	methods=("no_decontamination" "soupx:autoEstCont" "soupx:background_genes" "soupx:top_background_genes" "decontx:no_cell_types" "decontx:with_cell_types")
+
+	if [ -z $1 ]; then
+		sample_ids=("BG1_BG20C" "BG3_BG21C" "BG5_BG22C" "BG52_BG20C_MeOH" "BG54_BG21C_MeOH" "BG56_BG22C_MeOH")
+	else
+		sample_ids=$1
+	fi
+else
+	methods=$2
+fi
+
+dir=../../benchmarking_output
+
+# START PIDSTAT for RAM AND CPU
+nohup pidstat -h -r -u -C R 1 --human >> $dir/usage.txt &
+pid_r=$!
+
+echo $pid_r >> pid
+
+echo "PID METHOD SAMPLE_ID" > $dir/pid.txt
+echo "START" > $dir/output.log
+
+# looping through all methods and samples
+for m in ${methods[@]}; do
+	for id in ${sample_ids[@]}; do
+		nohup Rscript benchmarking.R $id $m >> $dir/output.log &
+
+		pid=$!
+		# record pid
+		echo $pid $m $id >> $dir/pid.txt
+		# wait for it to finish
+		tail --pid=$pid -f /dev/null
+
+		# wait 5 seconds
+		sleep 5
+	done
+done
+
+# killing pidstat processes
+kill -9 $pid_r
