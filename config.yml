@@ -52,6 +52,9 @@ pawsey:
     - "decontaminate"
   methods: 
     - "no_decontamination"
+    - "soupx:autoEstCont"
+    - "decontx:no_cell_types"
+    - "cellbender"
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10
   original_cell_annotations: "gem_classification.csv"
