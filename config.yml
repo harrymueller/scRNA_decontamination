@@ -28,17 +28,16 @@ default:
     - "DecontX: No Cell Types"
     - "DecontX: With Cell Types"
     - "CellBender"
-                              
 
 harry:
   input_dir: "/home/harry/Perkins/Human_Mouse/data"
   output_dir: "/home/harry/Perkins/Human_Mouse/results"
   process:
-    - "decontaminate"
+  - "decontaminate"
   methods: 
-    - "no_decontamination"
+  - "no_decontamination"
   dataset: "hgmm12k"
-  sample_ids: "hg19|mm10
+  sample_ids: "hg19|mm10"
   original_cell_annotations: "gem_classification.csv"
   # new_cell_annotations: "../new_results/reclus/no_decontamination/new_clus.tsv"
   # gene_signatures: "cell_type_gene_signatures.xlsx"
@@ -46,17 +45,26 @@ harry:
   recluster: False
 
 pawsey:
-  input_dir: "/data/harry_decontx/decont_project/hgmm12k/data"
-  output_dir: "/data/harry_decontx/decont_project/hgmm12k/results"
+  input_dir: "/data/harry_decont_project/hgmm12k/data"
+  output_dir: "/data/harry_decont_project/hgmm12k/results/first_attempt"
   process:
-    - "decontaminate"
+  - "decontaminate"
   methods: 
-    - "no_decontamination"
-    - "soupx:autoEstCont"
-    - "decontx:no_cell_types"
-    - "cellbender"
+  - "decontx:no_cell_types"
   dataset: "hgmm12k"
-  sample_ids: "hg19|mm10
+  sample_ids: "hg19|mm10"
+  original_cell_annotations: "gem_classification.csv"
+  recluster: False
+
+pawsey2:
+  input_dir: "/data/harry_decont_project/hgmm12k/data"
+  output_dir: "/data/harry_decont_project/hgmm12k/results/first_attempt"
+  process:
+  - "decontaminate"
+  methods: 
+  - "soupx:autoEstCont"
+  dataset: "hgmm12k"
+  sample_ids: "hg19|mm10"
   original_cell_annotations: "gem_classification.csv"
   recluster: False
 

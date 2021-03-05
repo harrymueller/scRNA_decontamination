@@ -44,10 +44,7 @@ decontaminate_samples <- function (config, files, current_method) {
     sample_id = names(samples)[i]
     
     print(paste("Starting",sample_id))
-    samples[[sample_id]] = get_sample(sample_id, files$dir[i], current_method, 
-                                      files$CellAnnotations, files$special[i], 
-                                      config$is_xlsx[[current_method]], config$sample_ids)
-    samples[[sample_id]] = get_sample(sample_id, i, config, files)
+    samples[[sample_id]] = get_sample(i, sample_id, current_method, config, files)
     
     # ensuring formatting of cell barcodes is the same (across all analyses)
     samples[[sample_id]]$seurat = fix_barcodes(samples[[sample_id]]$seurat)
@@ -62,7 +59,7 @@ decontaminate_samples <- function (config, files, current_method) {
   samples.seurat <- lapply(samples, function(x) {
     x$seurat@meta.data$orig.ident = x$sample_id
     
-    if (config$method == "mouse_kidney")
+    if (config$dataset == "mouse_kidney")
       x$seurat@meta.data$preservation = if (length(str_split(x$sample_id, "_",simplify=TRUE))>2) "MeOH" else "fresh"
         
     x$seurat@meta.data$method = "decont"
@@ -77,7 +74,7 @@ decontaminate_samples <- function (config, files, current_method) {
 	
   # factoring metadata
   samples.combined@meta.data$orig.ident = factor(samples.combined@meta.data$orig.ident)
-  if (config$method == "mouse_kidney")
+  if (config$dataset == "mouse_kidney")
     samples.combined@meta.data$preservation = factor(samples.combined@meta.data$preservation)
   samples.combined@meta.data$method = factor(samples.combined@meta.data$method)
   

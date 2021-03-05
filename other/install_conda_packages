@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # Getting input
 [ -z "$1" ] && opt=-h || opt=$1
 

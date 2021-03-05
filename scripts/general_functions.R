@@ -50,8 +50,8 @@ get_config <- function(args, file=F) {
     config <- config::get(config = (if (length(args) > 0) args[[1]]), file = "config.yml", file=file)
   
   # checking for empty variables
-  required =c("alpha", "threads", "quiet", "genes_ct_dotplots", "ct_order_dotplots", "pie_plot_cts", "input_dir",
-               "output_dir", "process", "methods", "summary_histogram_labels", "sample_ids")
+  required = c("alpha", "threads", "quiet", "genes_ct_dotplots", "ct_order_dotplots", "pie_plot_cts", "input_dir",
+               "output_dir", "process", "methods", "summary_histogram_labels", "sample_ids", "dataset")
                                     
   for (i in required) {
     if (config[[i]] == "" || is.null(config[[i]]))
@@ -95,9 +95,10 @@ get_files <- function (config, current_method) {
   if (config$dataset == "mouse_kidney") {
     files[["CellAnnotations"]] = if (config$is_xlsx[[current_method]]) 
       paste(config$input_dir, config$original_cell_annotations, sep="/") 
-    else paste(config$input_dir, config$new_cell_annotations, sep="/")
+    else 
+      paste(config$input_dir, config$new_cell_annotations, sep="/")
   } else if (config$dataset == "hgmm12k") {
-    files[[
+    files[["CellAnnotations"]] = paste(config$input_dir, config$original_cell_annotations, sep="/")
   }
 
   files$dir = sapply(repeat_names, FUN = function(x) {
@@ -120,7 +121,8 @@ get_files <- function (config, current_method) {
       paste(files$Filtered,"/", x,".txt", sep="")
     }, USE.NAMES=F)
   } else if (current_method == "no_decontamination") { 
-     paste(files$Filtered,"/", x,".txt", sep="")
+    files$special = sapply(config$sample_ids, function(x) {
+      paste(files$Filtered,"/", x,".txt", sep="")
     }, USE.NAMES=F)
   }
   

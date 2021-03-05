@@ -5,7 +5,7 @@
 ################################################################################################
 # Returns a list containing a $seurat & $sample_id
 ################################################################################################
-get_sample <- function(i, sample_id, current_method, config, files) {
+get_sample <- function(i, sample_id, method, config, files) {
   dir = files$dir[i]
   
   ## Cell Annotations
@@ -20,8 +20,9 @@ get_sample <- function(i, sample_id, current_method, config, files) {
     if (sample_id == "mouse_kidney")
 	    sc = load10X(dir)
     else if (sample_id == "hgmm12k") {
-	    filtered = get_filtered_hgmm(files$CellRanger, sample_ids)
-      raw = get_raw_hgmm(files$CellRanger, sample_ids)
+      filtered = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)
+      raw = get_raw_hgmm(files$CellRanger, config$sample_ids)
+      sc = SoupChannel(raw, filtered)
     }
 	  
     sc = setClusters(sc, setNames(cell_annotations, names(cell_annotations))) 
@@ -51,11 +52,11 @@ get_sample <- function(i, sample_id, current_method, config, files) {
   } 
   # DECONTX
   else if (substring(method,0,7) == "decontx") {
-    if (sample_id == "mouse_kidney")
-	    filtered = read.csv(dir,header = TRUE,sep = "\t")
+    if (sample_id == "mouse_kidney") {
+      filtered = read.csv(dir,header = TRUE,sep = "\t")
       cont_matrix = as.matrix(filtered)
-    else if (sample_id == "hgmm12k") {
-	    cont_matrix = get_filtered_hgmm(files$CellRanger, sample_ids)@assays$RNA@counts 
+    } else if (sample_id == "hgmm12k") {
+      cont_matrix = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts 
     }
     
     
@@ -73,11 +74,11 @@ get_sample <- function(i, sample_id, current_method, config, files) {
       stop("No special_files given, but path to filtered files is required for no decontamination")
     }
     
-    if (sample_id == "mouse_kidney")
-	    filtered = read.csv(dir,header = TRUE,sep = "\t")
+    if (sample_id == "mouse_kidney") {
+      filtered = read.csv(dir,header = TRUE,sep = "\t")
       cont_matrix = as.matrix(filtered)
-    else if (sample_id == "hgmm12k") {
-	    cont_matrix = get_filtered_hgmm(files$CellRanger, sample_ids)@assays$RNA@counts 
+    } else if (sample_id == "hgmm12k") {
+      cont_matrix = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts 
     }
     
     decont_matrix <- Read10X_h5(dir,use.names=T)
@@ -96,7 +97,12 @@ get_sample <- function(i, sample_id, current_method, config, files) {
   # NO DECONTAMINATION
   else {
     # not actually "decontaminated" - however named this way
-    decont_matrix = get_filtered_hgmm(files$CellRanger, sample_ids)@assays$RNA@counts
+    if (sample_id == "mouse_kidney") {
+      filtered = read.csv(dir,header = TRUE,sep = "\t")
+      decont_matrix = as.matrix(filtered)
+    } else if (sample_id == "hgmm12k") {
+      decont_matrix = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts 
+    }    
   } 
   
   out$seurat = CreateSeuratObject(decont_matrix)
@@ -157,9 +163,9 @@ save_matrices <- function(samples, file_dir) {
   # file_dir = "../data/output/no_decont/"
   lapply(samples, function(x) {
     print(paste("Saving",x$sample_id))
-    suppressMessages({
+    
 	  write.table(as.matrix(x$seurat@assays$RNA@counts), file=paste(file_dir,x$sample_id,".tsv",sep=""),quote=FALSE,sep="\t")
-    })
+    #})
   })
 }
 
@@ -365,12 +371,12 @@ get_top_n_markers <- function(dir, sc, n) {
 ################################################################################################
 # Returns a seurat object containing the filtered hgmm12k data
 ################################################################################################
-get_filtered_hgmm <- function(dir, types) {
+get_filtered_hgmm <- function(dir, annotation_path, types) {
   # raw data
   hg = Read10X(paste(dir, "raw_gene_bc_matrices", types[1], sep="/"))
   mm = Read10X(paste(dir, "raw_gene_bc_matrices", types[2], sep="/"))
   
-  gem_classifications = read.csv(paste(dir, "gem_classification.csv", sep="/"))
+  gem_classifications = read.csv(annotation_path)
   
   # using gem classifications to filter raw data
   hg.f = hg[,colnames(hg) %in% gem_classifications$barcode]
