@@ -29,19 +29,26 @@ decontaminate_samples <- function (config, files, current_method) {
     if (!dir.exists(p))
       dir.create(p)
   
+  if (config$dataset == "mouse_kidney") {
+    samples = as.list(config$sample_ids)
+    names(samples) <- config$sample_ids
+    s = seq(length(config$sample_ids))
+  } else if (config$dataset == "hgmm12k") {
+    samples = as.list("hgmm12k")
+    names(samples) = "hgmm12k"
+    s = seq(1)
+  }
   
-  samples = as.list(config$sample_ids)
-  names(samples) <- config$sample_ids
-  
-  ## Creates and saves individual R list objects <- previously used `soupx_processing.R` to create the Rda for each sample
-  for (i in seq(length(config$sample_ids))) {
-    sample_id = config$sample_ids[i]
+  ## Creates and saves individual R list objects 
+  for (i in s) {
+    sample_id = names(samples)[i]
     
     print(paste("Starting",sample_id))
     samples[[sample_id]] = get_sample(sample_id, files$dir[i], current_method, 
                                       files$CellAnnotations, files$special[i], 
-                                      config$is_xlsx[[current_method]])
-
+                                      config$is_xlsx[[current_method]], config$sample_ids)
+    samples[[sample_id]] = get_sample(sample_id, i, config, files)
+    
     # ensuring formatting of cell barcodes is the same (across all analyses)
     samples[[sample_id]]$seurat = fix_barcodes(samples[[sample_id]]$seurat)
   }
@@ -54,17 +61,24 @@ decontaminate_samples <- function (config, files, current_method) {
   # loops through each object in samples <- adds metadata to `seurat.decont` 
   samples.seurat <- lapply(samples, function(x) {
     x$seurat@meta.data$orig.ident = x$sample_id
-    x$seurat@meta.data$preservation = if (length(str_split(x$sample_id, "_",simplify=TRUE))>2) "MeOH" else "fresh"
+    
+    if (config$method == "mouse_kidney")
+      x$seurat@meta.data$preservation = if (length(str_split(x$sample_id, "_",simplify=TRUE))>2) "MeOH" else "fresh"
+        
     x$seurat@meta.data$method = "decont"
     return(x$seurat)
   })
   
   # merging
-  samples.combined <- merge(samples.seurat[[1]], samples.seurat[2:6], add.cell.ids = config$sample_ids)
-
+  if (config$method == "mouse_kidney")
+	  samples.combined <- merge(samples.seurat[[1]], samples.seurat[2:6], add.cell.ids = config$sample_ids)
+  else
+	  samples.combined <- samples.seurat[[1]]
+	
   # factoring metadata
   samples.combined@meta.data$orig.ident = factor(samples.combined@meta.data$orig.ident)
-  samples.combined@meta.data$preservation = factor(samples.combined@meta.data$preservation)
+  if (config$method == "mouse_kidney")
+    samples.combined@meta.data$preservation = factor(samples.combined@meta.data$preservation)
   samples.combined@meta.data$method = factor(samples.combined@meta.data$method)
   
 

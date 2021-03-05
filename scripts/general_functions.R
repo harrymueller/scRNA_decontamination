@@ -51,12 +51,13 @@ get_config <- function(args, file=F) {
   
   # checking for empty variables
   required =c("alpha", "threads", "quiet", "genes_ct_dotplots", "ct_order_dotplots", "pie_plot_cts", "input_dir",
-               "output_dir", "process", "methods", "sample_ids", "summary_histogram_labels")
+               "output_dir", "process", "methods", "summary_histogram_labels", "sample_ids")
                                     
   for (i in required) {
     if (config[[i]] == "" || is.null(config[[i]]))
       stop(paste("Config is empty @ ", i,sep=""))
   }
+
   
   # splitting "arrays"
   for (i in c("sample_ids", "genes_ct_dotplots", "ct_order_dotplots", "pie_plot_cts")) {
@@ -77,44 +78,49 @@ get_config <- function(args, file=F) {
 # Gets all file locations based on the config file and the current method
 ################################################################################################
 get_files <- function (config, current_method) {
+  if (config$dataset == "mouse_kidney")
+    repeat_names = config$sample_ids
+  else if (config$dataset == "hgmm12k")
+    repeat_names = c("hgmm12k")
+  
   files = list(
     "CellRanger" = paste(config$input_dir, "CellRanger", sep="/"),
     "Filtered" = paste(config$input_dir, "Filtered_Feature_Barcode_Matrices", sep="/"),
     "CellBender" = paste(config$input_dir, "CellBender", sep="/"),
-    "CellAnnotations" = if (config$is_xlsx[[current_method]]) 
-                          paste(config$input_dir, config$original_cell_annotations, sep="/") 
-                        else paste(config$input_dir, config$new_cell_annotations, sep="/"),
     "GeneSignatures" = paste(config$input_dir, config$gene_signatures, sep="/"),
     "output" = paste(config$output_dir, current_method, sep="/"),
     "OcraRelDir" = paste(config$ocra_dir, current_method, sep="/")
   )
+  
+  if (config$dataset == "mouse_kidney") {
+    files[["CellAnnotations"]] = if (config$is_xlsx[[current_method]]) 
+      paste(config$input_dir, config$original_cell_annotations, sep="/") 
+    else paste(config$input_dir, config$new_cell_annotations, sep="/")
+  } else if (config$dataset == "hgmm12k") {
+    files[[
+  }
 
+  files$dir = sapply(repeat_names, FUN = function(x) {
+    if (substring(current_method,0,5) == "soupx") 
+      paste(files$CellRanger, x, sep="/")
+    else if (substring(current_method,0,7) == "decontx")
+      paste(files$Filtered,"/", x,".txt", sep="")
+    else if (current_method == "cellbender")
+      paste(files$CellBender, "/", x, "/", x, "_filtered.h5", sep="")
+    else
+      paste(files$CellRanger, x, sep="/")
+  }, USE.NAMES=F)
+  
+  
   # specific locations based on the current method and the sample ids
   if (substring(current_method,0,5) == "soupx") {
-    files$dir = sapply(config$sample_ids, FUN = function(x) {
-      paste(files$CellRanger, x, sep="/")
-    }, USE.NAMES=F)
-    
     files$special = rep(files$GeneSignatures, length(config$sample_ids))
-  } else if (substring(current_method,0,7) == "decontx") {
-    files$dir = sapply(config$sample_ids, function(x) {
-      paste(files$Filtered,"/", x,".txt", sep="")
-    }, USE.NAMES=F)
   } else if (current_method == "cellbender") {
-    files$dir = sapply(config$sample_ids, function(x) {
-      paste(files$CellBender, "/", x, "/", x, "_filtered.h5", sep="")
-    }, USE.NAMES=F)
-    
-    files$special = sapply(config$sample_ids, function(x) {
+    files$special = sapply(repeat_names, function(x) {
       paste(files$Filtered,"/", x,".txt", sep="")
     }, USE.NAMES=F)
-  } else {
-    files$dir = sapply(config$sample_ids, function(x) {
-      paste(files$CellRanger, x, sep="/")
-    }, USE.NAMES=F)
-    
-    files$special = sapply(config$sample_ids, function(x) {
-      paste(files$Filtered,"/", x,".txt", sep="")
+  } else if (current_method == "no_decontamination") { 
+     paste(files$Filtered,"/", x,".txt", sep="")
     }, USE.NAMES=F)
   }
   
@@ -147,55 +153,65 @@ log_print <- function (msg) {
     # else -> reads a xlsx file of the same format as the cell annotations from the kidney paper
 ##########################################
 get_clusters <- function(path, sample_id, is_xlsx) {
-  if (is_xlsx) {
-    is_preserved = length(str_split(sample_id, "_",simplify=TRUE))>2
-    
-    # Annotations for preserved cells are on a separate sheet within the file
-    if (!is_preserved) {
-      suppressMessages({
-        cell_annotations = read_excel(path, sheet=1)
-      })
-      # library names are different from preserved library names
-      cell_annotations = cell_annotations[cell_annotations$Library==sample_id,]
-      
-    } else {
-      suppressMessages({
-        cell_annotations = read_excel(path, sheet=2)
-      })
-      cell_annotations = cell_annotations[cell_annotations$Preservation == "MeOH",c(1:3,5)]
-      
-      cell_annotations = cell_annotations[cell_annotations$Library==str_split(sample_id, "_",simplify=TRUE)[1],]
-    }
-    
-    names(cell_annotations)[1] = "barcodes"
-    names(cell_annotations)[4] = "orig.ident"
-    
-    cell_annotations$barcodes = sapply(cell_annotations$barcodes, function(x) paste(substring(x, nchar(sample_id)+2), "-1", sep=""))
-    names(cell_annotations$orig.ident) = cell_annotations$barcodes
-    
-    #cell_annotations = subset(cell_annotations, select=-c(1,2,3))
-    return(cell_annotations$orig.ident)
-  } else {
-    annotations = read.table(path, sep="\t",header=F,skip=1,stringsAsFactors=F, as.is=T)
-    
-    names(annotations) = c("barcode", "celltype")
-    
-    # creating sample_id variable
-    annotations$sample_id = sapply(annotations$barcode, FUN=function(x) {
-      return(paste(head(str_split(x,"_",)[[1]],-1),collapse = "_"))
-    })
-    
-    annotations = annotations[which(annotations$sample_id==sample_id),]
+  if (sample_id == "hgmm12k") {
+    classifications = read.csv(path)
 
-    
-    # removing sample_id from barcode
-    annotations$barcode = sapply(annotations$barcode, FUN=function(x) {
-      return(tail(str_split(x, "_")[[1]],1))
-    })
-    
-    ct = annotations$celltype
-    names(ct) = annotations$barcode
-    return(ct)
+    cell_annotations = c(unfactor(classifications$call))
+    names(cell_annotations) = classifications$barcode
+    return(cell_annotations)
+  }
+  
+  else {
+    if (is_xlsx) {
+      is_preserved = length(str_split(sample_id, "_",simplify=TRUE))>2
+
+      # Annotations for preserved cells are on a separate sheet within the file
+      if (!is_preserved) {
+        suppressMessages({
+          cell_annotations = read_excel(path, sheet=1)
+        })
+        # library names are different from preserved library names
+        cell_annotations = cell_annotations[cell_annotations$Library==sample_id,]
+
+      } else {
+        suppressMessages({
+          cell_annotations = read_excel(path, sheet=2)
+        })
+        cell_annotations = cell_annotations[cell_annotations$Preservation == "MeOH",c(1:3,5)]
+
+        cell_annotations = cell_annotations[cell_annotations$Library==str_split(sample_id, "_",simplify=TRUE)[1],]
+      }
+
+      names(cell_annotations)[1] = "barcodes"
+      names(cell_annotations)[4] = "orig.ident"
+
+      cell_annotations$barcodes = sapply(cell_annotations$barcodes, function(x) paste(substring(x, nchar(sample_id)+2), "-1", sep=""))
+      names(cell_annotations$orig.ident) = cell_annotations$barcodes
+
+      #cell_annotations = subset(cell_annotations, select=-c(1,2,3))
+      return(cell_annotations$orig.ident)
+    } else {
+      annotations = read.table(path, sep="\t",header=F,skip=1,stringsAsFactors=F, as.is=T)
+
+      names(annotations) = c("barcode", "celltype")
+
+      # creating sample_id variable
+      annotations$sample_id = sapply(annotations$barcode, FUN=function(x) {
+        return(paste(head(str_split(x,"_",)[[1]],-1),collapse = "_"))
+      })
+
+      annotations = annotations[which(annotations$sample_id==sample_id),]
+
+
+      # removing sample_id from barcode
+      annotations$barcode = sapply(annotations$barcode, FUN=function(x) {
+        return(tail(str_split(x, "_")[[1]],1))
+      })
+
+      ct = annotations$celltype
+      names(ct) = annotations$barcode
+      return(ct)
+    }
   }
 }
 
@@ -242,3 +258,7 @@ load_rda <- function (samples.combined, file) {
 	
   return(samples.combined)
 }
+
+
+
+

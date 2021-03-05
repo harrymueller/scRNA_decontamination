@@ -5,17 +5,26 @@
 ################################################################################################
 # Returns a list containing a $seurat & $sample_id
 ################################################################################################
-get_sample <- function(sample_id, dir, method, cell_annotations_path, special_files, annotations_is_xlsx) {
+get_sample <- function(i, sample_id, current_method, config, files) {
+  dir = files$dir[i]
+  
   ## Cell Annotations
   if (method != "none")
-    cell_annotations = get_clusters(cell_annotations_path, sample_id, annotations_is_xlsx)
+    cell_annotations = get_clusters(files$CellAnnotations, sample_id, config$is_xlsx[[current_method]])
   
   out = list("sample_id"=sample_id)
+  
   # SOUPX
   if (substring(method,0,5)=="soupx") {
     # loads dir in 'SoupChannel' object
-    sc = load10X(dir)
-    sc = setClusters(sc, setNames(cell_annotations, names(cell_annotations)))
+    if (sample_id == "mouse_kidney")
+	    sc = load10X(dir)
+    else if (sample_id == "hgmm12k") {
+	    filtered = get_filtered_hgmm(files$CellRanger, sample_ids)
+      raw = get_raw_hgmm(files$CellRanger, sample_ids)
+    }
+	  
+    sc = setClusters(sc, setNames(cell_annotations, names(cell_annotations))) 
     
     # removing any genes in the SC that are not in the filtered data
     if (length(sc$soupProfile[,1]) != length(rownames(sc$toc))) {
@@ -25,15 +34,14 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
     if (method == "soupx:autoEstCont") {
       sc = autoEstCont(sc)
     } else if (method =="soupx:background_genes") {
-      markers = get_markers(special_files, 3)
+      markers = get_markers(files$special[i], 3)
       useToEst = estimateNonExpressingCells(sc,nonExpressedGeneList = markers)
       sc = calculateContaminationFraction(sc,markers,useToEst=useToEst, forceAccept = T)
     } else if (method == "soupx:top_background_genes") {
-      if (special_files == FALSE) {
+      if (files$special[i] == FALSE)
         stop("No special_files given, but path to gene_signatures is required for soupX")
-      }
       
-      markers = get_top_n_markers(special_files, sc, 25)
+      markers = get_top_n_markers(files$special[i], sc, 25)
       useToEst = estimateNonExpressingCells(sc,nonExpressedGeneList = markers)
       sc = calculateContaminationFraction(sc,markers,useToEst=useToEst, forceAccept = T)
     }
@@ -43,8 +51,13 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
   } 
   # DECONTX
   else if (substring(method,0,7) == "decontx") {
-    filtered = read.csv(dir,header = TRUE,sep = "\t")
-    cont_matrix = as.matrix(filtered)
+    if (sample_id == "mouse_kidney")
+	    filtered = read.csv(dir,header = TRUE,sep = "\t")
+      cont_matrix = as.matrix(filtered)
+    else if (sample_id == "hgmm12k") {
+	    cont_matrix = get_filtered_hgmm(files$CellRanger, sample_ids)@assays$RNA@counts 
+    }
+    
     
     if (method == "decontx:with_cell_types") {
       ## Cell Annotations
@@ -56,12 +69,16 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
   } 
   # CELLBENDER
   else if (method == "cellbender") {
-    if (special_files == FALSE) {
+    if (files$special[i] == FALSE) {
       stop("No special_files given, but path to filtered files is required for no decontamination")
     }
     
-    filtered = read.csv(special_files,header = TRUE,sep = "\t")
-    cont_matrix = as.matrix(filtered)
+    if (sample_id == "mouse_kidney")
+	    filtered = read.csv(dir,header = TRUE,sep = "\t")
+      cont_matrix = as.matrix(filtered)
+    else if (sample_id == "hgmm12k") {
+	    cont_matrix = get_filtered_hgmm(files$CellRanger, sample_ids)@assays$RNA@counts 
+    }
     
     decont_matrix <- Read10X_h5(dir,use.names=T)
     
@@ -78,8 +95,8 @@ get_sample <- function(sample_id, dir, method, cell_annotations_path, special_fi
   } 
   # NO DECONTAMINATION
   else {
-    filtered = read.csv(special_files, header = TRUE, sep = "\t")
-    decont_matrix = as.matrix(filtered) # not actually "decontaminated" - however named this way
+    # not actually "decontaminated" - however named this way
+    decont_matrix = get_filtered_hgmm(files$CellRanger, sample_ids)@assays$RNA@counts
   } 
   
   out$seurat = CreateSeuratObject(decont_matrix)
@@ -341,4 +358,37 @@ get_top_n_markers <- function(dir, sc, n) {
   
   markers_top = markers_top[lengths(markers_top) != 0]
   return(markers_top)
+}
+
+
+
+################################################################################################
+# Returns a seurat object containing the filtered hgmm12k data
+################################################################################################
+get_filtered_hgmm <- function(dir, types) {
+  # raw data
+  hg = Read10X(paste(dir, "raw_gene_bc_matrices", types[1], sep="/"))
+  mm = Read10X(paste(dir, "raw_gene_bc_matrices", types[2], sep="/"))
+  
+  gem_classifications = read.csv(paste(dir, "gem_classification.csv", sep="/"))
+  
+  # using gem classifications to filter raw data
+  hg.f = hg[,colnames(hg) %in% gem_classifications$barcode]
+  mm.f = mm[,colnames(mm) %in% gem_classifications$barcode]
+  
+  combined = rbind(hg.f, mm.f)
+  return(CreateSeuratObject(combined))
+}
+
+
+
+################################################################################################
+# Returns a seurat object containing the raw hgmm12k data
+################################################################################################
+get_raw_hgmm <- function(dir, types) {
+  hg = Read10X(paste(dir, "raw_gene_bc_matrices", types[1], sep="/"))
+  mm = Read10X(paste(dir, "raw_gene_bc_matrices", types[2], sep="/"))
+  
+  combined = rbind(hg, mm)
+  return(CreateSeuratObject(combined))
 }
