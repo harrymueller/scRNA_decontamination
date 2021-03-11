@@ -378,11 +378,15 @@ get_filtered_hgmm <- function(dir, annotation_path, types) {
   
   gem_classifications = read.csv(annotation_path)
   
-  # using gem classifications to filter raw data
-  hg.f = hg[,colnames(hg) %in% gem_classifications$barcode]
-  mm.f = mm[,colnames(mm) %in% gem_classifications$barcode]
+  # using gem classifications to filter raw data - also removes multiplets
+  hg.f = hg[,colnames(hg) %in% gem_classifications$barcode[gem_classifications$call == "hg19"]]
+  mm.f = mm[,colnames(mm) %in% gem_classifications$barcode[gem_classifications$call == "mm10"]]
   
   combined = rbind(hg.f, mm.f)
+
+  # removing genes w/ less than 10 counts across all filtered cells
+  combined = combined[names(which(Matrix::rowSums(combined) > 10)),]
+
   return(CreateSeuratObject(combined))
 }
 
