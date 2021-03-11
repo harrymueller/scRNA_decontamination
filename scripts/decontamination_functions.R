@@ -18,10 +18,10 @@ get_sample <- function(i, sample_id, method, config, files) {
   if (substring(method,0,5)=="soupx") {
     # loads dir in 'SoupChannel' object
     if (sample_id == "mouse_kidney")
-	    sc = load10X(dir)
+      sc = load10X(dir)
     else if (sample_id == "hgmm12k") {
-      filtered = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)
-      raw = get_raw_hgmm(files$CellRanger, config$sample_ids)
+      filtered = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts
+      raw = get_raw_hgmm(files$CellRanger, config$sample_ids)@assays$RNA@counts
       sc = SoupChannel(raw, filtered)
     }
 	  
