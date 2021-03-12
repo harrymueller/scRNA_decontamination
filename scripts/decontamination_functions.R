@@ -308,7 +308,7 @@ reCluster <- function(seurat, gene_sig_file, alpha) {
 ################################################################################################
 get_markers <- function(dir_or_seurat, dataset, n=FALSE, b_compress=FALSE) {
   # n is the number of marker genes per cell type to select
-  if (dataset == "mouse_kidney") {
+  if (dataset != "hgmm12k") {
     suppressMessages({
       # order of celltypes in excel file
       excel_order = c("aLOH","B","CD_IC","CD_PC","CD_Trans","DCT-CNT","Endo","Fib","MC","MPH","NK","Podo","PT","T")
