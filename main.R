@@ -117,9 +117,9 @@ integrate_samples <- function (config, files, samples.combined) {
       write.table(as.matrix(Idents(samples.combined)), paste(files$output, "/new_clus.tsv", sep=""), sep="\t")
 
     DefaultAssay(samples.combined) <- "integrated"
-  } else if (config$dataset == "hgmm12k") {
+  } #else if (config$dataset == "hgmm12k") {
     # ...
-  }
+  #}
   
   #### Dimension Reduction
   print("Dimension reduction")
@@ -156,8 +156,6 @@ analyse_samples <- function (config, files, samples.combined) {
 
     # Differentially expressed genes
     analyse_DEGs(config, files, samples.combined)
-
-
 
     # Plotting pie charts of cell types
     plot_pie_ct(samples.combined, current_method, files$OcraRelDir, config$pie_plot_cts, "preservation")

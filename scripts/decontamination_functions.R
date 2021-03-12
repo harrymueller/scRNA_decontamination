@@ -90,7 +90,8 @@ get_sample <- function(i, sample_id, method, config, files) {
     }
     
     if (config$run_cellbender) {
-      cellbender_args = c("remove-background", "--input", "input dir", "--output", "output dir","--expected-cells", "numcells")
+      input_dir = paste(head(str_split(dir,"/")[[1]],-1),collapse="/") # removes the file name
+      cellbender_args = c("remove-background", "--input", input_dir, "--output", input_dir,"--expected-cells", dim(cont_matrix)[2])
       system2("cellbender", cellbender_args)
     }
     
@@ -363,7 +364,7 @@ get_markers <- function(dir_or_seurat, dataset, n=FALSE, b_compress=FALSE) {
     # compress into single vector w/ names being ct
     if (b_compress) {
       all_markers = c(markers$hg19, markers$mm10)
-      names(all_markers) = c(rep("hg19", length(markers["hg19"])), rep("mm10", length(markers["mm10"])))
+      names(all_markers) = c(rep("hg19", length(markers$hg19)), rep("mm10", length(markers$mm10)))
     }
   }
   
@@ -377,9 +378,6 @@ get_top_n_markers <- function(dir, dataset, sc, n) {
   # getting the marker genes from the excel file 
   markers = get_markers(dir, dataset)
   all_markers = get_markers(dir, dataset, b_compress=TRUE) # a single vector containing all genes
-  
-  # TODO REMOVE
-  print(all_markers)
   
   all_markers.no_dups <- all_markers[!all_markers %in% names(which(table(all_markers)!=1))]#all_markers[which(table(all_markers)==1)] #removing markers for >1 cell
   
