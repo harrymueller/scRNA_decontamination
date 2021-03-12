@@ -88,10 +88,11 @@ get_sample <- function(i, sample_id, method, config, files) {
     } else if (sample_id == "hgmm12k") {
       cont_matrix = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts 
     }
-    
+    print(files) 
     if (config$run_cellbender) {
+      # TODO: Fix for mouse_kidney dataset (specifically files$CellRanger)
       input_dir = paste(head(str_split(dir,"/")[[1]],-1),collapse="/") # removes the file name
-      cellbender_args = c("remove-background", "--input", input_dir, "--output", input_dir,"--expected-cells", dim(cont_matrix)[2])
+      cellbender_args = c("remove-background", "--input", files$CellRanger, "--output", input_dir,"--expected-cells", dim(cont_matrix)[2])
       system2("cellbender", cellbender_args)
     }
     
