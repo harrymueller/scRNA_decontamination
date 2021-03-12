@@ -56,7 +56,7 @@ get_sample <- function(i, sample_id, method, config, files) {
       filtered = read.csv(dir,header = TRUE,sep = "\t")
       cont_matrix = as.matrix(filtered)
     } else if (sample_id == "hgmm12k") {
-      cont_matrix = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts 
+      cont_matrix = as.matrix(get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts) 
     }
     
     
@@ -379,8 +379,8 @@ get_filtered_hgmm <- function(dir, annotation_path, types) {
   gem_classifications = read.csv(annotation_path)
   
   # using gem classifications to filter raw data - also removes multiplets
-  hg.f = hg[,colnames(hg) %in% gem_classifications$barcode[gem_classifications$call == "hg19"]]
-  mm.f = mm[,colnames(mm) %in% gem_classifications$barcode[gem_classifications$call == "mm10"]]
+  hg.f = hg[,colnames(hg) %in% gem_classifications$barcode[gem_classifications$call != "Multiplet"]]
+  mm.f = mm[,colnames(mm) %in% gem_classifications$barcode[gem_classifications$call != "Multiplet"]]
   
   combined = rbind(hg.f, mm.f)
 
