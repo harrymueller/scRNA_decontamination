@@ -62,9 +62,11 @@ get_sample <- function(i, sample_id, method, config, files) {
       filtered = read.csv(dir,header = TRUE,sep = "\t")
       cont_matrix = as.matrix(filtered)
     } else if (sample_id == "hgmm12k") {
+      #cont_matrix = as.matrix(get_raw_hgmm(files$CellRanger, config$sample_ids)@assays$RNA@counts) 
       cont_matrix = as.matrix(get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts) 
-    }
     
+      storage.mode(cont_matrix) <- "integer"
+    }
     
     if (method == "decontx:with_cell_types") {
       ## Cell Annotations
@@ -347,20 +349,20 @@ get_markers <- function(dir_or_seurat, dataset, n=FALSE, b_compress=FALSE) {
     })
   } else if (dataset == "hgmm12k") {
     # Find markers
-    raw_markers = FindMarkers(combined, ident.1 = "hg19", ident.2 = "mm10", verbose = F, logfc.threshold = 1, min.pct=0.5,test.use = "wilcox")
+    raw_markers = FindMarkers(dir_or_seurat, ident.1 = "hg19", ident.2 = "mm10", verbose = F, logfc.threshold = 1, min.pct=0.5,test.use = "wilcox")
     
     # filter markers
     raw_markers = raw_markers[raw_markers$p_val_adj < 0.05,]
     
     # produce output
     markers = list(
-      "hg19": rownames(raw_markers[raw_markers$avg_logFC > 0]),
-      "mm10": rownames(raw_markers[raw_markers$avg_logFC < 0])
+      "hg19" = rownames(raw_markers[raw_markers$avg_logFC > 0,]),
+      "mm10" = rownames(raw_markers[raw_markers$avg_logFC < 0,])
     )
     
     # compress into single vector w/ names being ct
     if (b_compress) {
-      all_markers = c(markers["hg19"], markers["mm10"])
+      all_markers = c(markers$hg19, markers$mm10)
       names(all_markers) = c(rep("hg19", length(markers["hg19"])), rep("mm10", length(markers["mm10"])))
     }
   }
@@ -377,8 +379,6 @@ get_top_n_markers <- function(dir, dataset, sc, n) {
   all_markers = get_markers(dir, dataset, b_compress=TRUE) # a single vector containing all genes
   
   # TODO REMOVE
-  print(markers)
-  print(rep("#", 20))
   print(all_markers)
   
   all_markers.no_dups <- all_markers[!all_markers %in% names(which(table(all_markers)!=1))]#all_markers[which(table(all_markers)==1)] #removing markers for >1 cell
@@ -427,9 +427,11 @@ get_filtered_hgmm <- function(dir, annotation_path, types) {
   combined = combined[names(which(Matrix::rowSums(combined) > 10)),]
   
   # setting idents
-  Idents(combined) <- c(unfactor(gem_classifications$call[gem_classifications$call != "Multiplet"]))
+  cell_annotations <- c(unfactor(gem_classifications$call[gem_classifications$call != "Multiplet"]))
+  combined <- CreateSeuratObject(combined)
+  Idents(combined) <- cell_annotations
   
-  return(CreateSeuratObject(combined))
+  return(combined)
 }
 
 

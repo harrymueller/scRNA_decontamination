@@ -51,7 +51,7 @@ pawsey:
   process:
   - "decontaminate"
   methods: 
-  - "decontx:no_cell_types"
+  - "soupx:top_background_genes"
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
   original_cell_annotations: "gem_classification.csv"
@@ -63,30 +63,37 @@ pawsey2:
   process:
   - "decontaminate"
   methods: 
-  - "soupx:autoEstCont"
+  - "decontx:no_cell_types"
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
   original_cell_annotations: "gem_classification.csv"
   recluster: False
 
-pawsey_reclus:
-  input_dir: "/data/harry_decontx/decont_project/mouse_kidney/input"
-  output_dir: "/data/harry_decontx/decont_project/mouse_kidney/output_reclus"
+pawsey_wkend:
+  input_dir: "/data/harry_decont_project/hgmm12k/data"
+  output_dir: "/data/harry_decont_project/hgmm12k/results/first_attempt"
+  process:
+  - "decontaminate"
+  methods: 
+  - "decontx:no_cell_types"
+  - "decontx:with_cell_types"
+  dataset: "hgmm12k"
+  sample_ids: "hg19|mm10"
+  original_cell_annotations: "gem_classification.csv"
+  recluster: False
+
+pawsey_mouse_kidney:
+  input_dir: "/data/harry_decont_project/mouse_kidney/input"
+  output_dir: "/data/harry_decont_project/mouse_kidney/output_reclus"
   process:
     - "decontaminate"
   methods: 
-  - "soupx:autoEstCont"
-  - "soupx:background_genes"
   - "soupx:top_background_genes"
-  - "decontx:no_cell_types"
-  - "decontx:with_cell_types"
-  - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
   new_cell_annotations: "../mouse_kidney/output_reclus/no_decontamination/new_clus.tsv"
   gene_signatures: "gene_signatures.xlsx"
-  recluster: True
-  threads: 4
+  recluster: False
 
 benchmarking:
   input_dir: "/home/harry/perkins/benchmarking/input"
