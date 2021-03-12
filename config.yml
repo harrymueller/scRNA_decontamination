@@ -87,7 +87,7 @@ pawsey_mouse_kidney:
   process:
     - "decontaminate"
   methods: 
-  - "soupx:top_background_genes"
+  - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
   new_cell_annotations: "../mouse_kidney/output_reclus/no_decontamination/new_clus.tsv"
