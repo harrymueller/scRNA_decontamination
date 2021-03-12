@@ -17,7 +17,7 @@ get_sample <- function(i, sample_id, method, config, files) {
   # SOUPX
   if (substring(method,0,5)=="soupx") {
     # loads dir in 'SoupChannel' object
-    if (sample_id == "mouse_kidney") {
+    if (sample_id != "hgmm12k") {
       sc = load10X(dir)
     
       marker_file = files$special[i] # setting marker file as dir to gene_sig file
