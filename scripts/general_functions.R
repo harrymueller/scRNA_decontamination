@@ -100,7 +100,7 @@ get_files <- function (config, current_method) {
   } else if (config$dataset == "hgmm12k") {
     files[["CellAnnotations"]] = paste(config$input_dir, config$original_cell_annotations, sep="/")
   }
-
+                           
   files$dir = sapply(repeat_names, FUN = function(x) {
     if (substring(current_method,0,5) == "soupx") 
       paste(files$CellRanger, x, sep="/")
@@ -112,6 +112,12 @@ get_files <- function (config, current_method) {
       paste(files$CellRanger, x, sep="/")
   }, USE.NAMES=F)
   
+  # adds filtered file paths for cellbender
+  if (config$dataset == "mouse_kidney" & current_method == "cellbender") {
+    files$Filtered = sapply(repeat_names, FUN = function(x) {
+      paste(files$Filtered,"/", x,".txt", sep="")
+    })
+  }
   
   # specific locations based on the current method and the sample ids
   if (substring(current_method,0,5) == "soupx") {
