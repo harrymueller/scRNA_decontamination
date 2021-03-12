@@ -83,7 +83,7 @@ get_sample <- function(i, sample_id, method, config, files) {
     }
     
     if (sample_id != "hgmm12k") {
-      filtered = read.csv(dir,header = TRUE,sep = "\t")
+      filtered = read.csv(files$Filtered[i],header = TRUE,sep = "\t")
       cont_matrix = as.matrix(filtered)
     } else if (sample_id == "hgmm12k") {
       cont_matrix = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts 
