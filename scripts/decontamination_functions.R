@@ -80,11 +80,16 @@ get_sample <- function(i, sample_id, method, config, files) {
       stop("No special_files given, but path to filtered files is required for no decontamination")
     }
     
-    if (sample_id == "mouse_kidney") {
+    if (sample_id != "hgmm12k") {
       filtered = read.csv(dir,header = TRUE,sep = "\t")
       cont_matrix = as.matrix(filtered)
     } else if (sample_id == "hgmm12k") {
       cont_matrix = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts 
+    }
+    
+    if (config$run_cellbender) {
+      cellbender_args = c("remove-background", "--input", "input dir", "--output", "output dir","--expected-cells", "numcells")
+      system2("cellbender", cellbender_args)
     }
     
     decont_matrix <- Read10X_h5(dir,use.names=T)
