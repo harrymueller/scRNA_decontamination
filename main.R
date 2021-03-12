@@ -105,17 +105,21 @@ decontaminate_samples <- function (config, files, current_method) {
 # Integrating samples via Seurat::IntegrateData
 ################################################################################################
 integrate_samples <- function (config, files, samples.combined) {
-  print("Finding integration anchors")
-  samples.anchors <- FindIntegrationAnchors(object.list = samples.combined)
- 
-  print("Integrating")
-  samples.combined <- IntegrateData(anchorset = samples.anchors)
-  
-  # If reclustered <- saves new cell annotations
-  if (config$recluster)
-    write.table(as.matrix(Idents(samples.combined)), paste(files$output, "/new_clus.tsv", sep=""), sep="\t")
-  
-  DefaultAssay(samples.combined) <- "integrated"
+  if (config$dataset == "mouse_kidney") {
+    print("Finding integration anchors")
+    samples.anchors <- FindIntegrationAnchors(object.list = samples.combined)
+
+    print("Integrating")
+    samples.combined <- IntegrateData(anchorset = samples.anchors)
+
+    # If reclustered <- saves new cell annotations
+    if (config$recluster)
+      write.table(as.matrix(Idents(samples.combined)), paste(files$output, "/new_clus.tsv", sep=""), sep="\t")
+
+    DefaultAssay(samples.combined) <- "integrated"
+  } else if (config$dataset == "hgmm12k") {
+    # ...
+  }
   
   #### Dimension Reduction
   print("Dimension reduction")
@@ -123,8 +127,8 @@ integrate_samples <- function (config, files, samples.combined) {
   samples.combined <- RunPCA(samples.combined, npcs = 30, verbose = FALSE)
   samples.combined <- RunUMAP(samples.combined, reduction = "pca", dims=1:30)
   
-  # adding metadata <- mostly for plotting the dotplots
-  samples.combined <- adding_metadata(samples.combined)
+  if (config$dataset == "mouse_kidney") # adding metadata <- mostly for plotting the dotplots
+    samples.combined <- adding_metadata(samples.combined)
   
   # saves the object as an rda
   saveRDS(samples.combined,paste(files$output, "Rda/integrated_rd.Rda", sep="/"))
@@ -141,24 +145,33 @@ analyse_samples <- function (config, files, samples.combined) {
   if (!dir.exists(paste(files$output, "plots", sep="/")))
     dir.create(paste(files$output, "plots", sep="/"))
   
-  
-  # backwards compatability with previous analyses
-  if (!("celltype" %in% names(samples.combined@meta.data)))
-    samples.combined <- adding_metadata(samples.combined)
-
-  # Differentially expressed genes
-  analyse_DEGs(config, files, samples.combined)
-  
   # UMAP
   analyse_UMAPs(files, samples.combined)
   
-  # Plotting pie charts of cell types
-  plot_pie_ct(samples.combined, current_method, files$OcraRelDir, config$pie_plot_cts, "preservation")
-  plot_pie_ct(samples.combined, current_method, files$OcraRelDir, config$pie_plot_cts, "method")
-	
-  # Reclustered plots / tables / etc.
-  if (config$recluster == T)
-    analyse_recluster(config, files, samples.combined, current_method)
+  # Mouse_Kidney analysis
+  if (config$dataset == "mouse_kidney") {
+    # backwards compatability with previous analyses
+    if (!("celltype" %in% names(samples.combined@meta.data)))
+      samples.combined <- adding_metadata(samples.combined)
+
+    # Differentially expressed genes
+    analyse_DEGs(config, files, samples.combined)
+
+
+
+    # Plotting pie charts of cell types
+    plot_pie_ct(samples.combined, current_method, files$OcraRelDir, config$pie_plot_cts, "preservation")
+    plot_pie_ct(samples.combined, current_method, files$OcraRelDir, config$pie_plot_cts, "method")
+
+    # Reclustered plots / tables / etc.
+    if (config$recluster == T)
+      analyse_recluster(config, files, samples.combined, current_method)
+  }
+  
+  # hgmm12k analysis
+  else if (config$dataset == "hgmm12k") {
+    # TODO ...
+  }
 }
 
 
@@ -167,28 +180,34 @@ analyse_samples <- function (config, files, samples.combined) {
 # Summarising samples
 ################################################################################################
 summarise_samples <- function (config) {
-  # doesn't require files as files is relative to a single method
-  
-  # check dir exists
-  if (!dir.exists(paste(config$output_dir, "summary", sep="/")))
-    dir.create(paste(config$output_dir, "summary", sep="/"))
-  
-  # summary histogram + summary degs
-  #deg_summary(config$output_dir, 
-  #            c(paste(config$output_dir, "summary", "Summary_Histogram.png", sep="/"),
-  #              paste(config$output_dir, "summary", "DEGs_Summary.xlsx", sep="/")),
-  #            config$methods, 
-  #            config$summary_histogram_labels)
-  
-  if (config$recluster) {
-	  # ARI / NMI -> 1 doc
-	  ari_nmi = concat_ari_nmi(config$output_dir,
-							   paste(config$output_dir, "summary", "ARI_NMI_Summary.xlsx", sep="/"),
-							   config$methods)
+  # summarise mouse_kidney analysis
+  if (config$dataset == "mouse_kidney") {
+    # check dir exists
+    if (!dir.exists(paste(config$output_dir, "summary", sep="/")))
+      dir.create(paste(config$output_dir, "summary", sep="/"))
 
-	  # ARI / NMI histograms
-	  plot_ari_nmi(ari_nmi, c(paste(config$output_dir, "summary", "ARI_Histogram.png", sep="/"),
-							  paste(config$output_dir, "summary", "NMI_Histogram.png", sep="/")))
+    # summary histogram + summary degs
+    deg_summary(config$output_dir, 
+                c(paste(config$output_dir, "summary", "Summary_Histogram.png", sep="/"),
+                  paste(config$output_dir, "summary", "DEGs_Summary.xlsx", sep="/")),
+                config$methods, 
+                config$summary_histogram_labels)
+
+    if (config$recluster) {
+      # ARI / NMI -> 1 doc
+      ari_nmi = concat_ari_nmi(config$output_dir,
+                   paste(config$output_dir, "summary", "ARI_NMI_Summary.xlsx", sep="/"),
+                   config$methods)
+
+      # ARI / NMI histograms
+      plot_ari_nmi(ari_nmi, c(paste(config$output_dir, "summary", "ARI_Histogram.png", sep="/"),
+                  paste(config$output_dir, "summary", "NMI_Histogram.png", sep="/")))
+    }
+  }
+  
+  # summarise hgmm12k dataset
+  else if (config$dataset == "hgmm12k") {
+    # TODO ... 
   }
 }
 
@@ -240,7 +259,7 @@ if (length(intersect(c("decontaminate", "integrate", "analyse"), config$process)
 
     # Analysis
     if ("analyse" %in% config$process) {
-    samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
+      samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
 
       print("Analysing")
       samples.combined = analyse_samples(config, files, samples.combined)
