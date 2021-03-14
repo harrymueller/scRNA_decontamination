@@ -100,7 +100,7 @@ decontaminate_samples <- function (current_method) {
     x <- FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
     return(x)
   })
-  
+
   saveRDS(samples.combined, paste(files$output, "Rda/decontaminated_samples.Rda", sep="/"))
   print("Completed decontamination")
   return(samples.combined)
@@ -147,7 +147,10 @@ analyse_samples <- function (samples.combined) {
   # checks for dir
   if (!dir.exists(paste(files$output, "plots", sep="/")))
     dir.create(paste(files$output, "plots", sep="/"))
-  
+
+  if (config$dataset == "mouse_kidney") # adding metadata
+    samples.combined <- adding_metadata(samples.combined)
+# TODO FIX FOR mouse_kidney
   # UMAP
   Idents(samples.combined) = "celltype"
   p = DimPlot(samples.combined, reduction = "umap",label=F)
@@ -155,9 +158,7 @@ analyse_samples <- function (samples.combined) {
 
   # Mouse_Kidney analysis
   if (config$dataset == "mouse_kidney") {
-    # adding metadata
-    samples.combined <- adding_metadata(samples.combined)
-
+    saveRDS(samples.combined, "~/Downloads/temp.Rda")
     # Differentially expressed genes
     analyse_DEGs(samples.combined)
 

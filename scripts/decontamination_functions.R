@@ -129,7 +129,7 @@ get_sample <- function(i, sample_id, method) {
   # Add cluster information
   if (method != "none")
     Idents(out$seurat) <- cell_annotations
-  
+
   return(out)
 }
 

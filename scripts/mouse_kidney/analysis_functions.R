@@ -9,7 +9,7 @@ adding_metadata <- function(samples.combined) {
   # changing ct annotations of CD_Trans to unknown
   Idents(samples.combined)[which(Idents(samples.combined)=="CD_Trans")] = "Unknown"
   order_paper = config$ct_order_dotplots[which(config$ct_order_dotplots %in% levels(samples.combined))]
-  
+
   #samples.combined <- readRDS(paste(output, "samples_integrated_rd.Rda", sep="/"))
   DefaultAssay(samples.combined) <- "RNA"
   
@@ -27,7 +27,6 @@ adding_metadata <- function(samples.combined) {
     end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="MeOH")
     x <- if (end) str_sub(x,end=-6) else x
   }))
-  
   return(samples.combined)
 }
 
@@ -37,23 +36,25 @@ adding_metadata <- function(samples.combined) {
 # Plots of differentially expressed genes
 ################################################################################################
 analyse_DEGs <- function(samples.combined) {
+  Idents(samples.combined) <- "celltype_method"
+
   # Getting DEGs
   DEGs = get_DEGs(samples.combined, paste(files$output,"/Rda/DEGs_per_celltype.Rda",sep=""))
 
   # Seperating all DEGs into overexpressed and underexpressed
   DEGs.over = get_over_under_DEGs(DEGs, TRUE)   #DEGs, bool_whether_overexpressed
   DEGs.under = get_over_under_DEGs(DEGs, FALSE) #DEGs, bool_whether_overexpressed
-  
+
   # Identify which DEGs are over/under expressed in at least 9 cell types
   genes.over <- get_genes_de(DEGs.over, 8)   #DEGs.selected, num_cells
   genes.under <- get_genes_de(DEGs.under, 8) #DEGs.selected, num_cells
-  
+
   ### Saving DEGs to excel file
   save_DEGs(DEGs, paste(files$output,"/DEGs.xlsx",sep=""), genes.over, genes.under) #DEGs, f_name, genes.over, genes.under
 
   ## Plotting DEGs
   print("Plotting DEGs")
-  DEGs_histogram(DEGs, paste(files$output,"/plots/DEG_histograms.png",sep=""), config$ct_order_dotplots) #DEGs, f_name
+  DEGs_histogram(DEGs) #DEGs, f_name
   DEGs_dotplot_over_under_expression(samples.combined, paste(files$output,"/plots/DEG_higher_expression_9_celltypes.png",sep=""), 
                                      config$ct_order_dotplots, config$genes_ct_dotplots,
                                      genes.over, genes.under)
