@@ -6,8 +6,8 @@ default:
   # ARRAY available options = ["no_decontamination" "soupx:autoEstCont" "soupx:background_genes" "soupx:top_background_genes" 
   #                            "decontX:no_cell_types" "decontX:with_cell_types" "cellbender"]
   methods: ""
-  dataset: ""
-  sample_ids: "BG1_BG20C|BG3_BG21C|BG5_BG22C|BG52_BG20C_MeOH|BG54_BG21C_MeOH|BG56_BG22C_MeOH"
+  dataset: "" # mouse_kidney || hgmm12k
+  sample_ids: "BG1_BG20C|BG3_BG21C|BG5_BG22C|BG52_BG20C_MeOH|BG54_BG21C_MeOH|BG56_BG22C_MeOH" # sample_ids for mouse_kidney || hg19|mm10
   # optional params
   original_cell_annotations: "" #only used for comparison for reclustering w/ no decont
   new_cell_annotations: "" #used for decontamination and comparison
@@ -16,6 +16,7 @@ default:
   quiet: False
   alpha: 0.05
   threads: 1
+  run_cellbender: False
   # list of genes separated by `|`
   genes_ct_dotplots: "Gpx3|Hbb-bs|Hbb-bt|Hba-a2|AY036118|Fxyd2|Gpx1|Hba-a1|Spink1"
   ct_order_dotplots: "PT|Endo|CD_IC|MC|B|DCT_CNT|CNT|DCT|NK|T|CD_PC|aLOH|Podo|MPH|Fib"
@@ -28,57 +29,76 @@ default:
     - "DecontX: No Cell Types"
     - "DecontX: With Cell Types"
     - "CellBender"
-                              
 
 harry:
-  input_dir: "/home/harry/Perkins/data"
-  output_dir: "/home/harry/Perkins/new_results/reclus"
+  input_dir: "/home/harry/Perkins/Human_Mouse/data"
+  output_dir: "/home/harry/Perkins/Human_Mouse/results"
   process:
-    - "analyse"
+  - "decontaminate"
   methods: 
-    - "no_decontamination"
-  dataset: "mouse_kidney"
-  original_cell_annotations: "cell_annotations.xlsx"
-  new_cell_annotations: "../new_results/reclus/no_decontamination/new_clus.tsv"
-  gene_signatures: "cell_type_gene_signatures.xlsx"
-  ocra_dir: "../../new_results/reclus"
-  recluster: True
+  - "no_decontamination"
+  dataset: "hgmm12k"
+  sample_ids: "hg19|mm10"
+  original_cell_annotations: "gem_classification.csv"
+  # new_cell_annotations: "../new_results/reclus/no_decontamination/new_clus.tsv"
+  # gene_signatures: "cell_type_gene_signatures.xlsx"
+  # ocra_dir: "../../new_results/reclus"
+  recluster: False
 
 pawsey:
-  input_dir: "/data/harry_decontx/decont_project/mouse_kidney/input"
-  output_dir: "/data/harry_decontx/decont_project/mouse_kidney/output"
+  input_dir: "/data/harry_decont_project/hgmm12k/data"
+  output_dir: "/data/harry_decont_project/hgmm12k/results/first_attempt"
   process:
-    - "decontaminate"
-    - "integrate"
+  - "decontaminate"
   methods: 
-    - "soupx:background_genes"
-    - "soupx:top_background_genes"
-    - "decontx:no_cell_types"
-    - "decontx:with_cell_types"
-    - "cellbender"
-  dataset: "mouse_kidney"
-  original_cell_annotations: "cell_annotations.xlsx"
-  gene_signatures: "gene_signatures.xlsx"
-  threads: 4
-
-pawsey_reclus:
-  input_dir: "/data/harry_decontx/decont_project/mouse_kidney/input"
-  output_dir: "/data/harry_decontx/decont_project/mouse_kidney/output_reclus"
-  process:
-    - "decontaminate"
-  methods: 
-  - "soupx:autoEstCont"
-  - "soupx:background_genes"
   - "soupx:top_background_genes"
+  dataset: "hgmm12k"
+  sample_ids: "hg19|mm10"
+  original_cell_annotations: "gem_classification.csv"
+  recluster: False
+
+pawsey2:
+  input_dir: "/data/harry_decont_project/hgmm12k/data"
+  output_dir: "/data/harry_decont_project/hgmm12k/results/first_attempt"
+  process:
+  - "decontaminate"
+  methods: 
+  - "cellbender"
+  run_cellbender: True
+  dataset: "hgmm12k"
+  sample_ids: "hg19|mm10"
+  original_cell_annotations: "gem_classification.csv"
+  recluster: False
+
+pawsey_wkend:
+  input_dir: "/data/harry_decont_project/hgmm12k/data"
+  output_dir: "/data/harry_decont_project/hgmm12k/results/first_attempt"
+  process:
+  - "decontaminate"
+  methods: 
+  - "no_decontamination"
+  - "soupx:background_genes"
   - "decontx:no_cell_types"
   - "decontx:with_cell_types"
+  #- "cellbender"
+  run_cellbender: True
+  dataset: "hgmm12k"
+  sample_ids: "hg19|mm10"
+  original_cell_annotations: "gem_classification.csv"
+  recluster: False
+
+pawsey_mouse_kidney:
+  input_dir: "/data/harry_decont_project/mouse_kidney/input"
+  output_dir: "/data/harry_decont_project/mouse_kidney/output_reclus"
+  process:
+    - "decontaminate"
+  methods: 
   - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
   new_cell_annotations: "../mouse_kidney/output_reclus/no_decontamination/new_clus.tsv"
   gene_signatures: "gene_signatures.xlsx"
-  recluster: True
-  threads: 4
+  recluster: False
 
 benchmarking:
   input_dir: "/home/harry/perkins/benchmarking/input"
