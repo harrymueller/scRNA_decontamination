@@ -1,7 +1,7 @@
 default:
   input_dir: ""
   output_dir: ""
-  # ARRAY available options = ["decontaminate" "integrate" "analyse"
+  # ARRAY available options = ["decontaminate" "integrate" "analyse" "summarise"]
   process: ""
   # ARRAY available options = ["no_decontamination" "soupx:autoEstCont" "soupx:background_genes" "soupx:top_background_genes" 
   #                            "decontX:no_cell_types" "decontX:with_cell_types" "cellbender"]
@@ -92,6 +92,8 @@ pawsey_mouse_kidney:
   output_dir: "/data/harry_decont_project/mouse_kidney/output_reclus"
   process:
     - "decontaminate"
+    - "integrate"
+    - "analyse"
   methods: 
   - "cellbender"
   dataset: "mouse_kidney"

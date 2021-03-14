@@ -88,7 +88,6 @@ get_sample <- function(i, sample_id, method) {
     } else if (sample_id == "hgmm12k") {
       cont_matrix = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts 
     }
-    print(files) 
     if (config$run_cellbender) {
       # TODO: Fix for mouse_kidney dataset (specifically files$CellRanger)
       input_dir = paste(head(str_split(dir,"/")[[1]],-1),collapse="/") # removes the file name

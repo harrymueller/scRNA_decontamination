@@ -8,7 +8,7 @@
 ################################################################################################
 deg_summary <- function () {
   # variables
-  input_path = config$output_dir,
+  input_path = config$output_dir
   output_path = c(paste(config$output_dir, "summary", "Summary_Histogram.png", sep="/"),
                   paste(config$output_dir, "summary", "DEGs_Summary.xlsx", sep="/"))
   methods = config$methods
