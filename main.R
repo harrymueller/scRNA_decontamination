@@ -76,7 +76,7 @@ decontaminate_samples <- function (current_method) {
   })
   
   # merging seurat objects
-  if (config$method == "mouse_kidney")
+  if (config$dataset == "mouse_kidney")
 	  samples.combined <- merge(samples.seurat[[1]], samples.seurat[2:6], add.cell.ids = config$sample_ids)
   else
 	  samples.combined <- samples.seurat[[1]]
