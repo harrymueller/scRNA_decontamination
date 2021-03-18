@@ -3,26 +3,58 @@
 
 
 ################################################################################################
+### Adds some metadata to the combined seurat object
+################################################################################################
+adding_metadata <- function(samples.combined) {
+  # changing ct annotations of CD_Trans to unknown
+  Idents(samples.combined)[which(Idents(samples.combined)=="CD_Trans")] = "Unknown"
+  order_paper = config$ct_order_dotplots[which(config$ct_order_dotplots %in% levels(samples.combined))]
+
+  #samples.combined <- readRDS(paste(output, "samples_integrated_rd.Rda", sep="/"))
+  DefaultAssay(samples.combined) <- "RNA"
+  
+  # adding metadata for `celltype_method`, `celltype`, and changing default ident to `celltype_method`
+  samples.combined$celltype_method <- paste(Idents(samples.combined), samples.combined$preservation, sep = "_")
+  samples.combined$celltype <- Idents(samples.combined)
+  Idents(samples.combined) <- "celltype_method"
+  
+  # Following relates to plotting the dotplots
+  samples.combined$celltype.fresh = unlist(lapply(samples.combined$celltype_method, function(x) {
+    end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="fresh")
+    x <- if (end) str_sub(x,end=-7) else x
+  }))
+  samples.combined$celltype.meoh = unlist(lapply(samples.combined$celltype_method, function(x) {
+    end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="MeOH")
+    x <- if (end) str_sub(x,end=-6) else x
+  }))
+  return(samples.combined)
+}
+
+
+
+################################################################################################
 # Plots of differentially expressed genes
 ################################################################################################
-analyse_DEGs <- function(config, files, samples.combined) {
+analyse_DEGs <- function(samples.combined) {
+  Idents(samples.combined) <- "celltype_method"
+
   # Getting DEGs
   DEGs = get_DEGs(samples.combined, paste(files$output,"/Rda/DEGs_per_celltype.Rda",sep=""))
 
   # Seperating all DEGs into overexpressed and underexpressed
   DEGs.over = get_over_under_DEGs(DEGs, TRUE)   #DEGs, bool_whether_overexpressed
   DEGs.under = get_over_under_DEGs(DEGs, FALSE) #DEGs, bool_whether_overexpressed
-  
+
   # Identify which DEGs are over/under expressed in at least 9 cell types
   genes.over <- get_genes_de(DEGs.over, 8)   #DEGs.selected, num_cells
   genes.under <- get_genes_de(DEGs.under, 8) #DEGs.selected, num_cells
-  
+
   ### Saving DEGs to excel file
   save_DEGs(DEGs, paste(files$output,"/DEGs.xlsx",sep=""), genes.over, genes.under) #DEGs, f_name, genes.over, genes.under
 
   ## Plotting DEGs
   print("Plotting DEGs")
-  DEGs_histogram(DEGs, paste(files$output,"/plots/DEG_histograms.png",sep=""), config$ct_order_dotplots) #DEGs, f_name
+  DEGs_histogram(DEGs) #DEGs, f_name
   DEGs_dotplot_over_under_expression(samples.combined, paste(files$output,"/plots/DEG_higher_expression_9_celltypes.png",sep=""), 
                                      config$ct_order_dotplots, config$genes_ct_dotplots,
                                      genes.over, genes.under)
@@ -31,20 +63,9 @@ analyse_DEGs <- function(config, files, samples.combined) {
 
 
 ################################################################################################
-# UMAP plots
-################################################################################################
-analyse_UMAPs <- function(files, samples.combined) {
-  Idents(samples.combined) = "celltype"
-  p = DimPlot(samples.combined, reduction = "umap",label=F)
-  ggsave(paste(files$output, "/plots/umap_plot.png",sep=""),p,width=9,height=7)
-}
-
-
-
-################################################################################################
 # Plots related to reclustering
 ################################################################################################
-analyse_recluster <- function(config, files, samples.combined, current_method) {
+analyse_recluster <- function(samples.combined, current_method) {
   print("Plotting CT after reclustering")
   # save & get contingency table of ct numbers
   tables = contigency_table_ct(config$sample_ids, files$CellAnnotations, 
@@ -69,7 +90,10 @@ analyse_recluster <- function(config, files, samples.combined, current_method) {
 # Plots a pie chart showing the relative proportions of cell-types within all samples
 # Plots a pie chart for each preservation method
 ################################################################################################
-plot_pie_ct <- function (samples, method, output, plot_cts, ident_name) {
+plot_pie_ct <- function (samples, method, ident_name) {
+  output = files$OcraRelDir
+  plot_cts = config$pie_plot_cts
+
   # plotting pie charts for each preservation technique
   Idents(samples) = ident_name
   samples <- SplitObject(samples)

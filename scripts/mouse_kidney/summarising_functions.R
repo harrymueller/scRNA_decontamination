@@ -6,7 +6,13 @@
 ################################################################################################
 # Loads all required libraries
 ################################################################################################
-deg_summary <- function (input_path, output_path, methods, labels) {
+deg_summary <- function () {
+  # variables
+  input_path = config$output_dir
+  output_path = c(paste(config$output_dir, "summary", "Summary_Histogram.png", sep="/"),
+                  paste(config$output_dir, "summary", "DEGs_Summary.xlsx", sep="/"))
+  methods = config$methods
+  labels = config$summary_histogram_labels
   n = length(methods)
   
   # creating files df
@@ -111,7 +117,11 @@ deg_summary <- function (input_path, output_path, methods, labels) {
 ################################################################################################
 # Concats ARI & NMI into 1 df and saves it
 ################################################################################################
-concat_ari_nmi <- function (input_path, output_path, methods) {
+concat_ari_nmi <- function () {
+  # variables
+  input_path = config$output_dir
+  output_path = paste(config$output_dir, "summary", "ARI_NMI_Summary.xlsx", sep="/")
+  methods = config$methods
   n = length(methods)
   
   # reading in files
@@ -150,6 +160,10 @@ concat_ari_nmi <- function (input_path, output_path, methods) {
 # Concats ARI & NMI into 1 df and saves it
 ################################################################################################
 plot_ari_nmi <- function (df, output_path) {
+  # variables
+  df = ari_nmi
+  output_path = c(paste(config$output_dir, "summary", "ARI_Histogram.png", sep="/"),
+                  paste(config$output_dir, "summary", "NMI_Histogram.png", sep="/"))
   n = length(df$Method)
 
   # 'melting' df so that all values are in 1 col

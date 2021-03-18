@@ -2,13 +2,13 @@
 ## Gets all the DEGs and returns a list object
 ################################################################################################
 get_DEGs <- function(samples.combined, save_name=FALSE) {
-  #cell_types = varhandle::unfactor(samples.combined$celltype)
-  #cell_types = names(which(table(cell_types)>10)) #filtering out cell types with less than 10 cells
   c1 = (unique(samples.combined@meta.data$celltype[which(samples.combined@meta.data$preservation=="fresh")]))
   c2 = (unique(samples.combined@meta.data$celltype[which(samples.combined@meta.data$preservation=="MeOH")]))
+
   cell_types = c1[which(c1%in% c2)]
   cell_types = cell_types[which(cell_types != "Unknown")] #removing unknown cell type
-  DEGs = as.list(cell_types)
+
+  DEGs = as.list(cell_types) 
   names(DEGs) <- cell_types
 
   for (ct in cell_types) {
@@ -41,10 +41,9 @@ get_DEGs <- function(samples.combined, save_name=FALSE) {
   })
   names(DEGs) <- cell_types
 	
-  if (save_name != FALSE) {
+  if (save_name != FALSE) 
     saveRDS(DEGs,save_name)
-  }
-  #DEGs = readRDS(paste(output, "DEGs_per_celltype.Rda", sep="/"))
+
   return(DEGs)
 }
 
@@ -112,7 +111,10 @@ save_DEGs <- function(DEGs, f_name, genes.over, genes.under) {
 ################################################################################################
 ### barplots of number of DEGs by (celltype, over/under expression)
 ################################################################################################
-DEGs_histogram <- function(DEGs, f_name, ct_order) {
+DEGs_histogram <- function(DEGs) {
+  f_name = paste(files$output,"/plots/DEG_histograms.png",sep="")
+  ct_order = config$ct_order_dotplots
+
   DEGs.c = do.call("rbind", DEGs)
   ct_order = ct_order[which(ct_order %in% names(DEGs))]
   

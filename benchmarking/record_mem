@@ -1,0 +1,2 @@
+#!/bin/bash
+nohup pidstat -h -r 1 --human >> log_files/usage.txt &

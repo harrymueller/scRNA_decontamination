@@ -4,9 +4,7 @@ args = commandArgs(trailingOnly=TRUE)
 # loading functions from separate scripts
 source("scripts/general_functions.R")
 source("scripts/decontamination_functions.R")
-source("scripts/analysis_functions.R")
-source("scripts/DEGs.R")
-source("scripts/summarising_functions.R")
+source("scripts/clustering.R")
 
 # checking for 'config' pacakge
 if (!requireNamespace('config', quietly=T))
@@ -18,22 +16,33 @@ config <- get_config(args)
 load_libraries()
 print("Config and libraries loaded successfully.")
 
+# loading dataset-specific functions
+if (config$dataset == "mouse_kidney") {
+  source("scripts/mouse_kidney/analysis_functions.R")
+  source("scripts/mouse_kidney/DEGs.R")
+  source("scripts/mouse_kidney/summarising_functions.R")
+} else if (config$dataset == "hgmm12k") {
+  source("scripts/hgmm12k/get_data.R")
+}
+
 ################################################################################################
 # Function to decontaminate samples, save the feature barcode matrix, and return a seurat object
 ################################################################################################
-decontaminate_samples <- function (config, files, current_method) {
+decontaminate_samples <- function (current_method) {
   # checks if folders are created - if not makes them
-  paths = c("", "Rda", "Rda/decontaminated_samples", "matrices")
-  paths = sapply(paths, function(x) paste(files$output,x, sep="/"), USE.NAMES=FALSE)
+  paths = sapply(c("", "Rda", "Rda/decontaminated_samples", "matrices"), 
+                 function(x) paste(files$output,x, sep="/"), USE.NAMES=FALSE)
   for (p in paths) 
     if (!dir.exists(p))
       dir.create(p)
   
+  # creating list to store decontaminated seurat objects
   if (config$dataset == "mouse_kidney") {
     samples = as.list(config$sample_ids)
     names(samples) <- config$sample_ids
     s = seq(length(config$sample_ids))
-  } else if (config$dataset == "hgmm12k") {
+  } 
+  else if (config$dataset == "hgmm12k") {
     samples = as.list("hgmm12k")
     names(samples) = "hgmm12k"
     s = seq(1)
@@ -44,13 +53,13 @@ decontaminate_samples <- function (config, files, current_method) {
     sample_id = names(samples)[i]
     
     print(paste("Starting",sample_id))
-    samples[[sample_id]] = get_sample(i, sample_id, current_method, config, files)
+    samples[[sample_id]] = get_sample(i, sample_id, current_method)
     
     # ensuring formatting of cell barcodes is the same (across all analyses)
     samples[[sample_id]]$seurat = fix_barcodes(samples[[sample_id]]$seurat)
   }
   
-  save_matrices(samples, paste(files$output, "/matrices/",sep=""))
+  save_matrices(samples)
   
   ### Combining seurat objects
   print("Combining seurat objects")
@@ -66,8 +75,8 @@ decontaminate_samples <- function (config, files, current_method) {
     return(x$seurat)
   })
   
-  # merging
-  if (config$method == "mouse_kidney")
+  # merging seurat objects
+  if (config$dataset == "mouse_kidney")
 	  samples.combined <- merge(samples.seurat[[1]], samples.seurat[2:6], add.cell.ids = config$sample_ids)
   else
 	  samples.combined <- samples.seurat[[1]]
@@ -87,13 +96,11 @@ decontaminate_samples <- function (config, files, current_method) {
   # normalises and finds variable features of individual seurats
   samples.combined <- lapply(X = samples.combined, FUN = function(x) {
     x <- NormalizeData(x)
-    if (config$recluster) {
-      x <- reCluster(x, files$GeneSignatures, config$alpha)
-    }
+    if (config$recluster) x <- reCluster(x, files$GeneSignatures, config$alpha)
     x <- FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
     return(x)
   })
-  
+
   saveRDS(samples.combined, paste(files$output, "Rda/decontaminated_samples.Rda", sep="/"))
   print("Completed decontamination")
   return(samples.combined)
@@ -104,31 +111,27 @@ decontaminate_samples <- function (config, files, current_method) {
 ################################################################################################
 # Integrating samples via Seurat::IntegrateData
 ################################################################################################
-integrate_samples <- function (config, files, samples.combined) {
-  if (config$dataset == "mouse_kidney") {
+integrate_samples <- function (samples.combined) {
+  # Integrate samples
+  if (config$dataset == "mouse_kidney") { # TODO <- make it dependant on length of samples.combined
     print("Finding integration anchors")
     samples.anchors <- FindIntegrationAnchors(object.list = samples.combined)
 
     print("Integrating")
     samples.combined <- IntegrateData(anchorset = samples.anchors)
 
-    # If reclustered <- saves new cell annotations
-    if (config$recluster)
-      write.table(as.matrix(Idents(samples.combined)), paste(files$output, "/new_clus.tsv", sep=""), sep="\t")
-
     DefaultAssay(samples.combined) <- "integrated"
-  } #else if (config$dataset == "hgmm12k") {
-    # ...
-  #}
+  } 
+
+  # If reclustered <- saves new cell annotations
+  if (config$recluster)
+    write.table(as.matrix(Idents(samples.combined)), paste(files$output, "/new_clus.tsv", sep=""), sep="\t")
   
   #### Dimension Reduction
   print("Dimension reduction")
   samples.combined <- ScaleData(samples.combined, verbose = FALSE)
   samples.combined <- RunPCA(samples.combined, npcs = 30, verbose = FALSE)
   samples.combined <- RunUMAP(samples.combined, reduction = "pca", dims=1:30)
-  
-  if (config$dataset == "mouse_kidney") # adding metadata <- mostly for plotting the dotplots
-    samples.combined <- adding_metadata(samples.combined)
   
   # saves the object as an rda
   saveRDS(samples.combined,paste(files$output, "Rda/integrated_rd.Rda", sep="/"))
@@ -140,30 +143,32 @@ integrate_samples <- function (config, files, samples.combined) {
 ################################################################################################
 # Analysing samples; mostly plotting
 ################################################################################################
-analyse_samples <- function (config, files, samples.combined) {
+analyse_samples <- function (samples.combined) {
   # checks for dir
   if (!dir.exists(paste(files$output, "plots", sep="/")))
     dir.create(paste(files$output, "plots", sep="/"))
-  
+
+  if (config$dataset == "mouse_kidney") # adding metadata
+    samples.combined <- adding_metadata(samples.combined)
+# TODO FIX FOR mouse_kidney
   # UMAP
-  analyse_UMAPs(files, samples.combined)
-  
+  Idents(samples.combined) = "celltype"
+  p = DimPlot(samples.combined, reduction = "umap",label=F)
+  ggsave(paste(files$output, "/plots/umap_plot.png",sep=""),p,width=9,height=7)
+
   # Mouse_Kidney analysis
   if (config$dataset == "mouse_kidney") {
-    # backwards compatability with previous analyses
-    if (!("celltype" %in% names(samples.combined@meta.data)))
-      samples.combined <- adding_metadata(samples.combined)
-
+    saveRDS(samples.combined, "~/Downloads/temp.Rda")
     # Differentially expressed genes
-    analyse_DEGs(config, files, samples.combined)
+    analyse_DEGs(samples.combined)
 
     # Plotting pie charts of cell types
-    plot_pie_ct(samples.combined, current_method, files$OcraRelDir, config$pie_plot_cts, "preservation")
-    plot_pie_ct(samples.combined, current_method, files$OcraRelDir, config$pie_plot_cts, "method")
+    plot_pie_ct(samples.combined, current_method, "preservation")
+    plot_pie_ct(samples.combined, current_method, "method")
 
     # Reclustered plots / tables / etc.
     if (config$recluster == T)
-      analyse_recluster(config, files, samples.combined, current_method)
+      analyse_recluster(samples.combined, current_method)
   }
   
   # hgmm12k analysis
@@ -177,7 +182,7 @@ analyse_samples <- function (config, files, samples.combined) {
 ################################################################################################
 # Summarising samples
 ################################################################################################
-summarise_samples <- function (config) {
+summarise_samples <- function () {
   # summarise mouse_kidney analysis
   if (config$dataset == "mouse_kidney") {
     # check dir exists
@@ -185,21 +190,12 @@ summarise_samples <- function (config) {
       dir.create(paste(config$output_dir, "summary", sep="/"))
 
     # summary histogram + summary degs
-    deg_summary(config$output_dir, 
-                c(paste(config$output_dir, "summary", "Summary_Histogram.png", sep="/"),
-                  paste(config$output_dir, "summary", "DEGs_Summary.xlsx", sep="/")),
-                config$methods, 
-                config$summary_histogram_labels)
+    deg_summary()
 
     if (config$recluster) {
-      # ARI / NMI -> 1 doc
-      ari_nmi = concat_ari_nmi(config$output_dir,
-                   paste(config$output_dir, "summary", "ARI_NMI_Summary.xlsx", sep="/"),
-                   config$methods)
-
-      # ARI / NMI histograms
-      plot_ari_nmi(ari_nmi, c(paste(config$output_dir, "summary", "ARI_Histogram.png", sep="/"),
-                  paste(config$output_dir, "summary", "NMI_Histogram.png", sep="/")))
+      # ARI / NMI -> 1 doc & histograms
+      ari_nmi = concat_ari_nmi()
+      plot_ari_nmi()
     }
   }
   
@@ -212,7 +208,7 @@ summarise_samples <- function (config) {
 
 
 ################################################################################################
-#start
+# START
 ################################################################################################
 # multithreading
 if (config$threads != 1) {
@@ -228,7 +224,7 @@ if (config$threads != 1) {
 }
 
 
-
+# If any methods in config$process...
 if (length(intersect(c("decontaminate", "integrate", "analyse"), config$process)) > 0) {
   # Looping through methods
   for (current_method in config$methods) {
@@ -242,7 +238,7 @@ if (length(intersect(c("decontaminate", "integrate", "analyse"), config$process)
     # Decontamination
     if ("decontaminate" %in% config$process) {
       print("Decontaminating")
-      samples.combined = decontaminate_samples(config, files, current_method)
+      samples.combined = decontaminate_samples(current_method)
       print("Decontamination completed")
     }
 
@@ -251,7 +247,7 @@ if (length(intersect(c("decontaminate", "integrate", "analyse"), config$process)
     samples.combined <- load_rda(samples.combined, "Rda/decontaminated_samples.Rda")
 
       print("Integrating")
-      samples.combined = integrate_samples(config, files, samples.combined)
+      samples.combined = integrate_samples(samples.combined)
       print("Integration completed")
     }
 
@@ -260,7 +256,7 @@ if (length(intersect(c("decontaminate", "integrate", "analyse"), config$process)
       samples.combined <- load_rda(samples.combined, "Rda/integrated_rd.Rda")
 
       print("Analysing")
-      samples.combined = analyse_samples(config, files, samples.combined)
+      samples.combined = analyse_samples(samples.combined)
       print("Analysis completed")
     }
   }
@@ -269,6 +265,6 @@ if (length(intersect(c("decontaminate", "integrate", "analyse"), config$process)
 # Summary
 if ("summarise" %in% config$process) {    
   print("Summarising")
-  samples.combined = summarise_samples(config)
+  samples.combined = summarise_samples()
   print("Summary completed")
 }
