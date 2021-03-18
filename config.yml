@@ -69,17 +69,15 @@ pawsey2:
   original_cell_annotations: "gem_classification.csv"
   recluster: False
 
-pawsey_wkend:
+pawsey3:
   input_dir: "/data/harry_decont_project/hgmm12k/data"
-  output_dir: "/data/harry_decont_project/hgmm12k/results/first_attempt"
+  output_dir: "/data/harry_decont_project/hgmm12k/results/working"
   process:
   - "decontaminate"
   methods: 
   - "no_decontamination"
   - "soupx:background_genes"
-  - "decontx:no_cell_types"
-  - "decontx:with_cell_types"
-  #- "cellbender"
+  - "soupx:top_background_genes"
   run_cellbender: True
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
