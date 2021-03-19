@@ -17,6 +17,7 @@ default:
   alpha: 0.05
   threads: 1
   run_cellbender: False
+  soupx_auto_vary_params: False
   # list of genes separated by `|`
   genes_ct_dotplots: "Gpx3|Hbb-bs|Hbb-bt|Hba-a2|AY036118|Fxyd2|Gpx1|Hba-a1|Spink1"
   ct_order_dotplots: "PT|Endo|CD_IC|MC|B|DCT_CNT|CNT|DCT|NK|T|CD_PC|aLOH|Podo|MPH|Fib"
@@ -83,6 +84,22 @@ pawsey3:
   sample_ids: "hg19|mm10"
   original_cell_annotations: "gem_classification.csv"
   recluster: False
+
+pawsey4:
+  input_dir: "/data/harry_decont_project/hgmm12k/data"
+  output_dir: "/data/harry_decont_project/hgmm12k/results/working"
+  process:
+  - "decontaminate"
+  methods: 
+  - "no_decontamination"
+  - "soupx:background_genes"
+  - "soupx:top_background_genes"
+  run_cellbender: True
+  dataset: "hgmm12k"
+  sample_ids: "hg19|mm10"
+  original_cell_annotations: "gem_classification.csv"
+  recluster: False
+  soupx_auto_vary_params: True
 
 pawsey_mouse_kidney:
   input_dir: "/data/harry_decont_project/mouse_kidney/input"

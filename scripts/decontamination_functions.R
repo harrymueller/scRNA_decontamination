@@ -40,7 +40,19 @@ get_sample <- function(i, sample_id, method) {
     }
     
     if (method == "soupx:autoEstCont") {
-      sc = autoEstCont(sc)
+      if (config$soupx_auto_vary_params == FALSE)
+        sc = autoEstCont(sc)
+      
+      # Testing varying params to get soupx:autoEstCont to work
+      else if (config$soupx_auto_vary_params == "tfidfMin") {
+        
+      } else if (config$soupx_auto_vary_params == "soupQuantile") {
+        # vary soupQuantile to 0
+
+      } else {
+        # vary tfidfMin & soupQuantile together
+      }
+
     } else if (method =="soupx:background_genes" | method == "soupx:top_background_genes") {
       # getting markers => calculating contamination factor
       if (method == "soupx:background_genes")
@@ -78,9 +90,8 @@ get_sample <- function(i, sample_id, method) {
   } 
   # CELLBENDER
   else if (method == "cellbender") {
-    if (files$special[i] == FALSE) {
+    if (files$special[i] == FALSE) 
       stop("No special_files given, but path to filtered files is required for no decontamination")
-    }
     
     if (sample_id != "hgmm12k") {
       filtered = read.csv(files$Filtered[i],header = TRUE,sep = "\t")
@@ -88,10 +99,12 @@ get_sample <- function(i, sample_id, method) {
     } else if (sample_id == "hgmm12k") {
       cont_matrix = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts 
     }
+
+    # whether to run cellbender OR just read in results
     if (config$run_cellbender) {
       # TODO: Fix for mouse_kidney dataset (specifically files$CellRanger)
-      input_dir = paste(head(str_split(dir,"/")[[1]],-1),collapse="/") # removes the file name
-      cellbender_args = c("remove-background", "--input", files$CellRanger, "--output", input_dir,"--expected-cells", dim(cont_matrix)[2])
+      output_dir = paste(head(str_split(dir,"/")[[1]],-1),collapse="/") # removes the file name
+      cellbender_args = c("remove-background", "--input", files$CellRanger, "--output", output_dir,"--expected-cells", dim(cont_matrix)[2])
       system2("cellbender", cellbender_args)
     }
     
@@ -131,6 +144,31 @@ get_sample <- function(i, sample_id, method) {
     Idents(out$seurat) <- cell_annotations
 
   return(out)
+}
+
+try_autoEstCont <- function(sc, val, iter) {
+# vary tfidfMin to 0
+  return(tryCatch({
+    if (config$soupx_auto_vary_params == "tfidfMin")
+      sc = autoEstCont(sc, tfidfMin = (val-iter))
+    else if (config$soupx_auto_vary_params == "soupQuantile")
+      sc = autoEstCont(sc, soupQuantile = (val-iter))
+    else
+      sc = autoEstCont(sc, tfidfMin = (val[1]-iter[1]), soupQuantile = (val[2]-iter[2]))
+  }))
+
+        tfidfMin = 1
+        success = FALSE
+        while (success) {
+          tryCatch({
+            sc = autoEstCont(sc, tfidfMin)
+          }, error = function(e) {
+            tfidfMin = tfidfMin - 0.25
+            print(paste("Reducing tfidfMin to", tfidfMin))
+          }, finally = function(e) {
+            print(paste("soupx:autoEstCont successful w/ tfidfMin =", tfidfMin))
+          })
+        }
 }
 
 
