@@ -150,7 +150,7 @@ analyse_samples <- function (samples.combined) {
 
   if (config$dataset == "mouse_kidney") # adding metadata
     samples.combined <- adding_metadata(samples.combined)
-# TODO FIX FOR mouse_kidney
+  # TODO FIX FOR mouse_kidney
   # UMAP
   Idents(samples.combined) = "celltype"
   p = DimPlot(samples.combined, reduction = "umap",label=F)
