@@ -45,6 +45,19 @@ harry:
   ocra_dir: "../../Mouse_Kidney/results"
   recluster: False
 
+pc_run_soupx_tweaks:
+  input_dir: "/media/harry/Data/Perkins/Human_Mouse/data"
+  output_dir: "/media/harry/Data/Perkins/Human_Mouse/results/soupx_tweaks_soupQuantile"
+  process:
+  - "decontaminate"
+  methods: 
+  - "soupx:autoEstCont"
+  dataset: "hgmm12k"
+  sample_ids: "hg19|mm10"
+  original_cell_annotations: "gem_classification.csv"
+  recluster: False
+  soupx_auto_vary_params: "soupQuantile"
+
 pawsey:
   input_dir: "/data/harry_decont_project/hgmm12k/data"
   output_dir: "/data/harry_decont_project/hgmm12k/results/first_attempt"

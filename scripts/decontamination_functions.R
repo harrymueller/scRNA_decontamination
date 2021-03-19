@@ -14,7 +14,9 @@ get_sample <- function(i, sample_id, method) {
   
   out = list("sample_id"=sample_id)
   
+  ####################
   # SOUPX
+  ####################
   if (substring(method,0,5)=="soupx") {
     # loads dir in 'SoupChannel' object
     if (sample_id != "hgmm12k") {
@@ -22,6 +24,7 @@ get_sample <- function(i, sample_id, method) {
     
       marker_file = files$special[i] # setting marker file as dir to gene_sig file
     }
+
     else if (sample_id == "hgmm12k") {
       filtered = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)
       marker_file = filtered # setting marker file as seurat object
@@ -32,27 +35,23 @@ get_sample <- function(i, sample_id, method) {
       sc = SoupChannel(raw, filtered)
     }
 	  
+    # adding clusters to sc obj
     sc = setClusters(sc, setNames(cell_annotations, names(cell_annotations))) 
     
     # removing any genes in the SC that are not in the filtered data
-    if (length(sc$soupProfile[,1]) != length(rownames(sc$toc))) {
+    if (length(sc$soupProfile[,1]) != length(rownames(sc$toc)))
       sc$soupProfile = sc$soupProfile[rownames(sc$toc),]
-    }
     
+    # AUTOESTCONT
     if (method == "soupx:autoEstCont") {
       if (config$soupx_auto_vary_params == FALSE)
         sc = autoEstCont(sc)
-      
-      # Testing varying params to get soupx:autoEstCont to work
-      else if (config$soupx_auto_vary_params == "tfidfMin") {
-        
-      } else if (config$soupx_auto_vary_params == "soupQuantile") {
-        # vary soupQuantile to 0
-
-      } else {
-        # vary tfidfMin & soupQuantile together
+      else {
+        print(paste("Trying", config$soupx_auto_vary_params, 0.75))
+        sc = try_autoEstCont(sc, 0.75, 0.25)
       }
 
+    # MARKERS
     } else if (method =="soupx:background_genes" | method == "soupx:top_background_genes") {
       # getting markers => calculating contamination factor
       if (method == "soupx:background_genes")
@@ -68,7 +67,10 @@ get_sample <- function(i, sample_id, method) {
     cont_matrix = sc$toc
   } 
   
+
+  ####################
   # DECONTX
+  ####################
   else if (substring(method,0,7) == "decontx") {
     if (sample_id == "mouse_kidney") {
       filtered = read.csv(dir,header = TRUE,sep = "\t")
@@ -88,11 +90,15 @@ get_sample <- function(i, sample_id, method) {
     }
     
   } 
+
+  ####################
   # CELLBENDER
+  ####################
   else if (method == "cellbender") {
     if (files$special[i] == FALSE) 
       stop("No special_files given, but path to filtered files is required for no decontamination")
     
+    # Data input
     if (sample_id != "hgmm12k") {
       filtered = read.csv(files$Filtered[i],header = TRUE,sep = "\t")
       cont_matrix = as.matrix(filtered)
@@ -121,7 +127,10 @@ get_sample <- function(i, sample_id, method) {
     l = sapply(str_split(colnames(decont_matrix),"_"), function(n) paste(tail(n,1),"-1",sep=""))
     colnames(decont_matrix) = l
   } 
+
+  ####################
   # NO DECONTAMINATION
+  ####################
   else {
     # not actually "decontaminated" - however named this way
     if (sample_id == "mouse_kidney") {
@@ -132,43 +141,57 @@ get_sample <- function(i, sample_id, method) {
     }    
   } 
   
+  # create seurat obj
   out$seurat = CreateSeuratObject(decont_matrix)
   
+  # "fixing" cell annotations for cell bender
   if (method == "cellbender") {
-    # "fixing" cell annotations
     cell_annotations = cell_annotations[names(cell_annotations) %in% names(Idents(out$seurat))]
     cell_annotations = cell_annotations[order(match(names(cell_annotations), names(Idents(out$seurat))))]
   }
-  # Add cluster information
-  if (method != "none")
-    Idents(out$seurat) <- cell_annotations
+
+  # Add cluster information to seurat object
+  Idents(out$seurat) <- cell_annotations
 
   return(out)
 }
 
-try_autoEstCont <- function(sc, val, iter) {
-# vary tfidfMin to 0
-  return(tryCatch({
-    if (config$soupx_auto_vary_params == "tfidfMin")
-      sc = autoEstCont(sc, tfidfMin = (val-iter))
-    else if (config$soupx_auto_vary_params == "soupQuantile")
-      sc = autoEstCont(sc, soupQuantile = (val-iter))
-    else
-      sc = autoEstCont(sc, tfidfMin = (val[1]-iter[1]), soupQuantile = (val[2]-iter[2]))
-  }))
 
-        tfidfMin = 1
-        success = FALSE
-        while (success) {
-          tryCatch({
-            sc = autoEstCont(sc, tfidfMin)
-          }, error = function(e) {
-            tfidfMin = tfidfMin - 0.25
-            print(paste("Reducing tfidfMin to", tfidfMin))
-          }, finally = function(e) {
-            print(paste("soupx:autoEstCont successful w/ tfidfMin =", tfidfMin))
-          })
-        }
+################################################################################################
+# Recursive function to test soupx:autoestcont params until it works
+################################################################################################
+try_autoEstCont <- function(sc, val, iter) {
+  return(tryCatch({
+    # check which param(s) to vary / use
+    # try to calculate with soupx
+    if (config$soupx_auto_vary_params == "tfidfMin")
+      sc = autoEstCont(sc, tfidfMin = (val))
+    else if (config$soupx_auto_vary_params == "soupQuantile")
+      sc = autoEstCont(sc, soupQuantile = (val))
+    else
+      sc = autoEstCont(sc, tfidfMin = val[1], soupQuantile = val[2])
+
+    # on success - print message and return soupchannel object
+    if (config$soupx_auto_vary_params == "tfidfMin" || config$soupx_auto_vary_params == "soupQuantile")
+      print(paste("soupx:autoEstCont successful w/ ", config$soupx_auto_vary_params, "=", val))
+    else 
+      print(paste("soupx:autoEstCont successful w/ tfidfMin and soupQuantile =", val))
+
+    return(sc)
+  }, error = function(e) { # on error - print message & recall this function w/ `val-iter`
+    if (config$soupx_auto_vary_params == "tfidfMin" || config$soupx_auto_vary_params == "soupQuantile")
+      if ((val-iter) >= 0) # check val-iter >= 0
+        print(paste("Reducing", config$soupx_auto_vary_params, "to", val-iter))
+      else 
+        stop(paste("varying", config$soupx_auto_vary_params, "did not work (still erroring @", val,")"))
+    else 
+      if ((val-iter) >= 0) # check val-iter >= 0
+        print(paste("Reducing tfidfMin and soupQuantile to", val-iter))
+      else 
+        stop(paste("varying tfidfMin and soupQuantile did not work (still erroring @ 0,0)"))
+
+    try_autoEstCont(sc, val-iter, iter)
+  }))
 }
 
 
