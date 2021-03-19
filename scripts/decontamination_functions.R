@@ -141,6 +141,9 @@ get_sample <- function(i, sample_id, method) {
     }    
   } 
   
+  ####################
+  # FINAL PROCESSING
+  ####################
   # create seurat obj
   out$seurat = CreateSeuratObject(decont_matrix)
   
