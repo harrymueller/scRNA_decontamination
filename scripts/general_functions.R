@@ -85,6 +85,7 @@ get_files <- function (config, current_method) {
   
   files = list(
     "CellRanger" = paste(config$input_dir, "CellRanger", sep="/"),
+    "CellRangerMerged" = paste(config$input_dir, "CellRanger_merged/raw_gene_bc_matrices", sep="/"),
     "Filtered" = paste(config$input_dir, "Filtered_Feature_Barcode_Matrices", sep="/"),
     "CellBender" = paste(config$input_dir, "CellBender", sep="/"),
     "GeneSignatures" = paste(config$input_dir, config$gene_signatures, sep="/"),

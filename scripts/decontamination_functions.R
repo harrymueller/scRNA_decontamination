@@ -104,7 +104,7 @@ get_sample <- function(i, sample_id, method) {
     if (config$run_cellbender) {
       # TODO: Fix for mouse_kidney dataset (specifically files$CellRanger)
       output_dir = paste(head(str_split(dir,"/")[[1]],-1),collapse="/") # removes the file name
-      cellbender_args = c("remove-background", "--input", files$CellRanger, "--output", output_dir,"--expected-cells", dim(cont_matrix)[2])
+      cellbender_args = c("remove-background", "--input", files$CellRangerMerged, "--output", output_dir,"--expected-cells", dim(cont_matrix)[2])
       system2("cellbender", cellbender_args)
     }
     

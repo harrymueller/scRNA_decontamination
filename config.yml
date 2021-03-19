@@ -87,19 +87,16 @@ pawsey3:
 
 pawsey4:
   input_dir: "/data/harry_decont_project/hgmm12k/data"
-  output_dir: "/data/harry_decont_project/hgmm12k/results/working"
+  output_dir: "/data/harry_decont_project/hgmm12k/results/cellbender"
   process:
   - "decontaminate"
   methods: 
-  - "no_decontamination"
-  - "soupx:background_genes"
-  - "soupx:top_background_genes"
+  - "cellbender"
   run_cellbender: True
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
   original_cell_annotations: "gem_classification.csv"
   recluster: False
-  soupx_auto_vary_params: True
 
 pawsey_mouse_kidney:
   input_dir: "/data/harry_decont_project/mouse_kidney/input"
