@@ -10,7 +10,7 @@ if [ $opt = -r ] || [ $opt = --rPackages ]; then
 	echo "r-base & r-essentials"
 	conda install -c r r-base r-essentials -y
 	echo "varhandle & config"
-	conda install -c conda-forge r-varhandle r-config -y
+	conda install -c conda-forge r-varhandle r-config r-spatstat=1.64_01 -y
 
 	# Seurat
 	echo "seurat"
