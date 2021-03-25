@@ -59,8 +59,8 @@ pc_run_soupx_tweaks:
   soupx_auto_vary_params: "tfidfMin"
 
 pawsey:
-  input_dir: "/data/harry_decont_project/hgmm12k/data"
-  output_dir: "/data/harry_decont_project/hgmm12k/results/decontx"
+  input_dir: "/data/decont_project/hgmm12k/data"
+  output_dir: "/data/decont_project/hgmm12k/results/decontx"
   process:
   - "decontaminate"
   methods: 
@@ -72,8 +72,8 @@ pawsey:
   recluster: False
 
 pawsey2:
-  input_dir: "/data/harry_decont_project/hgmm12k/data"
-  output_dir: "/data/harry_decont_project/hgmm12k/results/working"
+  input_dir: "/data/decont_project/hgmm12k/data"
+  output_dir: "/data/decont_project/hgmm12k/results/working"
   process:
   - "integrate"
   - "analyse"
@@ -89,13 +89,13 @@ pawsey2:
   recluster: False
 
 pawsey4:
-  input_dir: "/data/harry_decont_project/hgmm12k/data"
-  output_dir: "/data/harry_decont_project/hgmm12k/results/cellbender"
+  input_dir: "/data/decont_project/hgmm12k/data"
+  output_dir: "/data/decont_project/hgmm12k/results/cellbender"
   process:
   - "decontaminate"
   methods: 
   - "cellbender"
-  run_cellbender: True
+  run_cellbender: False
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
   original_cell_annotations: "gem_classification.csv"

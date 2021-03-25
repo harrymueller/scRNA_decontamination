@@ -113,7 +113,6 @@ get_sample <- function(i, sample_id, method) {
       cellbender_args = c("remove-background", "--input", files$CellRangerMerged, "--output", output_dir,"--expected-cells", dim(cont_matrix)[2])
       system2("cellbender", cellbender_args)
     }
-
     decont_matrix <- Read10X_h5(dir,use.names=T)
     
     # formatting cell barcodes to be '<sample id>_<barcode>'
