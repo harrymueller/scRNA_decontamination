@@ -121,8 +121,8 @@ integrate_samples <- function (samples.combined) {
     samples.combined <- IntegrateData(anchorset = samples.anchors)
 
     DefaultAssay(samples.combined) <- "integrated"
-  } 
-
+  } else
+    samples.combined <- samples.combined$hgmm12k
   # If reclustered <- saves new cell annotations
   if (config$recluster)
     write.table(as.matrix(Idents(samples.combined)), paste(files$output, "/new_clus.tsv", sep=""), sep="\t")
