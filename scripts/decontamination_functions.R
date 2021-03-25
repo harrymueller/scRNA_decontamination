@@ -109,11 +109,11 @@ get_sample <- function(i, sample_id, method) {
     # whether to run cellbender OR just read in results
     if (config$run_cellbender) {
       # TODO: Fix for mouse_kidney dataset (specifically files$CellRanger)
-      output_dir = paste(head(str_split(dir,"/")[[1]],-1),collapse="/") # removes the file name
+      output_dir = paste(paste(head(str_split(dir,"/")[[1]],-1),collapse="/"),"/",sep="") # removes the file name TODO needs testing - without last / doesn't create dir hgmm12k to store - messes up read
       cellbender_args = c("remove-background", "--input", files$CellRangerMerged, "--output", output_dir,"--expected-cells", dim(cont_matrix)[2])
       system2("cellbender", cellbender_args)
     }
-    
+
     decont_matrix <- Read10X_h5(dir,use.names=T)
     
     # formatting cell barcodes to be '<sample id>_<barcode>'
