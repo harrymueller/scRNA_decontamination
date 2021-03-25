@@ -37,7 +37,7 @@ files=get_files(config, current_method)
 ################################################################################################
 print("Decontaminating")
 # Creates and saves individual R list objects <- previously used `soupx_processing.R` to create the Rda for each sample
-sample = get_sample(sample_id, files$dir, current_method, files$CellAnnotations, files$special, config$is_xlsx[[current_method]])
+get_sample(i, sample_id, current_method)
 
 # ensuring formatting of cell barcodes is the same (across all analyses)
 sample$seurat = fix_barcodes(sample$seurat)
