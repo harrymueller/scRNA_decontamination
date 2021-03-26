@@ -175,10 +175,10 @@ analyse_samples <- function (samples.combined) {
   
   # hgmm12k analysis
   else if (config$dataset == "hgmm12k") {
-    # transcript ct origin
-    identify_transcript_origin()
+    # get DF of transcripts by barcode
+    transcripts = identify_transcript_origin(samples.combined)
 
-    plot_transcripts()
+    plot_transcripts(transcripts)
   }
 }
 
