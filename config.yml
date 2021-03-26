@@ -64,7 +64,6 @@ pawsey:
   process:
   - "decontaminate"
   methods: 
-  - "decontx:no_cell_types"
   - "decontx:with_cell_types"
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
@@ -76,12 +75,9 @@ pawsey2:
   output_dir: "/data/decont_project/hgmm12k/results/working"
   process:
   - "integrate"
-  - "analyse"
   methods: 
-  - "no_decontamination"
-  - "soupx:autoEstCont"
-  - "soupx:background_genes"
-  - "soupx:top_background_genes"
+  - "decontx:no_cell_types"
+  - "cellbender"
   run_cellbender: True
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
@@ -90,9 +86,9 @@ pawsey2:
 
 pawsey4:
   input_dir: "/data/decont_project/hgmm12k/data"
-  output_dir: "/data/decont_project/hgmm12k/results/cellbender"
+  output_dir: "/data/decont_project/hgmm12k/results/working"
   process:
-  - "decontaminate"
+  - "integrate"
   methods: 
   - "cellbender"
   run_cellbender: False
