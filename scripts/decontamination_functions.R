@@ -116,7 +116,10 @@ get_sample <- function(i, sample_id, method) {
     decont_matrix <- Read10X_h5(dir,use.names=T)
     
     # formatting cell barcodes to be '<sample id>_<barcode>'
-    dimnames(decont_matrix)[[2]] = sapply(dimnames(decont_matrix)[[2]], function(x) {paste(sample_id, substring(x, 0, nchar(x)-2), sep="_")}, USE.NAMES=F)
+    if (sample_id != "hgmm12k")
+      dimnames(decont_matrix)[[2]] = sapply(dimnames(decont_matrix)[[2]], function(x) {paste(sample_id, substring(x, 0, nchar(x)-2), sep="_")}, USE.NAMES=F)
+    else # converts to seurat object then back to matrix to convert `_` to `-`
+      decont_matrix = CreateSeuratObject(decont_matrix)@assays$RNA@counts
     
     # only keep filtered cells and genes
     decont_matrix = decont_matrix[,(dimnames(decont_matrix)[[2]] %in% dimnames(cont_matrix)[[2]])]
