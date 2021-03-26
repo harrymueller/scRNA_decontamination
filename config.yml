@@ -65,11 +65,14 @@ pawsey_run_everything:
   - "decontaminate"
   - "integrate"
   methods: 
+<<<<<<< HEAD
   - "no_decontamination"
   - "soupx:autoEstCont"
   - "soupx:background_genes"
   - "soupx:top_background_genes"
   - "decontx:no_cell_types"
+=======
+>>>>>>> 64757c6e3259c7c6c32329095145bd787a237bbc
   - "decontx:with_cell_types"
   - "cellbender"
   dataset: "hgmm12k"
@@ -95,9 +98,9 @@ pawsey_temp:
 
 pawsey4:
   input_dir: "/data/decont_project/hgmm12k/data"
-  output_dir: "/data/decont_project/hgmm12k/results/cellbender"
+  output_dir: "/data/decont_project/hgmm12k/results/working"
   process:
-  - "decontaminate"
+  - "integrate"
   methods: 
   - "cellbender"
   run_cellbender: False
