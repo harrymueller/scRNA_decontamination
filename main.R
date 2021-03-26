@@ -88,7 +88,7 @@ decontaminate_samples <- function (current_method) {
     samples.combined@meta.data$preservation = factor(samples.combined@meta.data$preservation)
   samples.combined@meta.data$method = factor(samples.combined@meta.data$method)
   
-
+  saveRDS(samples.combined, paste(files$output, "Rda/temp.Rda", sep="/"))
   ### Processing prior to integration
   print("Processing prior to integration")
   # splits combined seurat object into each individual seurat
@@ -136,6 +136,7 @@ integrate_samples <- function (samples.combined) {
   samples.combined <- RunUMAP(samples.combined, reduction = "pca", dims=1:30)
   
   # saves the object as an rda
+  print("Saving RDA")
   saveRDS(samples.combined,paste(files$output, "Rda/integrated_rd.Rda", sep="/"))
   return(samples.combined)
 }

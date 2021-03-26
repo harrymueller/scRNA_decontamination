@@ -126,8 +126,8 @@ get_sample <- function(i, sample_id, method) {
     decont_matrix = decont_matrix[(dimnames(decont_matrix)[[1]] %in% dimnames(cont_matrix)[[1]]),]
     
     # reformatting cell barcodes to match barcodes in cell_annotations
-    l = sapply(str_split(colnames(decont_matrix),"_"), function(n) paste(tail(n,1),"-1",sep=""))
-    colnames(decont_matrix) = l
+    if (sample_id != "hgmm12k")
+      colnames(temp) = sapply(str_split(colnames(decont_matrix),"_"), function(n) paste(tail(n,1),"-1",sep=""))
   } 
 
   ####################
