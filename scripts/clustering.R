@@ -136,7 +136,8 @@ reCluster <- function(seurat) {
 get_clusters <- function(path, sample_id, is_xlsx) {
   if (sample_id == "hgmm12k") {
     classifications = read.csv(path)
-
+    classifications = classifications[classifications$call != "Multiplet",] # removing multiplets
+    
     cell_annotations = c(unfactor(classifications$call))
     names(cell_annotations) = classifications$barcode
     return(cell_annotations)
