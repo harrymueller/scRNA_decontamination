@@ -1,4 +1,4 @@
-import pandas
+import pandas as pd
 
 usage_path = "usage.txt"
 output_path = "out.txt"
