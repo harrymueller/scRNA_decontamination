@@ -23,6 +23,7 @@ if (config$dataset == "mouse_kidney") {
   source("scripts/mouse_kidney/summarising_functions.R")
 } else if (config$dataset == "hgmm12k") {
   source("scripts/hgmm12k/get_data.R")
+  source("scripts/hgmm12k/analysis.R")
 }
 
 ################################################################################################
@@ -174,7 +175,10 @@ analyse_samples <- function (samples.combined) {
   
   # hgmm12k analysis
   else if (config$dataset == "hgmm12k") {
-    # TODO ...
+    # transcript ct origin
+    identify_transcript_origin()
+
+    plot_transcripts()
   }
 }
 
