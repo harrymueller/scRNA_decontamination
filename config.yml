@@ -65,9 +65,6 @@ pawsey_run_everything:
   - "decontaminate"
   - "integrate"
   methods: 
-  - "no_decontamination"
-  - "soupx:autoEstCont"
-  - "soupx:background_genes"
   - "soupx:top_background_genes"
   - "decontx:no_cell_types"
   - "decontx:with_cell_types"

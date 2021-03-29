@@ -36,6 +36,7 @@ if [ $opt = -r ] || [ $opt = --rPackages ]; then
 
 	# others
 	conda install -c conda-forge r-htmlwidgets r-vctrs -y
+	conda install -c bioconda bioconductor-limma -y
 ############################################################
 # CellBender (CPU)
 ############################################################
