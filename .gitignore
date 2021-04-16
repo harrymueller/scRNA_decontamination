@@ -2,3 +2,4 @@ pid
 sysstat_notes
 fix_git_ssh
 .gitignore
+log_files
