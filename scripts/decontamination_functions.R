@@ -87,7 +87,7 @@ get_sample <- function(i, sample_id, method) {
       decont_matrix = decontX(cont_matrix, z=as.numeric(factor(cell_annotations)))$resList$estNativeCounts
     } else if (method == "decontx:no_cell_types") {
       decont_matrix = decontX(cont_matrix)$resList$estNativeCounts
-    } else if (method == "decont:paper") {
+    } else if (method == "decontx:paper") {
       RNGkind(sample.kind = "Rounding")
       set.seed(12345)
       decont_matrix = decontX(cont_matrix, z=as.numeric(factor(cell_annotations)), max.iter = 60)$resList$estNativeCounts
