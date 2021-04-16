@@ -104,11 +104,12 @@ pawsey_temp:
 
 pawsey4:
   input_dir: "/data/decont_project/hgmm12k/data"
-  output_dir: "/data/decont_project/hgmm12k/results/working"
+  output_dir: "/data/decont_project/hgmm12k/results"
   process:
+  - "decontaminate"
   - "integrate"
   methods: 
-  - "cellbender"
+  - "decontx:paper"
   run_cellbender: False
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
