@@ -94,12 +94,12 @@ pawsey_run_everything:
 
 pawsey_temp:
   input_dir: "/data/decont_project/hgmm12k/data"
-  output_dir: "/data/decont_project/hgmm12k/results/new"
+  output_dir: "/data/decont_project/hgmm12k/results"
   process:
   - "decontaminate"
   - "integrate"
   methods: 
-  - "no_decontamination"
+  - "cellbender"
   run_cellbender: True
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
