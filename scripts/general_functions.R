@@ -159,8 +159,11 @@ log_print <- function (msg) {
 ################################################################################################
 # Checks if samples.combined is loaded, if not -> loads it from the file
 ################################################################################################
-load_rda <- function (samples.combined, file) {
-  if (is.null(samples.combined)) {
+load_rda <- function (samples.combined, file, load_no_decont = FALSE) {
+  if (load_no_decont) 
+    samples.combined <- readRDS(paste(config$output_dir, "no_decontamination", file, sep="/"))
+  
+  else if (is.null(samples.combined)) {
     print("Reading Rda from file...")
     samples.combined <- readRDS(paste(files$output, file, sep="/"))
   }

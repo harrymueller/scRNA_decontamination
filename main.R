@@ -154,13 +154,12 @@ analyse_samples <- function (samples.combined) {
     samples.combined <- adding_metadata(samples.combined)
   # TODO FIX FOR mouse_kidney
   # UMAP
-  Idents(samples.combined) = "celltype"
+  # Idents(samples.combined) = "celltype"
   p = DimPlot(samples.combined, reduction = "umap",label=F)
   ggsave(paste(files$output, "/plots/umap_plot.png",sep=""),p,width=9,height=7)
 
   # Mouse_Kidney analysis
   if (config$dataset == "mouse_kidney") {
-    saveRDS(samples.combined, "~/Downloads/temp.Rda")
     # Differentially expressed genes
     analyse_DEGs(samples.combined)
 
@@ -174,10 +173,15 @@ analyse_samples <- function (samples.combined) {
   }
   
   # hgmm12k analysis
-  else if (config$dataset == "hgmm12k") {
-    # get DF of transcripts by barcode
-    transcripts = identify_transcript_origin(samples.combined)
+  else if (config$dataset == "hgmm12k" && current_method != "no_decontamination") {
+    # get DF of transcript origins by barcode
+    transcripts_method = identify_transcript_origin(samples.combined)
+    transcripts_none = identify_transcript_origin(load_rda(NULL, "Rda/integrated_rd.Rda", TRUE))
 
+    # combine transcripts for no decont and this method
+    transcripts = combine_transcripts(transcripts_none, transcripts_method)
+    summ <- summarise_transcripts(transcripts)
+    save_summary_transcripts(transcripts, summ)
     plot_transcripts(transcripts)
   }
 }
