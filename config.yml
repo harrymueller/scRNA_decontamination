@@ -51,11 +51,7 @@ harry2:
   process:
     - "analyse"
   methods: 
-  - "soupx:autoEstCont"
-  - "soupx:background_genes"
-  - "soupx:top_background_genes"
-  - "decontx:with_cell_types"
-  - "decontx:no_cell_types"
+  - "cellbender"
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
   original_cell_annotations: "gem_classification.csv"
