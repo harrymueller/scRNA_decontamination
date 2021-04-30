@@ -118,11 +118,14 @@ get_sample <- function(i, sample_id, method) {
     if (config$run_cellbender) {
       # TODO: Fix for mouse_kidney dataset (specifically files$CellRanger)
       # TODO check for output file dir presense
-      output_dir = paste(paste(head(str_split(dir,"/")[[1]],-1),collapse="/"),"/",sep="") # removes the file name TODO needs testing - without last / doesn't create dir hgmm12k to store - messes up read
+      if (sample_id != "hgmm12k")
+        output_dir = paste(files$output, sample_id, sep="/")
+      else
+        output_dir = paste(paste(head(str_split(dir,"/")[[1]],-1),collapse="/"),"/",sep="") # removes the file name TODO needs testing - without last / doesn't create dir hgmm12k to store - messes up read
       cellbender_args = c("remove-background", "--input", "placeholder_value", "--output", output_dir,"--expected-cells", dim(cont_matrix)[2])
       
       if (sample_id != "hgmm12k") 
-        cellbender_args[3] = dir
+        cellbender_args[3] = paste(files$CellRanger, sample_id, sep="/")
       else
         cellbender_args[3] = files$CellRangerMerged
 
