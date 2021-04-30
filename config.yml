@@ -133,9 +133,10 @@ pawsey_mouse_kidney:
 
 benchmarking:
   input_dir: "/data/Perkins/data"
-  output_dir: "/data/benchmarking/output"
+  output_dir: "/data/Perkins/benchmarking"
   process: "decontaminate"
   methods: "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
   gene_signatures: "gene_signatures.xlsx"
+  run_cellbender: True
