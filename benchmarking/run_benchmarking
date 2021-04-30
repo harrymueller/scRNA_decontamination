@@ -26,6 +26,7 @@ echo "START" > $dir/output.log
 # looping through all methods and samples
 for i in {1..6..1}; do
 	m=${methods[$i]}
+	echo $m
 	for id in ${sample_ids[@]}; do
 		nohup Rscript benchmarking/benchmarking.R $id $m $i >> $dir/output.log &
 

@@ -2,7 +2,7 @@
 # SETUP
 ################################################################################################
 args = commandArgs(trailingOnly=TRUE)
-
+print(args)
 # sample id and current method from arguments
 sample_id = args[[1]]
 current_method = args[[2]]
