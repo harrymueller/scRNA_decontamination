@@ -6,7 +6,7 @@ args = commandArgs(trailingOnly=TRUE)
 # sample id and current method from arguments
 sample_id = args[[1]]
 current_method = args[[2]]
-i = args[[3]]
+i = args[[3]]+1
 
 print(paste(rep("#", 25),collapse=""))
 print(paste("Starting", current_method, sample_id))
