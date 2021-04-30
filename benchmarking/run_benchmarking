@@ -24,9 +24,10 @@ echo "PID METHOD SAMPLE_ID" > $dir/pid.txt
 echo "START" > $dir/output.log
 
 # looping through all methods and samples
-for m in ${methods[@]}; do
+for i in {1..6..1}; do
+	m=${methods[$i]}
 	for id in ${sample_ids[@]}; do
-		nohup Rscript benchmarking/benchmarking.R $id $m >> $dir/output.log &
+		nohup Rscript benchmarking/benchmarking.R $id $m $i >> $dir/output.log &
 
 		pid=$!
 		# record pid
