@@ -6,7 +6,7 @@ args = commandArgs(trailingOnly=TRUE)
 # sample id and current method from arguments
 sample_id = args[[1]]
 current_method = args[[2]]
-i = args[[3]]+1
+i = as.integer(args[[3]])+1
 
 print(paste(rep("#", 25),collapse=""))
 print(paste("Starting", current_method, sample_id))
@@ -14,6 +14,7 @@ print(paste("Starting", current_method, sample_id))
 # loading functions from separate scripts
 source("scripts/general_functions.R")
 source("scripts/decontamination_functions.R")
+source("scripts/clustering.R")
 
 # getting config
 config <- get_config("benchmarking", "config.yml")
