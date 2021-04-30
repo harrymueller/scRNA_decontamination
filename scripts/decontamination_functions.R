@@ -126,7 +126,7 @@ get_sample <- function(i, sample_id, method) {
       cellbender_args = c("remove-background", "--input", "placeholder_value", "--output", output_dir,"--expected-cells", dim(cont_matrix)[2])
       
       if (sample_id != "hgmm12k") 
-        cellbender_args[3] = paste(files$CellRanger, sample_id, "raw_gene_bc_matrices", sep="/")
+        cellbender_args[3] = paste(files$CellRanger, sample_id, "raw_gene_bc_matrices", "mm10", sep="/")
       else
         cellbender_args[3] = files$CellRangerMerged
 
