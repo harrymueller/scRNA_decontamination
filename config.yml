@@ -132,10 +132,10 @@ pawsey_mouse_kidney:
   recluster: False
 
 benchmarking:
-  input_dir: "/home/harry/perkins/benchmarking/input"
-  output_dir: "/home/harry/perkins/benchmarking/output"
+  input_dir: "/data/Perkins/data"
+  output_dir: "/data/benchmarking/output"
   process: "decontaminate"
-  methods: "null"
+  methods: "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
   gene_signatures: "gene_signatures.xlsx"
