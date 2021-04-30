@@ -21,7 +21,7 @@ get_sample <- function(i, sample_id, method) {
     # loads dir in 'SoupChannel' object
     if (sample_id != "hgmm12k") {
       sc = load10X(dir)
-    
+
       marker_file = files$special[i] # setting marker file as dir to gene_sig file
     }
 
@@ -35,6 +35,8 @@ get_sample <- function(i, sample_id, method) {
       sc = SoupChannel(raw, filtered)
     }
 	  
+    # TODO add subset filtering (or after adding clusters?)
+
     # adding clusters to sc obj
     sc = setClusters(sc, setNames(cell_annotations, names(cell_annotations))) 
     
@@ -82,6 +84,8 @@ get_sample <- function(i, sample_id, method) {
       storage.mode(cont_matrix) <- "integer"
     }
     
+    # TODO add subset filtering
+
     if (method == "decontx:with_cell_types") {
       ## Cell Annotations
       decont_matrix = decontX(cont_matrix, z=as.numeric(factor(cell_annotations)))$resList$estNativeCounts
@@ -113,8 +117,16 @@ get_sample <- function(i, sample_id, method) {
     # whether to run cellbender OR just read in results
     if (config$run_cellbender) {
       # TODO: Fix for mouse_kidney dataset (specifically files$CellRanger)
+      # TODO check for output file dir presense
       output_dir = paste(paste(head(str_split(dir,"/")[[1]],-1),collapse="/"),"/",sep="") # removes the file name TODO needs testing - without last / doesn't create dir hgmm12k to store - messes up read
-      cellbender_args = c("remove-background", "--input", files$CellRangerMerged, "--output", output_dir,"--expected-cells", dim(cont_matrix)[2])
+      cellbender_args = c("remove-background", "--input", "placeholder_value", "--output", output_dir,"--expected-cells", dim(cont_matrix)[2])
+      
+      if (sample_id != "hgmm12k") 
+        cellbender_args[3] = dir
+      else
+        cellbender_args[3] = files$CellRangerMerged
+
+      print(cellbender_args)
       system2("cellbender", cellbender_args)
     }
     decont_matrix <- Read10X_h5(dir,use.names=T)
@@ -347,4 +359,13 @@ get_top_n_markers <- function(dir, dataset, sc, n) {
   
   markers_top = markers_top[lengths(markers_top) != 0]
   return(markers_top)
+}
+
+
+
+################################################################################################
+# Filters the given seurat object to include only the gene and barcode subset given by subset_i and files$subet_dir
+################################################################################################
+subset_seurat <- function () {
+
 }
