@@ -93,7 +93,7 @@ get_sample <- function(i, sample_id, method) {
       decont_matrix = decontX(cont_matrix)$resList$estNativeCounts
     } else if (method == "decontx:paper") {
       #RNGkind(sample.kind = "Rounding") didn't work
-      set.seed(31415) # doubt that this will change anything
+      #set.seed(12345) <- shouldn't change anything as default seed value for `decontX(...)` is `12345`
       decont_matrix = decontX(cont_matrix, z=as.numeric(factor(cell_annotations)), maxIter = 60)$resList$estNativeCounts
     }
     
@@ -116,23 +116,33 @@ get_sample <- function(i, sample_id, method) {
 
     # whether to run cellbender OR just read in results
     if (config$run_cellbender) {
-      # TODO: Fix for mouse_kidney dataset (specifically files$CellRanger)
-      # TODO check for output file dir presense
-      if (sample_id != "hgmm12k")
+      # TODO: check for mouse kidney data
+      if (sample_id != "hgmm12k") {
+        input_dir  = paste(files$CellRanger, sample_id, "raw_gene_bc_matrices", "mm10", sep="/")
         output_dir = paste(files$output, sample_id, sep="/")
-      else
-        output_dir = paste(paste(head(str_split(dir,"/")[[1]],-1),collapse="/"),"/",sep="") # removes the file name TODO needs testing - without last / doesn't create dir hgmm12k to store - messes up read
-      
-      cellbender_args = c("remove-background", "--input", "placeholder_value", "--output", output_dir,"--expected-cells", dim(cont_matrix)[2])
-      
-      if (sample_id != "hgmm12k") 
-        cellbender_args[3] = paste(files$CellRanger, sample_id, "raw_gene_bc_matrices", "mm10", sep="/")
-      else
-        cellbender_args[3] = files$CellRangerMerged
+        filename   = paste(sample_id, ".h5", sep="")
+      } else {
+        input_dir  = files$CellRangerMerged
+        output_dir = paste(files$output, sample_id, sep="/")
+        filename   = paste(sample_id, ".h5", sep="")
+      }
 
+      # checks for output dir presense - if it doesnt exist, cellbender wont realise until after its finished executing
+      if (!dir.exists(output_dir))
+        dir.create(output_dir)
+
+      cellbender_args = c("remove-background", "--input", input_dir, 
+                          "--output", paste(output_dir, filename, sep="/"),
+                          "--expected-cells", dim(cont_matrix)[2])
+
+      print("##########")
+      print("The arguements for CellBender are:")
       print(cellbender_args)
+      print("##########")
+
       system2("cellbender", cellbender_args)
     }
+    
     decont_matrix <- Read10X_h5(dir,use.names=T)
     
     # formatting cell barcodes to be '<sample id>_<barcode>'

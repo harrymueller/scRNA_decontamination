@@ -50,13 +50,14 @@ harry2:
   input_dir: "/data/Perkins/hgmm12k/data"
   output_dir: "/data/Perkins/hgmm12k/results"
   process:
-  - "analyse"
+  - "decontaminate"
   methods: 
-  - "decontx:paper"
+  - "cellbender"
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
   original_cell_annotations: "gem_classification.csv"
   recluster: False
+  run_cellbender: True
 
 run_soupx_tweaks:
   input_dir: "/media/harry/Data/Perkins/Human_Mouse/data"

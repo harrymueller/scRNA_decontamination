@@ -155,7 +155,8 @@ analyse_samples <- function (samples.combined) {
   # TODO FIX FOR mouse_kidney
   # UMAP
   # Idents(samples.combined) = "celltype"
-  p = DimPlot(samples.combined, reduction = "umap",label=F)
+  p = DimPlot(samples.combined, reduction = "umap",label=F) + 
+      theme(text=element_text(size=16, family="TT Times New Roman")) # missing a certain package for the default font
   ggsave(paste(files$output, "/plots/umap_plot.png",sep=""),p,width=9,height=7)
 
   # Mouse_Kidney analysis
