@@ -110,7 +110,7 @@ pawsey4:
   - "decontaminate"
   - "integrate"
   methods: 
-  - "cellbender"
+  - "decontx:paper"
   run_cellbender: False
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
