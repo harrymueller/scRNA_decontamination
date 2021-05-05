@@ -4,7 +4,8 @@ default:
   # ARRAY available options = ["decontaminate" "integrate" "analyse" "summarise"]
   process: ""
   # ARRAY available options = ["no_decontamination" "soupx:autoEstCont" "soupx:background_genes" "soupx:top_background_genes" 
-  #                            "decontX:no_cell_types" "decontX:with_cell_types" "cellbender"]
+  #                            "decontX:no_cell_types" "decontX:with_cell_types" "decontx:paper" "cellbender"]
+  #                                                             # decontx:paper only available for hgmm12k
   methods: ""
   dataset: "" # mouse_kidney || hgmm12k
   sample_ids: "BG1_BG20C|BG3_BG21C|BG5_BG22C|BG52_BG20C_MeOH|BG54_BG21C_MeOH|BG56_BG22C_MeOH" # sample_ids for mouse_kidney || hg19|mm10
@@ -46,12 +47,12 @@ harry:
   recluster: False
 
 harry2:
-  input_dir: "/data/Perkins/Human_Mouse/data"
-  output_dir: "/data/Perkins/Human_Mouse/results"
+  input_dir: "/data/Perkins/hgmm12k/data"
+  output_dir: "/data/Perkins/hgmm12k/results"
   process:
-    - "analyse"
+  - "analyse"
   methods: 
-  - "cellbender"
+  - "decontx:paper"
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
   original_cell_annotations: "gem_classification.csv"
@@ -132,10 +133,11 @@ pawsey_mouse_kidney:
   recluster: False
 
 benchmarking:
-  input_dir: "/home/harry/perkins/benchmarking/input"
-  output_dir: "/home/harry/perkins/benchmarking/output"
+  input_dir: "/data/Perkins/data"
+  output_dir: "/data/Perkins/benchmarking"
   process: "decontaminate"
-  methods: "null"
+  methods: "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
   gene_signatures: "gene_signatures.xlsx"
+  run_cellbender: True

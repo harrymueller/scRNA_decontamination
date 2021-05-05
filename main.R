@@ -173,16 +173,23 @@ analyse_samples <- function (samples.combined) {
   }
   
   # hgmm12k analysis
-  else if (config$dataset == "hgmm12k" && current_method != "no_decontamination") {
-    # get DF of transcript origins by barcode
-    transcripts_method = identify_transcript_origin(samples.combined)
-    transcripts_none = identify_transcript_origin(load_rda(NULL, "Rda/integrated_rd.Rda", TRUE))
+  else if (config$dataset == "hgmm12k") {
+    if (current_method == "no_decontamination") {
+      transcripts = identify_transcript_origin(load_rda(NULL, "Rda/integrated_rd.Rda", TRUE))
+      summarise_transcripts_before_decont(transcripts)
+    }
 
-    # combine transcripts for no decont and this method
-    transcripts = combine_transcripts(transcripts_none, transcripts_method)
-    summ <- summarise_transcripts(transcripts)
-    save_summary_transcripts(transcripts, summ)
-    plot_transcripts(transcripts)
+    else {
+      # get DF of transcript origins by barcode
+      transcripts_method = identify_transcript_origin(samples.combined)
+      transcripts_none = identify_transcript_origin(load_rda(NULL, "Rda/integrated_rd.Rda", TRUE))
+      
+      # combine transcripts for no decont and this method
+      transcripts = combine_transcripts(transcripts_none, transcripts_method)
+      summ <- summarise_transcripts(transcripts) 
+      save_summary_transcripts(transcripts, summ)
+      plot_transcripts(transcripts)
+    }
   }
 }
 
