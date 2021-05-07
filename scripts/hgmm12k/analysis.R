@@ -1,4 +1,9 @@
 # TODO comment this file
+
+# native_counts = endogenous UMI counts
+# non_native = exogenous
+# fractions = UMI proportions
+
 identify_transcript_origin <- function (samples.combined) {
   # list of genes and origin
   genes = sapply(rownames(samples.combined), function(x) { str_split(x, "-")[[1]][1] })
@@ -38,13 +43,13 @@ identify_transcript_origin <- function (samples.combined) {
 }
 
 
+
 # "merge" method transcripts with none transcripts to produce a DF with counts removed etc.
 combine_transcripts <- function (transcripts_none, transcripts_method) {
   transcripts = data.frame(barcodes = transcripts_none$barcode, celltype = transcripts_none$celltype)
   transcripts$barcodes = unfactor(transcripts$barcodes)
-  
   transcripts_method = transcripts_method[order(match(transcripts_method$barcode, transcripts_none$barcode)),]
-  
+
   # native / endogenous counts
   transcripts["endo_counts_before"] = transcripts_none$native_counts
   transcripts["endo_counts_after"] = transcripts_method$native_counts
@@ -67,6 +72,7 @@ combine_transcripts <- function (transcripts_none, transcripts_method) {
   
   return(transcripts)
 }
+
 
 
 summarise_transcripts <- function (transcripts_combined) {
@@ -104,6 +110,8 @@ summarise_transcripts <- function (transcripts_combined) {
   
   return(summ)
 }
+
+
 
 # summarise and save the measure of dataset prior to decontamination
 # similar to summarise_transripts & save_summary_transcripts
@@ -173,19 +181,25 @@ summarise_transcripts_before_decont = function (transcripts) {
   saveWorkbook(wb, paste(files$output, "/transcript_origins.xlsx",sep="/"))
 }
 
+
+
+# Given the summary and transcripts DF -> saves to an xlsx file 
 save_summary_transcripts <- function (transcripts, summ) {
+  # round to 5 sig fig for the fractions
   summ[3:5] = lapply(summ[3:5], round, 5)
+  # template DF for output
   new = data.frame("Contamination Fraction Statistics"=rep("", 4),
                    "celltype" = c("measure", "hg19", "mm10", "all"))
   
-  new["contamination fraction"] = c("mean", summ$cont_fract[1:3])
-  new["contamination fraction "] = c("std", summ$cont_fract[4:6])
+  # fill template output DF
+  new["exogenous fraction removed"] = c("mean", abs(summ$cont_fract_diff[1:3]))
+  new["exogenous fraction removed "] = c("std", summ$cont_fract_diff[4:6])
+
+  new["exogenous fraction remaining"] = c("mean", summ$cont_fract[1:3])
+  new["exogenous fraction remaining "] = c("std", summ$cont_fract[4:6])
   
-  new["contamination fraction difference"] = c("mean", summ$cont_fract_diff[1:3])
-  new["contamination fraction difference "] = c("std", summ$cont_fract_diff[4:6])
-  
-  new["native counts difference"] = c("mean", summ$endo_count_diff[1:3])
-  new["native counts difference "] = c("std", summ$endo_count_diff[4:6])
+  new["endogenous counts removed"] = c("mean", abs(summ$endo_count_diff[1:3]))
+  new["endogenous counts removed "] = c("std", summ$endo_count_diff[4:6])
   
   # save to excel: first sheet is summary, then full DF (separated by CT)
   wb <- createWorkbook()
@@ -193,6 +207,7 @@ save_summary_transcripts <- function (transcripts, summ) {
   s <- createSheet(wb, "summary")
   addDataFrame(t(new), s, row.names = TRUE, col.names = FALSE)
   
+  # adding "raw" data
   for (ct in c("hg19", "mm10")) {
     s = createSheet(wb, ct)
     addDataFrame(transcripts[transcripts$celltype == ct,], s, row.names = FALSE, col.names = TRUE)
@@ -201,71 +216,61 @@ save_summary_transcripts <- function (transcripts, summ) {
   saveWorkbook(wb, paste(files$output, "/transcript_origins.xlsx",sep="/"))
 }
 
+
+
 # creates a plot of all barcodes, before and after decont, against mouse transcripts and human transcripts
 plot_transcripts <- function (transcripts) {
   for (i in c("before", "after")) {
-    # select cols from transcripts
-    temp = transcripts[c("barcodes", "celltype", paste("endo_counts", i, sep="_"), paste("exo_counts", i, sep="_"))]
-    names(temp) = c("barcodes", "celltype", "human_counts", "mouse_counts")
+    # select certain columns from transcripts and rename
+    subset = transcripts[c("barcodes", "celltype", paste("endo_counts", i, sep="_"), paste("exo_counts", i, sep="_"))]
+    names(subset) = c("barcodes", "celltype", "human_counts", "mouse_counts")
     
-    temp2 = temp$human_counts[temp$celltype=="mm10"]
-    temp$human_counts[temp$celltype=="mm10"] = temp$mouse_counts[temp$celltype=="mm10"]
-    temp$mouse_counts[temp$celltype=="mm10"] = temp2
+    # swap exogenous and endogenous UMIs for mouse cells - so transcripts are specific to either human or mouse 
+    # instead of generic endogenous vs exogenous
+    temp = subset$human_counts[subset$celltype=="mm10"]
+    subset$human_counts[subset$celltype=="mm10"] = subset$mouse_counts[subset$celltype=="mm10"]
+    subset$mouse_counts[subset$celltype=="mm10"] = temp
     
-    temp["group"] = sapply(temp$celltype, function(ct) {
-      paste(ct, i, sep="_")
+    # add a group column (for plot labels)
+    subset["group"] = sapply(subset$celltype, function(ct) {
+      paste(ct, if (i == "before") "prior-decont" else "post-decont", sep=" ")
     },USE.NAMES=F)
     
     if (i == "before")
-      plot_df = temp
+      plot_df = subset
     else
-      plot_df = rbind(plot_df, temp)
+      plot_df = rbind(plot_df, subset)
   }
-  
-  if (FALSE) {
-    # save 3 plots like decontx paper
 
-    # human plot
-    human = ggplot(plot_df[plot_df$celltype == "hg19",], aes(x=human_counts, y=mouse_counts, color=group, alpha=0.5)) +
-                geom_point() + theme(text=element_text(size=16, family="TT Times New Roman")) +
-                ggtitle("UMI Counts of Human Cells") + ylab("Mouse UMI Counts") + xlab("Human UMI Counts") +
-                scale_color_manual(values=c("#27AE60", "#8E44AD"))
-    human = human / (human + ylab("Mouse UMI Counts (0-1000)") + ylim(0, 1000))
-    
-    # mouse plot
-    mouse = ggplot(plot_df[plot_df$celltype == "mm10",], aes(x=human_counts, y=mouse_counts, color=group, alpha=0.5)) + 
-                geom_point() + theme(text=element_text(size=16, family="TT Times New Roman")) +
-                ggtitle("UMI Counts of Mouse Cells") + ylab("Mouse UMI Counts") + xlab("Human UMI Counts") +
-                scale_color_manual(values=c("#E67E22","#3498DB"))
-    mouse = mouse / (mouse + xlab("Human UMI Counts (0-1000)") + xlim(0, 1000))
-    
-    # all plot
-    all <- ggplot(plot_df, aes(x=human_counts, y=mouse_counts, color=group, alpha=0.5)) + 
-                geom_point() + theme(text=element_text(size=16, family="TT Times New Roman")) + 
-                ggtitle("UMI Counts of All Cells") + ylab("Mouse UMI Counts") + xlab("Human UMI Counts") +
-                scale_color_manual(values=c("#27AE60", "#8E44AD", "#E67E22","#3498DB"))
-    ggsave(paste(files$output, "plots/UMIs_for_all_cells.png", sep="/"), all, width=10, height=7)
-    ggsave(paste(files$output, "plots/UMIs_for_human_cells.png", sep="/"), human, width=12, height=7)
-    ggsave(paste(files$output, "plots/UMIs_for_mouse_cells.png", sep="/"), mouse, width=12, height=7)
-  } else { 
-    # save only 1 plot -> [all] + [human / mouse]
-    all <- ggplot(plot_df, aes(x=human_counts, y=mouse_counts, color=group, alpha=0.5)) + 
-                geom_point() + theme(text=element_text(size=16, family="TT Times New Roman")) + 
-                ggtitle("UMI Counts of All Cells") + ylab("Mouse UMI Counts") + xlab("Human UMI Counts") +
-                scale_color_manual(values=c("#27AE60", "#8E44AD", "#E67E22","#3498DB"))
+  # plot of both cell types (x-axis = human UMIs & y-axis = mouse UMIs)
+  all <- ggplot(plot_df, aes(x=human_counts, y=mouse_counts, color=group)) + 
+                  geom_point() + ggtitle("UMI Counts of All Cells") +
+                  ylab("Mouse UMI Counts") + xlab("Human UMI Counts") +
+                  scale_color_manual(values=c("#27AE60", "#8E44AD", "#E67E22","#3498DB"), name="Species and Prior- or\nPost-Decontamination") +
+                  theme(text=element_text(size=16, family="TT Times New Roman"))
 
-    human = ggplot(plot_df[plot_df$celltype == "hg19",], aes(x=human_counts, y=mouse_counts, color=group, alpha=0.5)) +
-                geom_point() + theme(text=element_text(size=16, family="TT Times New Roman")) +
-                ggtitle("UMI Counts of Human Cells") + ylab("Mouse UMI Counts (0-1000)") + xlab("Human UMI Counts") +
-                scale_color_manual(values=c("#27AE60", "#8E44AD")) + ylim(0, 1000)
+  # mouse UMI counts in any human cells with mouse counts > 1000 are set to 1000 
+  plot_df[plot_df$celltype == "hg19" & plot_df$mouse_counts > 1000,"mouse_counts"] = 1000
 
-    mouse = ggplot(plot_df[plot_df$celltype == "mm10",], aes(x=mouse_counts, y=human_counts, color=group, alpha=0.5)) + 
-                geom_point() + theme(text=element_text(size=16, family="TT Times New Roman")) +
-                ggtitle("UMI Counts of Mouse Cells") + ylab("Human UMI Counts (0-1000)") + xlab("Mouse UMI Counts") +
-                scale_color_manual(values=c("#E67E22", "#3498DB")) + ylim(0, 1000)
-      
-    ggsave(paste(files$output, "plots/UMI_plot_for_all_cells.png", sep="/"), all, width=12, height=10)
-    ggsave(paste(files$output, "plots/UMI_plots_for_each_celltype.png", sep="/"), (human / mouse), width=12, height=10)
-    ggsave(paste(files$output, "plots/UMI_plots_combined.png", sep="/"), all / (human / mouse), width=12, height=20)
-  }
+  # plot of ONLY human cells (with mouse UMIs <= 1000) - will remove some cells
+  human = ggplot(plot_df[plot_df$celltype == "hg19",], aes(x=human_counts, y=mouse_counts, color=group)) +
+                  geom_point() + ggtitle("UMI Counts of Human Cells") + 
+                  ylab("Mouse UMI Counts (0-1000)") + xlab("Human UMI Counts") + ylim(0, 1000) +
+                  scale_color_manual(values=c("#27AE60", "#8E44AD"), name="Species and Prior- or\nPost-Decontamination") + 
+                  theme(text=element_text(size=16, family="TT Times New Roman"))
+
+  # human UMI counts in any mouse cells with human counts > 1000 are set to 1000
+  plot_df[plot_df$celltype == "mm10" & plot_df$human_counts > 1000,"human_counts"] = 1000
+
+  # plot of ONLY mouse cells (with human UMIs <= 1000) - will remove some cells
+  mouse = ggplot(plot_df[plot_df$celltype == "mm10",], aes(x=mouse_counts, y=human_counts, color=group)) + 
+                  geom_point() + ggtitle("UMI Counts of Mouse Cells") + 
+                  ylab("Human UMI Counts (0-1000)") + xlab("Mouse UMI Counts") + ylim(0, 1000) +
+                  scale_color_manual(values=c("#E67E22", "#3498DB"), name="Species and Prior- or\nPost-Decontamination") +
+                  theme(text=element_text(size=16, family="TT Times New Roman"))
+
+  # save plots
+  ggsave(paste(files$output, "plots/UMI_plot_for_all_cells.png", sep="/"), all, width=12, height=10)
+  ggsave(paste(files$output, "plots/UMI_plots_for_each_celltype.png", sep="/"), (human / mouse), width=12, height=10)
+  ggsave(paste(files$output, "plots/UMI_plots_combined.png", sep="/"), all / (human / mouse), width=12, height=20)
 }
