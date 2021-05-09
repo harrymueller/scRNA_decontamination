@@ -118,21 +118,6 @@ pawsey4:
   original_cell_annotations: "gem_classification.csv"
   recluster: False
 
-pawsey_mouse_kidney:
-  input_dir: "/data/harry_decont_project/mouse_kidney/input"
-  output_dir: "/data/harry_decont_project/mouse_kidney/output_reclus"
-  process:
-    - "decontaminate"
-    - "integrate"
-    - "analyse"
-  methods: 
-  - "cellbender"
-  dataset: "mouse_kidney"
-  original_cell_annotations: "cell_annotations.xlsx"
-  new_cell_annotations: "../mouse_kidney/output_reclus/no_decontamination/new_clus.tsv"
-  gene_signatures: "gene_signatures.xlsx"
-  recluster: False
-
 benchmarking:
   input_dir: "/data/Perkins/data"
   output_dir: "/data/Perkins/benchmarking"
@@ -142,3 +127,23 @@ benchmarking:
   original_cell_annotations: "cell_annotations.xlsx"
   gene_signatures: "gene_signatures.xlsx"
   run_cellbender: True
+
+stability_testing:
+  input_dir: "/data/Perkins/stability_testing/data"
+  output_dir: "/data/Perkins/stability_testing/results"
+  process: 
+  - "decontaminate"
+  - "integrate"
+  methods:
+  - "soupx:autoEstCont"
+  - "soupx:background_genes"
+  - "soupx:top_background_genes"
+  - "decontx:no_cell_types"
+  - "decontx:with_cell_types"
+  - "cellbender"
+  dataset: "mouse_kidney" #TODO
+  original_cell_annotations: "cell_annotations.xlsx" #TODO check that this aligns automatically
+  gene_signatures: "gene_signatures.xlsx" #TODO check that this aligns automatically
+  run_cellbender: True
+  stability_testing: True # in main.R -> adds index to end of input_dir and output_dir
+ 

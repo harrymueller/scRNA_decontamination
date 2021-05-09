@@ -13,6 +13,13 @@ if (!requireNamespace('config', quietly=T))
 # getting config and loading libs
 print("Getting the config and loading libraries...")
 config <- get_config(args)
+
+# appends index to end of input and output if testing algorithm stability
+if (config$stability_testing) {
+  config$input_dir = paste(config$input_dir, args[[2]], sep="/")
+  config$output_dir = paste(config$output_dir, args[[2]], sep="/")
+}
+
 load_libraries()
 print("Config and libraries loaded successfully.")
 
