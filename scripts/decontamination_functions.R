@@ -143,8 +143,10 @@ get_sample <- function(i, sample_id, method) {
       system2("cellbender", cellbender_args)
     }
     
-    decont_matrix <- Read10X_h5(dir,use.names=T)
-    
+    # TODO: TEMP
+    #decont_matrix <- Read10X_h5(dir,use.names=T)
+    decont_matrix <- Read10X_h5(paste("/data/Perkins/benchmarking/cellbender/", sample_id, "/", sample_id, ".h5",sep=""), use.names=T)
+
     # formatting cell barcodes to be '<sample id>_<barcode>'
     if (sample_id != "hgmm12k")
       dimnames(decont_matrix)[[2]] = sapply(dimnames(decont_matrix)[[2]], function(x) {paste(sample_id, substring(x, 0, nchar(x)-2), sep="_")}, USE.NAMES=F)
@@ -157,7 +159,7 @@ get_sample <- function(i, sample_id, method) {
     
     # reformatting cell barcodes to match barcodes in cell_annotations
     if (sample_id != "hgmm12k")
-      colnames(temp) = sapply(str_split(colnames(decont_matrix),"_"), function(n) paste(tail(n,1),"-1",sep=""))
+      colnames(decont_matrix) = sapply(str_split(colnames(decont_matrix),"_"), function(n) paste(tail(n,1),"-1",sep=""))
   } 
 
   ####################
