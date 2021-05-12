@@ -64,6 +64,7 @@ harry2:
   - "soupx:top_background_genes"
   - "decontx:no_cell_types"
   - "decontx:with_cell_types"
+  - "decontx:paper"
   - "cellbender"
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"

@@ -186,6 +186,12 @@ save_summary_transcripts <- function (transcripts, summ) {
   })
   summ[5] = lapply(summ[5], round, 2)
 
+  if (F) { # for use in results
+    print(paste(abs(summ[6, "exo_fract_diff"]), abs(summ[9, "exo_fract_diff"]),
+              abs(summ[6, "exo_fract_after"]), abs(summ[9, "exo_fract_after"]),
+              abs(summ[6, "endo_counts_diff"]), abs(summ[9, "endo_counts_diff"]),
+              abs(summ[6, "endo_fract_diff"]), abs(summ[9, "endo_fract_diff"]), sep=","))
+  }
   # template DF for output
   new = data.frame("Contamination Fraction Statistics"=rep("", 4),
                    "celltype" = c("measure", "hg19", "mm10", "all"))
