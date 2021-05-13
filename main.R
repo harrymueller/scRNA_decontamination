@@ -196,7 +196,9 @@ analyse_samples <- function (samples.combined) {
       transcripts = combine_transcripts(transcripts_none, transcripts_method)
       summ <- summarise_transcripts(transcripts) 
       save_summary_transcripts(transcripts, summ)
-      plot_transcripts(transcripts)
+      
+      plot_exo_endo_transcripts(transcripts)
+      plot_before_after_transcripts(transcripts)
     }
   }
 }

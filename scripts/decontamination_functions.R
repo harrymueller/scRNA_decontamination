@@ -117,16 +117,14 @@ get_sample <- function(i, sample_id, method) {
     # whether to run cellbender OR just read in results
     if (config$run_cellbender) {
       # TODO: check for mouse kidney data
-      if (sample_id != "hgmm12k") {
+      if (sample_id != "hgmm12k") 
         input_dir  = paste(files$CellRanger, sample_id, "raw_gene_bc_matrices", "mm10", sep="/")
-        output_dir = paste(files$output, sample_id, sep="/")
-        filename   = paste(sample_id, ".h5", sep="")
-      } else {
+      else 
         input_dir  = files$CellRangerMerged
-        output_dir = paste(files$output, sample_id, sep="/")
-        filename   = paste(sample_id, ".h5", sep="")
-      }
 
+      output_dir = paste(files$output, sample_id, sep="/")
+      filename   = paste(sample_id, ".h5", sep="")
+      
       # checks for output dir presense - if it doesnt exist, cellbender wont realise until after its finished executing
       if (!dir.exists(output_dir))
         dir.create(output_dir)
@@ -142,10 +140,11 @@ get_sample <- function(i, sample_id, method) {
 
       system2("cellbender", cellbender_args)
     }
-    
-    # TODO: TEMP
-    #decont_matrix <- Read10X_h5(dir,use.names=T)
-    decont_matrix <- Read10X_h5(paste("/data/Perkins/benchmarking/cellbender/", sample_id, "/", sample_id, ".h5",sep=""), use.names=T)
+
+    if (config$benchmarking)
+      decont_matrix <- Read10X_h5(paste(output_dir, "/", sample_id, "_filtered.h5", sep=""), use.names=T)
+    else
+      decont_matrix <- Read10X_h5(dir, use.names=T)
 
     # formatting cell barcodes to be '<sample id>_<barcode>'
     if (sample_id != "hgmm12k")
@@ -273,7 +272,12 @@ fix_barcodes <- function(seurat) {
 # Creates a tsv for each `sc.decont$toc` object in samples - prior to merging/integration 
 ################################################################################################
 save_matrices <- function(samples) {
-  file_dir = paste(files$output, "/matrices/",sep="")
+  if (config$benchmarking) # different directories for benchmarking and normal operation
+    file_dir = paste(files$output, sample_id, "matrices/", sep="/")
+    if (!dir.exists(file_dir))
+      dir.create(file_dir)
+  else
+    file_dir = paste(files$output, "/matrices/",sep="")
 
   lapply(samples, function(x) {
     print(paste("Saving",x$sample_id))

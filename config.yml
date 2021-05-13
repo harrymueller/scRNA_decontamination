@@ -2,7 +2,7 @@ default:
   input_dir: ""
   output_dir: ""
   # ARRAY available options = ["decontaminate" "integrate" "analyse" "summarise"]
-  process: ""
+  process: "null"
   # ARRAY available options = ["no_decontamination" "soupx:autoEstCont" "soupx:background_genes" "soupx:top_background_genes" 
   #                            "decontX:no_cell_types" "decontX:with_cell_types" "decontx:paper" "cellbender"]
   #                                                             # decontx:paper only available for hgmm12k
@@ -32,8 +32,9 @@ default:
     - "DecontX: With Cell Types"
     - "CellBender"
   stability_testing: False
+  benchmarking: False
 
-harry:
+harry_mm: # mousekidney pc
   input_dir: "/data/Perkins/Mouse_Kidney/data"
   output_dir: "/data/Perkins/Mouse_Kidney/results"
   process:
@@ -53,7 +54,7 @@ harry:
   ocra_dir: "../../Mouse_Kidney/results"
   recluster: False
 
-harry2:
+harry_hgmm: # hgmm12k pc
   input_dir: "/data/Perkins/hgmm12k/data"
   output_dir: "/data/Perkins/hgmm12k/results"
   process:
@@ -73,8 +74,8 @@ harry2:
   run_cellbender: False
 
 run_soupx_tweaks:
-  input_dir: "/media/harry/Data/Perkins/Human_Mouse/data"
-  output_dir: "/media/harry/Data/Perkins/Human_Mouse/results/soupx_tweaks_soupQuantile"
+  input_dir: "/data/Perkins/Human_Mouse/data"
+  output_dir: "/data/Perkins/Human_Mouse/results/soupx_tweaks_soupQuantile"
   process:
   - "decontaminate"
   methods: 
@@ -85,25 +86,7 @@ run_soupx_tweaks:
   recluster: False
   soupx_auto_vary_params: "tfidfMin"
 
-pawsey_run_everything:
-  input_dir: "/data/decont_project/hgmm12k/data"
-  output_dir: "/data/decont_project/hgmm12k/results/new"
-  process:
-  - "decontaminate"
-  - "integrate"
-  methods: 
-  - "soupx:top_background_genes"
-  - "decontx:no_cell_types"
-  - "decontx:with_cell_types"
-  - "cellbender"
-  dataset: "hgmm12k"
-  sample_ids: "hg19|mm10"
-  original_cell_annotations: "gem_classification.csv"
-  recluster: False
-  run_cellbender: True
-  soupx_auto_vary_params: "tfidfMin"
-
-pawsey_temp:
+pawsey_hgmm:
   input_dir: "/data/decont_project/hgmm12k/data"
   output_dir: "/data/decont_project/hgmm12k/results"
   process:
@@ -112,20 +95,6 @@ pawsey_temp:
   methods: 
   - "cellbender"
   run_cellbender: True
-  dataset: "hgmm12k"
-  sample_ids: "hg19|mm10"
-  original_cell_annotations: "gem_classification.csv"
-  recluster: False
-
-pawsey4:
-  input_dir: "/data/decont_project/hgmm12k/data"
-  output_dir: "/data/decont_project/hgmm12k/results"
-  process:
-  - "decontaminate"
-  - "integrate"
-  methods: 
-  - "decontx:paper"
-  run_cellbender: False
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
   original_cell_annotations: "gem_classification.csv"
@@ -140,6 +109,18 @@ benchmarking:
   original_cell_annotations: "cell_annotations.xlsx"
   gene_signatures: "gene_signatures.xlsx"
   run_cellbender: True
+  benchmarking: True
+
+benchmarking_pc:
+  input_dir: "/data/Perkins/Mouse_Kidney/data"
+  output_dir: "/data/Perkins/benchmark_testing"
+  process: "decontaminate"
+  methods: "cellbender"
+  dataset: "mouse_kidney"
+  original_cell_annotations: "cell_annotations.xlsx"
+  gene_signatures: "gene_signatures.xlsx"
+  run_cellbender: True
+  benchmarking: True
 
 stability_testing:
   input_dir: "/data/Perkins/stability_testing/data"

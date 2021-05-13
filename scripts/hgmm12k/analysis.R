@@ -187,10 +187,11 @@ save_summary_transcripts <- function (transcripts, summ) {
   summ[5] = lapply(summ[5], round, 2)
 
   if (F) { # for use in results
-    print(paste(abs(summ[6, "exo_fract_diff"]), abs(summ[9, "exo_fract_diff"]),
-              abs(summ[6, "exo_fract_after"]), abs(summ[9, "exo_fract_after"]),
-              abs(summ[6, "endo_counts_diff"]), abs(summ[9, "endo_counts_diff"]),
-              abs(summ[6, "endo_fract_diff"]), abs(summ[9, "endo_fract_diff"]), sep=","))
+    print(paste(current_method, ",",
+              abs(summ[6, "exo_fract_diff"]), " (", abs(summ[9, "exo_fract_diff"]), "),",
+              abs(summ[6, "exo_fract_after"]), " (", abs(summ[9, "exo_fract_after"]), "),",
+              abs(summ[6, "endo_counts_diff"]), " (", abs(summ[9, "endo_counts_diff"]), "),",
+              abs(summ[6, "endo_fract_diff"]), " (", abs(summ[9, "endo_fract_diff"]), ")", sep=""))
   }
   # template DF for output
   new = data.frame("Contamination Fraction Statistics"=rep("", 4),
@@ -224,9 +225,8 @@ save_summary_transcripts <- function (transcripts, summ) {
 }
 
 
-
 # creates a plot of all barcodes, before and after decont, against mouse transcripts and human transcripts
-plot_transcripts <- function (transcripts) {
+plot_exo_endo_transcripts <- function (transcripts) {
   for (i in c("before", "after")) {
     # select certain columns from transcripts and rename
     subset = transcripts[c("barcodes", "celltype", paste("endo_counts", i, sep="_"), paste("exo_counts", i, sep="_"))]
@@ -280,4 +280,16 @@ plot_transcripts <- function (transcripts) {
   ggsave(paste(files$output, "plots/UMI_plot_for_all_cells.png", sep="/"), all, width=12, height=10)
   ggsave(paste(files$output, "plots/UMI_plots_for_each_celltype.png", sep="/"), (human / mouse), width=12, height=10)
   ggsave(paste(files$output, "plots/UMI_plots_combined.png", sep="/"), all / (human / mouse), width=12, height=20)
+}
+
+plot_before_after_transcripts <- function (transcripts) {
+  # plot of ONLY human cells (with mouse UMIs <= 1000) - will remove some cells
+  all = ggplot(transcripts, aes(x=exo_counts_before, y=exo_counts_after, color=celltype)) +
+                  geom_point(alpha = 0.5) + ggtitle("Human Cells: Exogenous UMI") + geom_abline(slope=1, intercept=0) +
+                  ylab("Exogenous UMI Counts Post") + xlab("Exogenous UMI Counts Prior") +
+                  theme(text=element_text(size=16, family="TT Times New Roman")) + 
+                  ylim(0, 4000) + xlim(0,4000) # Limit to ensure all plots are same size for comparison <- should be dynamic NOT hardcoded
+
+  # save plots
+  ggsave(paste(files$output, "plots/UMI_plot_of_exo_post_prior.png", sep="/"), all, width=12, height=10)
 }

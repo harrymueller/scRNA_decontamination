@@ -87,7 +87,7 @@ get_files <- function (config, current_method) {
     "CellRanger" = paste(config$input_dir, "CellRanger", sep="/"),
     "CellRangerMerged" = paste(config$input_dir, "CellRanger_merged/raw_gene_bc_matrices", sep="/"),
     "Filtered" = paste(config$input_dir, "Filtered_Feature_Barcode_Matrices", sep="/"),
-    "CellBender" = paste(config$input_dir, "CellBender", sep="/"),
+    "CellBender" = paste(config$input_dir, "cellbender", sep="/"),
     "GeneSignatures" = paste(config$input_dir, config$gene_signatures, sep="/"),
     "output" = paste(config$output_dir, current_method, sep="/"),
     "OcraRelDir" = paste(config$ocra_dir, current_method, sep="/")
