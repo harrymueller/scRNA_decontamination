@@ -27,7 +27,7 @@ echo "PID METHOD SAMPLE_ID" > $dir/pid.txt
 echo "START" > $dir/output.log
 
 # looping through all methods and samples
-for i in {0}; do
+for i in {0..0}; do
 	m=${methods[$i]}
 	echo $m
 	for id in ${sample_ids[@]}; do
