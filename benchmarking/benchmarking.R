@@ -17,7 +17,7 @@ source("scripts/decontamination_functions.R")
 source("scripts/clustering.R")
 
 # getting config
-config <- get_config("benchmarking_pc", "config.yml")
+config <- get_config("benchmarking", "config.yml")
 config$sample_ids = sample_id
 config$methods=c(current_method)
 
