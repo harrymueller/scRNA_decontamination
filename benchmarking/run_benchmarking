@@ -17,14 +17,17 @@ dir=/data/Perkins/benchmarking/output
 # START PIDSTAT for RAM AND CPU
 nohup pidstat -h -r -u -C R 1 --human >> $dir/usage.txt &
 pid_r=$!
+nohup pidstat -h -r -u -C python3 1 --human >> $dir/python.txt &
+pid_c=$!
 
 echo $pid_r >> pid
+echo $pid_c >> pid
 
 echo "PID METHOD SAMPLE_ID" > $dir/pid.txt
 echo "START" > $dir/output.log
 
 # looping through all methods and samples
-for i in {0..5..1}; do
+for i in {0..0}; do
 	m=${methods[$i]}
 	echo $m
 	for id in ${sample_ids[@]}; do
@@ -43,3 +46,4 @@ done
 
 # killing pidstat processes
 kill -9 $pid_r
+kill -9 $pid_c

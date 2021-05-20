@@ -272,11 +272,11 @@ fix_barcodes <- function(seurat) {
 # Creates a tsv for each `sc.decont$toc` object in samples - prior to merging/integration 
 ################################################################################################
 save_matrices <- function(samples) {
-  if (config$benchmarking) # different directories for benchmarking and normal operation
+  if (config$benchmarking) { # different directories for benchmarking and normal operation
     file_dir = paste(files$output, sample_id, "matrices/", sep="/")
     if (!dir.exists(file_dir))
       dir.create(file_dir)
-  else
+  } else
     file_dir = paste(files$output, "/matrices/",sep="")
 
   lapply(samples, function(x) {
@@ -378,14 +378,4 @@ get_top_n_markers <- function(dir, dataset, sc, n) {
   })
   
   markers_top = markers_top[lengths(markers_top) != 0]
-  return(markers_top)
-}
-
-
-
-################################################################################################
-# Filters the given seurat object to include only the gene and barcode subset given by subset_i and files$subet_dir
-################################################################################################
-subset_seurat <- function () {
-
 }
