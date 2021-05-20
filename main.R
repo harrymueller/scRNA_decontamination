@@ -194,10 +194,10 @@ analyse_samples <- function (samples.combined) {
       
       # combine transcripts for no decont and this method
       transcripts = combine_transcripts(transcripts_none, transcripts_method)
-      summ <- summarise_transcripts(transcripts) 
-      save_summary_transcripts(transcripts, summ)
+      #summ <- summarise_transcripts(transcripts) 
+      #save_summary_transcripts(transcripts, summ)
       
-      plot_exo_endo_transcripts(transcripts)
+      #plot_exo_endo_transcripts(transcripts)
       plot_before_after_transcripts(transcripts)
     }
   }

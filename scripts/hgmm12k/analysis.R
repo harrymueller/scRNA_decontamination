@@ -285,8 +285,8 @@ plot_exo_endo_transcripts <- function (transcripts) {
 plot_before_after_transcripts <- function (transcripts) {
   # plot of ONLY human cells (with mouse UMIs <= 1000) - will remove some cells
   all = ggplot(transcripts, aes(x=exo_counts_before, y=exo_counts_after, color=celltype)) +
-                  geom_point(alpha = 0.5) + ggtitle("Human Cells: Exogenous UMI") + geom_abline(slope=1, intercept=0) +
-                  ylab("Exogenous UMI Counts Post") + xlab("Exogenous UMI Counts Prior") +
+                  geom_point(alpha = 0.5) + ggtitle("Comparison of Exogenous UMIs Post- and Prior-Decontamination") + geom_abline(slope=1, intercept=0) +
+                  ylab("Exogenous UMI Counts Post-Decontamination") + xlab("Exogenous UMI Counts Prior-Decontamination") +
                   theme(text=element_text(size=16, family="TT Times New Roman")) + 
                   ylim(0, 4000) + xlim(0,4000) # Limit to ensure all plots are same size for comparison <- should be dynamic NOT hardcoded
 
