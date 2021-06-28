@@ -25,7 +25,7 @@ get_sample <- function(i, sample_id, method) {
       marker_file = files$special[i] # setting marker file as dir to gene_sig file
     }
 
-    else if (sample_id == "hgmm12k") {
+    else if (sample_id == "hgmm12k" & !config$stability_testing) {
       filtered = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)
       marker_file = filtered # setting marker file as seurat object
       
@@ -34,9 +34,10 @@ get_sample <- function(i, sample_id, method) {
       raw = get_raw_hgmm(files$CellRanger, config$sample_ids)@assays$RNA@counts
       sc = SoupChannel(raw, filtered)
     }
-	  
-    # TODO add subset filtering (or after adding clusters?)
-
+    else if (sample_id == "hgmm12k" & !config$stability_testing) {
+      
+    }
+	
     # adding clusters to sc obj
     sc = setClusters(sc, setNames(cell_annotations, names(cell_annotations))) 
     
@@ -84,16 +85,12 @@ get_sample <- function(i, sample_id, method) {
       storage.mode(cont_matrix) <- "integer"
     }
     
-    # TODO add subset filtering
-
     if (method == "decontx:with_cell_types") {
       ## Cell Annotations
       decont_matrix = decontX(cont_matrix, z=as.numeric(factor(cell_annotations)))$resList$estNativeCounts
     } else if (method == "decontx:no_cell_types") {
       decont_matrix = decontX(cont_matrix)$resList$estNativeCounts
     } else if (method == "decontx:paper") {
-      #RNGkind(sample.kind = "Rounding") didn't work
-      #set.seed(12345) <- shouldn't change anything as default seed value for `decontX(...)` is `12345`
       decont_matrix = decontX(cont_matrix, z=as.numeric(factor(cell_annotations)), maxIter = 60)$resList$estNativeCounts
     }
     
@@ -119,7 +116,7 @@ get_sample <- function(i, sample_id, method) {
       # TODO: check for mouse kidney data
       if (sample_id != "hgmm12k") 
         input_dir  = paste(files$CellRanger, sample_id, "raw_gene_bc_matrices", "mm10", sep="/")
-      else 
+      else if (sample_id == "hgmm12k")
         input_dir  = files$CellRangerMerged
 
       output_dir = paste(files$output, sample_id, sep="/")

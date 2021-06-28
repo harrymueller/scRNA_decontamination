@@ -54,6 +54,19 @@ harry_mm: # mousekidney pc
   ocra_dir: "../../Mouse_Kidney/results"
   recluster: False
 
+subset_reclus_pt_cells: # mousekidney pc
+  input_dir: "/data/Perkins/Mouse_Kidney/results/reclus"
+  output_dir: "/data/Perkins/Mouse_Kidney/results/subset_reclus_pt_cells"
+  process:
+    - "analyse"
+  methods: 
+    - "no_decontamination"
+    - "soupx:top_background_genes"
+    - "decontx:with_cell_types"
+    - "cellbender"
+  dataset: "mouse_kidney"
+  original_cell_annotations: "cell_annotations.xlsx"
+
 harry_hgmm: # hgmm12k pc
   input_dir: "/data/Perkins/hgmm12k/data"
   output_dir: "/data/Perkins/hgmm12k/results"
@@ -123,21 +136,17 @@ benchmarking_pc:
   benchmarking: True
 
 stability_testing:
-  input_dir: "/data/Perkins/stability_testing/data"
-  output_dir: "/data/Perkins/stability_testing/results"
+  input_dir: "/data/Perkins/stability_testing/data_genes"
+  output_dir: "/data/Perkins/stability_testing/results_genes"
   process: 
   - "decontaminate"
   - "integrate"
+  - "analyse"
   methods:
-  - "soupx:autoEstCont"
   - "soupx:background_genes"
-  - "soupx:top_background_genes"
-  - "decontx:no_cell_types"
-  - "decontx:with_cell_types"
-  - "cellbender"
-  dataset: "mouse_kidney" #TODO
-  original_cell_annotations: "cell_annotations.xlsx" #TODO check that this aligns automatically
-  gene_signatures: "gene_signatures.xlsx" #TODO check that this aligns automatically
+  dataset: "hgmm12k"
+  sample_ids: "hg19|mm10"
+  original_cell_annotations: "../gem_classification.csv"
+  recluster: False
   run_cellbender: True
-  # in main.R -> adds index to end of input_dir and output_dir
   stability_testing: True

@@ -6,18 +6,25 @@
 ### Adds some metadata to the combined seurat object
 ################################################################################################
 adding_metadata <- function(samples.combined) {
+  samples.combined$celltype_method <- Idents(samples.combined)
+
+  samples.combined$celltype <- sapply(samples.combined$celltype_method, function(annotation) {
+    split = c(str_split(annotation, "_", simplify = T))
+    return(paste(split[1:length(split)-1], collapse="_"))
+  })
+
+  Idents(samples.combined) = samples.combined$celltype
+
   # changing ct annotations of CD_Trans to unknown
-  Idents(samples.combined)[which(Idents(samples.combined)=="CD_Trans")] = "Unknown"
+  if (any(Idents(samples.combined)=="CD_Trans"))
+    dents(samples.combined)[which(Idents(samples.combined)=="CD_Trans")] = "Unknown"
+
   order_paper = config$ct_order_dotplots[which(config$ct_order_dotplots %in% levels(samples.combined))]
 
   #samples.combined <- readRDS(paste(output, "samples_integrated_rd.Rda", sep="/"))
   DefaultAssay(samples.combined) <- "RNA"
   
-  # adding metadata for `celltype_method`, `celltype`, and changing default ident to `celltype_method`
-  samples.combined$celltype_method <- paste(Idents(samples.combined), samples.combined$preservation, sep = "_")
-  samples.combined$celltype <- Idents(samples.combined)
-  Idents(samples.combined) <- "celltype_method"
-  
+  Idents(samples.combined) = samples.combined$celltype_method
   # Following relates to plotting the dotplots
   samples.combined$celltype.fresh = unlist(lapply(samples.combined$celltype_method, function(x) {
     end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="fresh")

@@ -1,3 +1,6 @@
+################################################################################################
+# RUNS DECONTAMINATION, INTEGRATION, ANALYSIS DEPENDING ON CONFIG
+################################################################################################
 # command line args
 args = commandArgs(trailingOnly=TRUE)
 
@@ -8,17 +11,15 @@ source("scripts/clustering.R")
 
 # checking for 'config' pacakge
 if (!requireNamespace('config', quietly=T))
-  stop("R Package 'config' not installed.") # DO NOT LOAD CONFIG - CLASHES W/ SEURAT MERGE
+  stop("R Package 'config' not installed.") # DO NOT LOAD CONFIG - CLASHES W/ SEURAT MERGE - still needs to be installeds
 
 # getting config and loading libs
 print("Getting the config and loading libraries...")
 config <- get_config(args)
 
 # appends index to end of input and output if testing algorithm stability
-if (config$stability_testing) {
-  config$input_dir = paste(config$input_dir, args[[2]], sep="/")
-  config$output_dir = paste(config$output_dir, args[[2]], sep="/")
-}
+if (config$stability_testing)
+  SUBSET_INDEX = args[[2]]
 
 load_libraries()
 print("Config and libraries loaded successfully.")
@@ -163,7 +164,7 @@ analyse_samples <- function (samples.combined) {
   # UMAP
   # Idents(samples.combined) = "celltype"
   p = DimPlot(samples.combined, reduction = "umap",label=F) + 
-      theme(text=element_text(size=16, family="TT Times New Roman")) # missing a certain package for the default font
+      theme(text=element_text(size=16, family="TT Times New Roman")) 
   ggsave(paste(files$output, "/plots/umap_plot.png",sep=""),p,width=9,height=7)
 
   # Mouse_Kidney analysis
@@ -258,7 +259,11 @@ if (length(intersect(c("decontaminate", "integrate", "analyse"), config$process)
     print(paste("Starting",current_method))
     print(paste(rep("#",30),collapse=""))
 
-    files = get_files(config, current_method)
+    if (config$stability_testing)
+      files = get_files(config, current_method, SUBSET_INDEX)
+    else
+      files = get_files(config, current_method)
+
     samples.combined=NULL
 
     # Decontamination

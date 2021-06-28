@@ -77,31 +77,61 @@ get_config <- function(args, file=F) {
 ################################################################################################
 # Gets all file locations based on the config file and the current method
 ################################################################################################
-get_files <- function (config, current_method) {
+get_files <- function (config, current_method, subset_index = F) {
   if (config$dataset == "mouse_kidney")
-    repeat_names = config$sample_ids
-  else if (config$dataset == "hgmm12k")
-    repeat_names = c("hgmm12k")
-  
-  files = list(
-    "CellRanger" = paste(config$input_dir, "CellRanger", sep="/"),
-    "CellRangerMerged" = paste(config$input_dir, "CellRanger_merged/raw_gene_bc_matrices", sep="/"),
-    "Filtered" = paste(config$input_dir, "Filtered_Feature_Barcode_Matrices", sep="/"),
-    "CellBender" = paste(config$input_dir, "cellbender", sep="/"),
-    "GeneSignatures" = paste(config$input_dir, config$gene_signatures, sep="/"),
-    "output" = paste(config$output_dir, current_method, sep="/"),
-    "OcraRelDir" = paste(config$ocra_dir, current_method, sep="/")
-  )
-  
-  if (config$dataset == "mouse_kidney") {
-    files[["CellAnnotations"]] = if (config$is_xlsx[[current_method]]) 
-      paste(config$input_dir, config$original_cell_annotations, sep="/") 
-    else 
-      paste(config$input_dir, config$new_cell_annotations, sep="/")
-  } else if (config$dataset == "hgmm12k") {
-    files[["CellAnnotations"]] = paste(config$input_dir, config$original_cell_annotations, sep="/")
+      repeat_names = config$sample_ids
+    else if (config$dataset == "hgmm12k")
+      repeat_names = c("hgmm12k")
+
+  if (subset_index != F) {
+    files = list(
+      "CellRanger"        = paste(config$input_dir, subset_index, sep="/"),
+      "CellRangerMerged"  = paste(config$input_dir, subset_index, sep="/"),
+      "CellBender"        = paste(config$input_dir, "cellbender", subset_index, sep="/"),
+      "output"            = paste(config$output_dir, current_method, subset_index, sep="/"),
+      "CellAnnotations"   = paste(config$input_dir, config$original_cell_annotations, sep="/")
+    )
+  } else { 
+    files = list(
+      "CellRanger" = paste(config$input_dir, "CellRanger", sep="/"),
+      "CellRangerMerged" = paste(config$input_dir, "CellRanger_merged/raw_gene_bc_matrices", sep="/"),
+      "Filtered" = paste(config$input_dir, "Filtered_Feature_Barcode_Matrices", sep="/"),
+      "CellBender" = paste(config$input_dir, "cellbender", sep="/"),
+      "GeneSignatures" = paste(config$input_dir, config$gene_signatures, sep="/"),
+      "output" = paste(config$output_dir, current_method, sep="/"),
+      "OcraRelDir" = paste(config$ocra_dir, current_method, sep="/")
+    )
+    
+    if (config$dataset == "mouse_kidney") {
+      files[["CellAnnotations"]] = if (config$is_xlsx[[current_method]]) 
+        paste(config$input_dir, config$original_cell_annotations, sep="/") 
+      else 
+        paste(config$input_dir, config$new_cell_annotations, sep="/")
+    } else if (config$dataset == "hgmm12k") {
+      files[["CellAnnotations"]] = paste(config$input_dir, config$original_cell_annotations, sep="/")
+    }
+    
+    # adds filtered file paths for cellbender
+    if (config$dataset == "mouse_kidney" & current_method == "cellbender") {
+      files$Filtered = sapply(repeat_names, FUN = function(x) {
+        paste(files$Filtered,"/", x,".txt", sep="")
+      })
+    }
+    
+    # specific locations based on the current method and the sample ids
+    if (substring(current_method,0,5) == "soupx") {
+      files$special = rep(files$GeneSignatures, length(config$sample_ids))
+    } else if (current_method == "cellbender") {
+      files$special = sapply(repeat_names, function(x) {
+        paste(files$Filtered,"/", x,".txt", sep="")
+      }, USE.NAMES=F)
+    } else if (current_method == "no_decontamination") { 
+      files$special = sapply(config$sample_ids, function(x) {
+        paste(files$Filtered,"/", x,".txt", sep="")
+      }, USE.NAMES=F)
+    }
   }
-                           
+
   files$dir = sapply(repeat_names, FUN = function(x) {
     if (substring(current_method,0,5) == "soupx") 
       paste(files$CellRanger, x, sep="/")
@@ -112,26 +142,6 @@ get_files <- function (config, current_method) {
     else
       paste(files$CellRanger, x, sep="/")
   }, USE.NAMES=F)
-  
-  # adds filtered file paths for cellbender
-  if (config$dataset == "mouse_kidney" & current_method == "cellbender") {
-    files$Filtered = sapply(repeat_names, FUN = function(x) {
-      paste(files$Filtered,"/", x,".txt", sep="")
-    })
-  }
-  
-  # specific locations based on the current method and the sample ids
-  if (substring(current_method,0,5) == "soupx") {
-    files$special = rep(files$GeneSignatures, length(config$sample_ids))
-  } else if (current_method == "cellbender") {
-    files$special = sapply(repeat_names, function(x) {
-      paste(files$Filtered,"/", x,".txt", sep="")
-    }, USE.NAMES=F)
-  } else if (current_method == "no_decontamination") { 
-    files$special = sapply(config$sample_ids, function(x) {
-      paste(files$Filtered,"/", x,".txt", sep="")
-    }, USE.NAMES=F)
-  }
   
   return(files)
 }
