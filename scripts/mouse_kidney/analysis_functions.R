@@ -6,37 +6,47 @@
 ### Adds some metadata to the combined seurat object
 ################################################################################################
 adding_metadata <- function(samples.combined) {
-  samples.combined$celltype_method <- Idents(samples.combined)
-
-  samples.combined$celltype <- sapply(samples.combined$celltype_method, function(annotation) {
-    split = c(str_split(annotation, "_", simplify = T))
-    return(paste(split[1:length(split)-1], collapse="_"))
-  })
-
-  Idents(samples.combined) = samples.combined$celltype
-
+  # assumes Idents is celltype and contains $preservation
+  if (!("celltype" %in% colnames(samples.combined@meta.data))) {
+    samples.combined@meta.data$celltype = Idents(samples.combined)
+    # celltype_method
+    samples.combined@meta.data$celltype_method = paste(samples.combined$celltype, samples.combined$preservation, sep="_")
+  }
+  
+  if (F) {
+    # LEGACY CODE
+    samples.combined$celltype_method <- Idents(samples.combined)
+    
+    samples.combined$celltype <- sapply(samples.combined$celltype_method, function(annotation) {
+      split = c(str_split(annotation, "_", simplify = T))
+      return(paste(split[1:length(split)-1], collapse="_"))
+    }, simplify = TRUE)
+  }
+  
+  Idents(samples.combined) = "celltype"
+  
   # changing ct annotations of CD_Trans to unknown
   if (any(Idents(samples.combined)=="CD_Trans"))
-    dents(samples.combined)[which(Idents(samples.combined)=="CD_Trans")] = "Unknown"
-
+    Idents(samples.combined)[which(Idents(samples.combined)=="CD_Trans")] = "Unknown"
+  
   order_paper = config$ct_order_dotplots[which(config$ct_order_dotplots %in% levels(samples.combined))]
-
+  
   #samples.combined <- readRDS(paste(output, "samples_integrated_rd.Rda", sep="/"))
   DefaultAssay(samples.combined) <- "RNA"
   
-  Idents(samples.combined) = samples.combined$celltype_method
-  # Following relates to plotting the dotplots
-  samples.combined$celltype.fresh = unlist(lapply(samples.combined$celltype_method, function(x) {
-    end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="fresh")
-    x <- if (end) str_sub(x,end=-7) else x
-  }))
-  samples.combined$celltype.meoh = unlist(lapply(samples.combined$celltype_method, function(x) {
-    end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="MeOH")
-    x <- if (end) str_sub(x,end=-6) else x
-  }))
+  if (!("celltype.fresh" %in% colnames(samples.combined@meta.data))) {
+    Idents(samples.combined) = samples.combined$celltype_method
+    # Following relates to plotting the dotplots
+    samples.combined$celltype.fresh = unlist(lapply(samples.combined$celltype_method, function(x) {
+      end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="fresh")
+      x <- if (end) str_sub(x,end=-7) else x
+    }))
+    samples.combined$celltype.meoh = unlist(lapply(samples.combined$celltype_method, function(x) {
+      end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="MeOH")
+      x <- if (end) str_sub(x,end=-6) else x
+    }))}
   return(samples.combined)
 }
-
 
 
 ################################################################################################
@@ -108,38 +118,44 @@ plot_pie_ct <- function (samples, method, ident_name) {
 	
   lapply(samples, function(x) {
     type=unique(x@meta.data[[ident_name]])
-    df = data.frame(xtabs(~x@meta.data$celltype))
-	  
-    df$labels = unfactor(df[,1])
-    df[,1]=NULL
+    if (type != "decont") {
+      df = data.frame(xtabs(~x@meta.data$celltype))
+      
+      df$labels = unfactor(df[,1])
+      df[,1]=NULL
 
-    # creates a new category for other, containing all cts not in plot_cts
-    df = rbind(df[which(df$labels %in% plot_cts),], c(sum(df$Freq[which(!(df$labels %in% plot_cts))]),"Other"))
-    
-    df$Freq = as.integer(df$Freq)
-    
-    # proportions
-    df$prop = df$Freq / sum(df$Freq) *100
-    
-    # ordering cts - for comparing different analyses
-    df = df[order(match(df$labels, c(plot_cts, "Other"))),]
+      # creates a new category for other, containing all cts not in plot_cts
+      df = rbind(df[which(df$labels %in% plot_cts),], c(sum(df$Freq[which(!(df$labels %in% plot_cts))]),"Other"))
+      
+      df$Freq = as.integer(df$Freq)
+      
+      # proportions
+      df$prop = df$Freq / sum(df$Freq) *100
+      
+      # ordering cts - for comparing different analyses
+      df = df[order(match(df$labels, c(plot_cts, "Other"))),]
 
-    df$labels = c(plot_cts, "Other")
-    
-    # Labels 
-    df$labels = factor(df$labels, levels=df$labels)
+      df$labels = c(plot_cts, "Other")
+      
+      # Labels 
+      df$labels = factor(df$labels, levels=df$labels)
 
-    # plotting
-    fig <- plot_ly(df, labels = ~labels, values = ~prop, type = 'pie',textinfo = 'label+percent', sort=F, textfont = list(size = 20))
-    fig <- fig %>% layout(#title = paste(method, " (", type,"); Cell type proportions", sep=""),
-                          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-                          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-                          margin=list(l=50, r=50, t=150, b=50),
-                          showlegend = F)
+      # plotting
+      fig <- plot_ly(df, labels = ~labels, values = ~prop, type = 'pie',textinfo = 'label+percent', sort=F, textfont = list(size = 20))
+      fig <- fig %>% layout(#title = paste(method, " (", type,"); Cell type proportions", sep=""),
+                            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                            margin=list(l=50, r=50, t=150, b=50),
+                            showlegend = F)
 
-    # using ocra to save as image
-    # always displays error - even though it saves
-    orca(fig, file=paste(output, "/plots/", ident_name, "_", method, "_", type, "_ct_pie.png",sep=""),scale=3)
+      # using ocra to save as image
+      # always displays error - even though it saves
+      library("processx")
+      tryCatch(expr = {
+        # orca would only work on my PC by turning on debug mode - then closing the HTML popup
+        #orca(fig, file=paste(output, "/plots/", ident_name, "_", method, "_", type, "_ct_pie.png",sep=""),scale=3, verbose = TRUE)
+      })
+    }
   })
 }
 

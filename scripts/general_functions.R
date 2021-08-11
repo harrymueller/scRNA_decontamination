@@ -9,7 +9,7 @@ load_libraries <- function () {
   # libs
   required_libs = c(
     c("Seurat", "readxl", "varhandle", "MASS", "dplyr", "tidyverse"),
-    if ("decontaminate" %in% config$process) c("SoupX", "celda") else NULL,
+    if ("decontaminate" %in% config$process) c("SoupX", "celda", "Matrix", "qlcMatrix", "FastCAR") else NULL,
     if ("analyse" %in% config$process) c("ggplot2", "xlsx", "reshape2","plotly","cowplot","patchwork") else NULL,
 	if ("summarise" %in% config$process) c("ggplot2", "xlsx", "reshape2", "stringr", "ggforce") else NULL
   )

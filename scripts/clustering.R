@@ -8,7 +8,7 @@ reCluster <- function(seurat) {
   alpha = config$alpha
 
   metadata_length_pre = length(names(seurat@meta.data))
-  gene_sigs = get_markers(gene_sig_file, dataset) #TODO
+  gene_sigs = get_markers(gene_sig_file, config$dataset)
   names(gene_sigs)[which(names(gene_sigs) == "DCT-CNT")] = "DCT_CNT"
   
   # adding module scores per gene

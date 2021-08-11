@@ -7,7 +7,7 @@
 ################################################################################################
 get_sample <- function(i, sample_id, method) {
   dir = files$dir[i]
-  
+
   ## Cell Annotations
   if (method != "none")
     cell_annotations = get_clusters(files$CellAnnotations, sample_id, config$is_xlsx[[current_method]])
@@ -33,9 +33,6 @@ get_sample <- function(i, sample_id, method) {
       filtered = filtered@assays$RNA@counts
       raw = get_raw_hgmm(files$CellRanger, config$sample_ids)@assays$RNA@counts
       sc = SoupChannel(raw, filtered)
-    }
-    else if (sample_id == "hgmm12k" & !config$stability_testing) {
-      
     }
 	
     # adding clusters to sc obj
@@ -69,7 +66,30 @@ get_sample <- function(i, sample_id, method) {
     decont_matrix = adjustCounts(sc)
     cont_matrix = sc$toc
   } 
-  
+
+
+
+  ####################
+  # FastCAR
+  ####################
+  else if (method=="fastcar") {
+    if (sample_id != "hgmm12k") {
+      # needs gzipped files (ie barcodes.tsv.gz, features.tsv.gz, etc.)
+      cell = read.cell.matrix(paste(dir, "filtered_gene_bc_matrices/mm10", sep="/")) # filtered
+      full = read.full.matrix(paste(dir, "raw_gene_bc_matrices/mm10", sep="/")) # raw
+    }
+
+    else if (sample_id == "hgmm12k" & !config$stability_testing) {
+      cell = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts # filtered
+      full = get_raw_hgmm(files$CellRanger, config$sample_ids)@assays$RNA@counts # raw
+    }
+	
+    # mm kidney emptyDropletCutoff, contaminationChanceCutoff = 100,0.05
+    ambientProfile = determine.background.to.remove(full, cell, 300, 0.03)
+    decont_matrix  = remove.background(cell, ambientProfile)
+  } 
+
+
 
   ####################
   # DECONTX
@@ -93,7 +113,6 @@ get_sample <- function(i, sample_id, method) {
     } else if (method == "decontx:paper") {
       decont_matrix = decontX(cont_matrix, z=as.numeric(factor(cell_annotations)), maxIter = 60)$resList$estNativeCounts
     }
-    
   } 
 
   ####################
@@ -163,9 +182,12 @@ get_sample <- function(i, sample_id, method) {
   ####################
   else {
     # not actually "decontaminated" - however named this way
-    if (sample_id == "mouse_kidney") {
-      filtered = read.csv(dir,header = TRUE,sep = "\t")
-      decont_matrix = as.matrix(filtered)
+    if (sample_id != "hgmm12k") {
+      decont_matrix = Read10X(paste(dir, "filtered_gene_bc_matrices", "mm10", sep="/"))#@assays$RNA@counts
+      
+      # old way:
+      #filtered = read.csv(special_files, header = TRUE, sep = "\t")
+      #decont_matrix = as.matrix(filtered)
     } else if (sample_id == "hgmm12k") {
       decont_matrix = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts 
     }    

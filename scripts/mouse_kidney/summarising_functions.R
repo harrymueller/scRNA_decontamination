@@ -49,7 +49,7 @@ deg_summary <- function () {
         if (length(DEGs) > 0) {
           all_degs = append(all_degs, DEGs[[1]])
           counts$nums[i] = counts$nums[i] + lengths(DEGs[DEGs$avg_logFC < 0, 1])[[1]]
-          counts$nums[i+7] = counts$nums[i+7] + lengths(DEGs[DEGs$avg_logFC > 0, 1])[[1]]
+          counts$nums[i+length(methods)] = counts$nums[i+length(methods)] + lengths(DEGs[DEGs$avg_logFC > 0, 1])[[1]]
         }
       }
 

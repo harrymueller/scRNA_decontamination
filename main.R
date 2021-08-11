@@ -8,6 +8,7 @@ args = commandArgs(trailingOnly=TRUE)
 source("scripts/general_functions.R")
 source("scripts/decontamination_functions.R")
 source("scripts/clustering.R")
+source("scripts/scatterplot_gene_expr.R")
 
 # checking for 'config' pacakge
 if (!requireNamespace('config', quietly=T))
@@ -104,7 +105,7 @@ decontaminate_samples <- function (current_method) {
   # normalises and finds variable features of individual seurats
   samples.combined <- lapply(X = samples.combined, FUN = function(x) {
     x <- NormalizeData(x)
-    if (config$recluster) x <- reCluster(x, files$GeneSignatures, config$alpha)
+    if (config$recluster) x <- reCluster(x)
     x <- FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
     return(x)
   })
@@ -160,12 +161,20 @@ analyse_samples <- function (samples.combined) {
 
   if (config$dataset == "mouse_kidney") # adding metadata
     samples.combined <- adding_metadata(samples.combined)
-  # TODO FIX FOR mouse_kidney
+
   # UMAP
-  # Idents(samples.combined) = "celltype"
+  Idents(samples.combined) = "celltype"
+  
   p = DimPlot(samples.combined, reduction = "umap",label=F) + 
       theme(text=element_text(size=16, family="TT Times New Roman")) 
   ggsave(paste(files$output, "/plots/umap_plot.png",sep=""),p,width=9,height=7)
+
+  # scatterplot of gene expression prior and post decontamination
+  if (current_method != "no_decontamination") {
+    undecont_seurat = load_rda(NULL, "../no_decontamination/Rda/integrated_rd.Rda")
+
+    scatterplot_gene_expr_between_samples(undecont_seurat, samples.combined, c("Prior-Decontamination", "Post-Decontamination"))
+  }
 
   # Mouse_Kidney analysis
   if (config$dataset == "mouse_kidney") {
@@ -195,8 +204,8 @@ analyse_samples <- function (samples.combined) {
       
       # combine transcripts for no decont and this method
       transcripts = combine_transcripts(transcripts_none, transcripts_method)
-      #summ <- summarise_transcripts(transcripts) 
-      #save_summary_transcripts(transcripts, summ)
+      summ <- summarise_transcripts(transcripts) 
+      save_summary_transcripts(transcripts, summ)
       
       #plot_exo_endo_transcripts(transcripts)
       plot_before_after_transcripts(transcripts)

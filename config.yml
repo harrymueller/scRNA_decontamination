@@ -4,7 +4,7 @@ default:
   # ARRAY available options = ["decontaminate" "integrate" "analyse" "summarise"]
   process: "null"
   # ARRAY available options = ["no_decontamination" "soupx:autoEstCont" "soupx:background_genes" "soupx:top_background_genes" 
-  #                            "decontX:no_cell_types" "decontX:with_cell_types" "decontx:paper" "cellbender"]
+  #                            "decontX:no_cell_types" "decontX:with_cell_types" "decontx:paper" "cellbender", "fastcar"]
   #                                                             # decontx:paper only available for hgmm12k
   methods: ""
   dataset: "" # mouse_kidney || hgmm12k
@@ -60,12 +60,84 @@ subset_reclus_pt_cells: # mousekidney pc
   process:
     - "analyse"
   methods: 
-    - "no_decontamination"
-    - "soupx:top_background_genes"
-    - "decontx:with_cell_types"
+  #  - "no_decontamination"
+  #  - "soupx:top_background_genes"
+  #  - "decontx:with_cell_types"
     - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
+
+testing_fastcar: # mousekidney pc
+  input_dir: "/data/Perkins/Mouse_Kidney/data"
+  output_dir: "/data/Perkins/Mouse_Kidney/results/fastcar"
+  process:
+    - "decontaminate"
+    - "integrate"
+    - "analyse"
+  methods: 
+    - "fastcar"
+  dataset: "mouse_kidney"
+  original_cell_annotations: "cell_annotations.xlsx"
+  ocra_dir: "../Mouse_Kidney/results/fastcar"
+  recluster: False
+
+fastcar: # mousekidney pc
+  input_dir: "/data/Perkins/Mouse_Kidney/data"
+  output_dir: "/data/Perkins/Mouse_Kidney/results/no_reclus"
+  process:
+    - "summarise"
+  methods: 
+    - "no_decontamination"
+    - "fastcar"
+  dataset: "mouse_kidney"
+  original_cell_annotations: "cell_annotations.xlsx"
+  ocra_dir: "../Mouse_Kidney/results/no_reclus"
+  recluster: False
+
+fastcar_no_mt: # mousekidney pc
+  input_dir: "/data/Perkins/Mouse_Kidney/data_no_mt"
+  output_dir: "/data/Perkins/Mouse_Kidney/results/no_mt"
+  process:
+    - "analyse"
+  methods: 
+    - "fastcar"
+  dataset: "mouse_kidney"
+  original_cell_annotations: "cell_annotations.xlsx"
+  new_cell_annotations: "../results/no_mt/no_decontamination/new_clus.tsv"
+  gene_signatures: "cell_type_gene_signatures.xlsx"
+  ocra_dir: "../Mouse_Kidney/results/no_mt"
+  recluster: True
+
+fastcar_reclus: # mousekidney pc
+  input_dir: "/data/Perkins/Mouse_Kidney/data"
+  output_dir: "/data/Perkins/Mouse_Kidney/results/reclus"
+  process:
+    - "decontaminate"
+    - "integrate"
+    - "analyse"
+  methods: 
+    - "fastcar"
+  dataset: "mouse_kidney"
+  original_cell_annotations: "cell_annotations.xlsx"
+  new_cell_annotations: "../results/no_mt/no_decontamination/new_clus.tsv"
+  gene_signatures: "cell_type_gene_signatures.xlsx"
+  ocra_dir: "../Mouse_Kidney/results/reclus"
+  recluster: True
+
+testing_fastcar_hgmm: # hgmm12k pc
+  input_dir: "/data/Perkins/hgmm12k/data"
+  output_dir: "/data/Perkins/hgmm12k/results"
+  process:
+  - "decontaminate"
+  - "integrate"
+  - "analyse"
+  methods: 
+  - "fastcar"
+  dataset: "hgmm12k"
+  sample_ids: "hg19|mm10"
+  original_cell_annotations: "gem_classification.csv"
+  recluster: False
+  run_cellbender: False
 
 harry_hgmm: # hgmm12k pc
   input_dir: "/data/Perkins/hgmm12k/data"
