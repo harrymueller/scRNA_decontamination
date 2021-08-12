@@ -159,25 +159,29 @@ analyse_samples <- function (samples.combined) {
   if (!dir.exists(paste(files$output, "plots", sep="/")))
     dir.create(paste(files$output, "plots", sep="/"))
 
-  if (config$dataset == "mouse_kidney") # adding metadata
+  if (config$dataset == "mouse_kidney") { # adding metadata
     samples.combined <- adding_metadata(samples.combined)
+    Idents(samples.combined) = "celltype"
+  }
 
   # UMAP
-  Idents(samples.combined) = "celltype"
-  
   p = DimPlot(samples.combined, reduction = "umap",label=F) + 
       theme(text=element_text(size=16, family="TT Times New Roman")) 
   ggsave(paste(files$output, "/plots/umap_plot.png",sep=""),p,width=9,height=7)
-
-  # scatterplot of gene expression prior and post decontamination
-  if (current_method != "no_decontamination") {
-    undecont_seurat = load_rda(NULL, "../no_decontamination/Rda/integrated_rd.Rda")
-
-    scatterplot_gene_expr_between_samples(undecont_seurat, samples.combined, c("Prior-Decontamination", "Post-Decontamination"))
-  }
-
+  
   # Mouse_Kidney analysis
   if (config$dataset == "mouse_kidney") {
+    # scatterplot of gene expression prior and post decontamination
+    if (current_method != "no_decontamination") {
+      undecont_seurat = load_rda(NULL, "../no_decontamination/Rda/integrated_rd.Rda")
+      Idents(undecont_seurat) = "celltype"
+
+      if (!dir.exists(paste(files$output, "plots/gene_expression", sep="/")))
+        dir.create(paste(files$output, "plots/gene_expression", sep="/"))
+    
+      gene_expr_scatter_plots(undecont_seurat, samples.combined)
+    }
+    return()
     # Differentially expressed genes
     analyse_DEGs(samples.combined)
 
@@ -231,7 +235,7 @@ summarise_samples <- function () {
     if (config$recluster) {
       # ARI / NMI -> 1 doc & histograms
       ari_nmi = concat_ari_nmi()
-      plot_ari_nmi()
+      plot_ari_nmi(ari_nmi)
     }
   }
   

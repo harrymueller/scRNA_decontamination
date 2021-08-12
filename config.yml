@@ -30,29 +30,31 @@ default:
     - "SoupX: Top 25 Marker Genes"
     - "DecontX: No Cell Types"
     - "DecontX: With Cell Types"
+    - "FastCar"
     - "CellBender"
   stability_testing: False
   benchmarking: False
 
 harry_mm: # mousekidney pc
   input_dir: "/data/Perkins/Mouse_Kidney/data"
-  output_dir: "/data/Perkins/Mouse_Kidney/results"
+  output_dir: "/data/Perkins/Mouse_Kidney/results/reclus"
   process:
     - "analyse"
   methods: 
+  #- "no_decontamination"
   - "soupx:autoEstCont"
   - "soupx:background_genes"
   - "soupx:top_background_genes"
   - "decontx:with_cell_types"
   - "decontx:no_cell_types"
-  - "decontx:paper"
+  - "fastcar"
   - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
-  # new_cell_annotations: "../new_results/reclus/no_decontamination/new_clus.tsv"
-  # gene_signatures: "cell_type_gene_signatures.xlsx"
+  new_cell_annotations: "../new_results/reclus/no_decontamination/new_clus.tsv"
+  gene_signatures: "cell_type_gene_signatures.xlsx"
   ocra_dir: "../../Mouse_Kidney/results"
-  recluster: False
+  recluster: True
 
 subset_reclus_pt_cells: # mousekidney pc
   input_dir: "/data/Perkins/Mouse_Kidney/results/reclus"
@@ -85,9 +87,8 @@ fastcar: # mousekidney pc
   input_dir: "/data/Perkins/Mouse_Kidney/data"
   output_dir: "/data/Perkins/Mouse_Kidney/results/no_reclus"
   process:
-    - "summarise"
+    - "analyse"
   methods: 
-    - "no_decontamination"
     - "fastcar"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
@@ -112,8 +113,6 @@ fastcar_reclus: # mousekidney pc
   input_dir: "/data/Perkins/Mouse_Kidney/data"
   output_dir: "/data/Perkins/Mouse_Kidney/results/reclus"
   process:
-    - "decontaminate"
-    - "integrate"
     - "analyse"
   methods: 
     - "fastcar"
@@ -124,12 +123,10 @@ fastcar_reclus: # mousekidney pc
   ocra_dir: "../Mouse_Kidney/results/reclus"
   recluster: True
 
-testing_fastcar_hgmm: # hgmm12k pc
+fastcar_hgmm: # hgmm12k pc
   input_dir: "/data/Perkins/hgmm12k/data"
   output_dir: "/data/Perkins/hgmm12k/results"
   process:
-  - "decontaminate"
-  - "integrate"
   - "analyse"
   methods: 
   - "fastcar"

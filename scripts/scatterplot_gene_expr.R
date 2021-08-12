@@ -1,26 +1,23 @@
-scatterplot_gene_expr_between_samples <- function (obj1, obj2, labs) {
-    # by preservation
-    for (pres in c("fresh", "MeOH")) {
-        # average gene expr
-        avg1 = average_expr(obj1, pres)
-        avg2 = average_expr(obj2, pres)
-        
-        avg_expr = data.frame("x" = avg1, "y" = avg2[names(avg1)])
-        # scatterplot
-        p <- ggplot(avg_expr, aes(x=log(x+1), y=log(y+1))) +  
-                  geom_point(alpha = 0.5) + ggtitle(paste("Gene Expression Comparison; log(x+1) scales", pres)) +
-                  geom_abline(slope=1, intercept=0) + 
-                  ylab(labs[2]) + xlab(labs[1]) +
-                  scale_color_manual(values=c("#27AE60", "#8E44AD", "#E67E22","#3498DB"), name="Species and Prior- or\nPost-Decontamination") +
-                  theme(text=element_text(size=16, family="TT Times New Roman"))
+gene_expr_scatter_plots = function(prior, post) {
+  DefaultAssay(prior) = "RNA"
+  
+  # for each pres
+  for (pres in c("fresh", "MeOH")) {
+    # get average expr
+    prior_expr = AverageExpression(prior[,prior$preservation == pres], assay = "RNA")$RNA
+    post_expr = AverageExpression(post[,post$preservation == pres], assay = "RNA")$RNA
     
-        ggsave(paste(files$output, "/plots/gene_expression_", pres, ".png", sep=""), p, width=8, height=8)
+    for (ct in names(post_expr)) {
+      new = data.frame('X' = log(prior_expr[ct] + 1), 'Y' = log(post_expr[ct] + 1))
+      names(new) = c("X", "Y")
+
+      p <- ggplot(new, aes(x=X, y=Y)) +  
+        geom_point(alpha = 0.5) + ggtitle(paste("Average gene expression plotted on log(x+1) scales for", pres, "&", ct)) +
+        geom_abline(slope=1, intercept=0) + 
+        ylab("Post-Decontamination") + xlab("Pre-Decontamination") +
+        theme(text=element_text(size=12, family="TT Times New Roman"))
+      
+      ggsave(paste(files$output, "/plots/gene_expression/", ct, "_", pres, ".png", sep=""), p, width=8, height=8)
     }
-        
-}
-
-
-average_expr <- function (seurat, pres) {
-    # returns a named vector of the gene expression averages for the preservation type given
-    return(rowMeans(as.matrix(seurat[, seurat$preservation == pres]@assays$RNA@counts)))
+  }
 }

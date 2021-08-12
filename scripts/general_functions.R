@@ -6,6 +6,8 @@
 # Loads all required libraries
 ################################################################################################
 load_libraries <- function () {
+  extrafont::loadfonts(device="pdf")
+  
   # libs
   required_libs = c(
     c("Seurat", "readxl", "varhandle", "MASS", "dplyr", "tidyverse"),
