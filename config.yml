@@ -56,6 +56,41 @@ harry_mm: # mousekidney pc
   ocra_dir: "../../Mouse_Kidney/results"
   recluster: True
 
+pawsey: # mousekidney pc
+  input_dir: "/data/decont_project/mouse_kidney/input"
+  output_dir: "/data/decont_project/mouse_kidney/output_reclus"
+  process:
+    - "analyse"
+  methods: 
+  #- "no_decontamination"
+  - "soupx:autoEstCont"
+  - "soupx:background_genes"
+  - "soupx:top_background_genes"
+  - "decontx:with_cell_types"
+  - "decontx:no_cell_types"
+  - "fastcar"
+  - "cellbender"
+  dataset: "mouse_kidney"
+  original_cell_annotations: "cell_annotations.xlsx"
+  new_cell_annotations: "../mouse_kidney/output_reclus/no_decontamination/new_clus.tsv"
+  gene_signatures: "cell_type_gene_signatures.xlsx"
+  ocra_dir: "../mouse_kidney/output_reclus"
+  recluster: True
+
+pawsey2: # mousekidney pc
+  input_dir: "/data/decont_project/mouse_kidney/input"
+  output_dir: "/data/decont_project/mouse_kidney/output_reclus"
+  process:
+    - "analyse"
+  methods: 
+  - "fastcar"
+  dataset: "mouse_kidney"
+  original_cell_annotations: "cell_annotations.xlsx"
+  new_cell_annotations: "../mouse_kidney/output_reclus/no_decontamination/new_clus.tsv"
+  gene_signatures: "cell_type_gene_signatures.xlsx"
+  ocra_dir: "../mouse_kidney/output_reclus"
+  recluster: True
+
 subset_reclus_pt_cells: # mousekidney pc
   input_dir: "/data/Perkins/Mouse_Kidney/results/reclus"
   output_dir: "/data/Perkins/Mouse_Kidney/results/subset_reclus_pt_cells"
