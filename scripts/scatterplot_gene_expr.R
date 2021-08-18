@@ -6,7 +6,7 @@ gene_expr_scatter_plots = function(prior, post) {
     # get average expr
     prior_expr = AverageExpression(prior[,prior$preservation == pres], assay = "RNA")$RNA
     post_expr = AverageExpression(post[,post$preservation == pres], assay = "RNA")$RNA
-    diff = (post_expr - prior_expr)
+
     # reorder
     prior_expr = prior_expr[order(match(rownames(prior_expr), rownames(post_expr))),]
     
@@ -14,11 +14,14 @@ gene_expr_scatter_plots = function(prior, post) {
       new = data.frame('X' = log(prior_expr[[ct]] + 1), 
                       'Y' = log(post_expr[[ct]] + 1), 
                       "NAME" = rownames(prior_expr))
-      new["bLABEL"] = new$NAME %in% rownames(diff[order(diff[[ct]], decreasing = T),])[1:10]
+	  diff = abs(prior_expr[[ct]] - post_expr[[ct]])	
+	  names(diff) = new$NAME
+
+      new["bLABEL"] = new$NAME %in% names(diff[order(diff, decreasing = T)])[1:10]
 
       p = ggplot(new, aes(x=X, y=Y, label=NAME)) +  
         geom_point(alpha = 0.5) + ggtitle(paste("Average gene expression plotted on log(x+1) scales for", pres, "&", ct)) +
-        geom_text_repel(aes(label=ifelse(bLABEL>0.2,as.character(NAME),'')),max.overlaps=100) + 
+        geom_text_repel(aes(label=ifelse(bLABEL>0.2,as.character(NAME),'')),max.overlaps=10000) + 
         geom_abline(slope=1, intercept=0) + 
         ylab("Post-Decontamination") + xlab("Pre-Decontamination") 
       
@@ -41,8 +44,8 @@ run_degs_prior_post <- function(prior, post) {
   for (pres in c("fresh", "MeOH")) {
     degs = get_DEGs_prior_post(merged[[pres]])
 
-    over = get_over_under_DEGs_prior_post(degs, T)
-    under = get_over_under_DEGs_prior_post(degs, F)
+    #over = get_over_under_DEGs_prior_post(degs, T)
+    #under = get_over_under_DEGs_prior_post(degs, F)
 
 
     save_DEGs_prior_post(degs, paste(config$output_dir, "/", current_method, "/", pres, "_DEGs_between_prior_post.xlsx", sep=""))
@@ -93,8 +96,8 @@ get_DEGs_prior_post <- function(samples) {
 save_DEGs_prior_post <- function(DEGs, f_name, summary) {
   wb <- createWorkbook()
   
-  s <- createSheet(wb, "summary")
-  addDataFrame(summary, s, row.names = FALSE, col.names = FALSE)
+  #s <- createSheet(wb, "summary")
+  #addDataFrame(summary, s, row.names = FALSE, col.names = FALSE)
 
   # DEGs by cell type
   lapply(names(DEGs), function(x) {
@@ -115,7 +118,7 @@ get_DEGs_summary <- function(DEGs, b_over) {
     sapply(rownames(DEGs[[ct]]), function(gene) {
       # looping through genes
       if (abs(DEGs[[ct]][gene, "avg_logFC"]) > 0.5) {
-        if (gene in summary$genes) {
+        if (gene %in% summary$genes) {
           i = if (DEGs[[ct]][gene, "avg_logFC"] > 0.5) 2 else 3
           summary[gene, i] = summary[gene, i] + 1
         } else {

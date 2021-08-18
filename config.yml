@@ -63,7 +63,7 @@ windows: # mousekidney pc
     - "analyse"
   methods: 
   #- "no_decontamination"
-  - "soupx:autoEstCont"
+  #- "soupx:autoEstCont"
   - "soupx:background_genes"
   - "soupx:top_background_genes"
   - "decontx:with_cell_types"
