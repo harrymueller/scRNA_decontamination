@@ -20,8 +20,7 @@ gene_expr_scatter_plots = function(prior, post) {
         geom_point(alpha = 0.5) + ggtitle(paste("Average gene expression plotted on log(x+1) scales for", pres, "&", ct)) +
         geom_text_repel(aes(label=ifelse(bLABEL>0.2,as.character(NAME),'')),max.overlaps=100) + 
         geom_abline(slope=1, intercept=0) + 
-        ylab("Post-Decontamination") + xlab("Pre-Decontamination") +
-        theme(text=element_text(size=12, family="TT Times New Roman"))
+        ylab("Post-Decontamination") + xlab("Pre-Decontamination") 
       
       ggsave(paste(files$output, "/plots/gene_expression/", ct, "_", pres, ".png", sep=""), p, width=8, height=8)
     }
