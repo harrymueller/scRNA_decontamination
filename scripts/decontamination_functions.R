@@ -7,7 +7,7 @@
 ################################################################################################
 get_sample <- function(i, sample_id, method) {
   dir = files$dir[i]
-  
+
   ## Cell Annotations
   if (method != "none")
     cell_annotations = get_clusters(files$CellAnnotations, sample_id, config$is_xlsx[[current_method]])
@@ -25,7 +25,7 @@ get_sample <- function(i, sample_id, method) {
       marker_file = files$special[i] # setting marker file as dir to gene_sig file
     }
 
-    else if (sample_id == "hgmm12k") {
+    else if (sample_id == "hgmm12k" & !config$stability_testing) {
       filtered = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)
       marker_file = filtered # setting marker file as seurat object
       
@@ -34,9 +34,7 @@ get_sample <- function(i, sample_id, method) {
       raw = get_raw_hgmm(files$CellRanger, config$sample_ids)@assays$RNA@counts
       sc = SoupChannel(raw, filtered)
     }
-	  
-    # TODO add subset filtering (or after adding clusters?)
-
+	
     # adding clusters to sc obj
     sc = setClusters(sc, setNames(cell_annotations, names(cell_annotations))) 
     
@@ -68,7 +66,30 @@ get_sample <- function(i, sample_id, method) {
     decont_matrix = adjustCounts(sc)
     cont_matrix = sc$toc
   } 
-  
+
+
+
+  ####################
+  # FastCAR
+  ####################
+  else if (method=="fastcar") {
+    if (sample_id != "hgmm12k") {
+      # needs gzipped files (ie barcodes.tsv.gz, features.tsv.gz, etc.)
+      cell = read.cell.matrix(paste(dir, "filtered_gene_bc_matrices/mm10", sep="/")) # filtered
+      full = read.full.matrix(paste(dir, "raw_gene_bc_matrices/mm10", sep="/")) # raw
+    }
+
+    else if (sample_id == "hgmm12k" & !config$stability_testing) {
+      cell = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts # filtered
+      full = get_raw_hgmm(files$CellRanger, config$sample_ids)@assays$RNA@counts # raw
+    }
+	
+    # mm kidney emptyDropletCutoff, contaminationChanceCutoff = 100,0.05
+    ambientProfile = determine.background.to.remove(full, cell, 300, 0.03)
+    decont_matrix  = remove.background(cell, ambientProfile)
+  } 
+
+
 
   ####################
   # DECONTX
@@ -84,19 +105,14 @@ get_sample <- function(i, sample_id, method) {
       storage.mode(cont_matrix) <- "integer"
     }
     
-    # TODO add subset filtering
-
     if (method == "decontx:with_cell_types") {
       ## Cell Annotations
       decont_matrix = decontX(cont_matrix, z=as.numeric(factor(cell_annotations)))$resList$estNativeCounts
     } else if (method == "decontx:no_cell_types") {
       decont_matrix = decontX(cont_matrix)$resList$estNativeCounts
     } else if (method == "decontx:paper") {
-      #RNGkind(sample.kind = "Rounding") didn't work
-      #set.seed(12345) <- shouldn't change anything as default seed value for `decontX(...)` is `12345`
       decont_matrix = decontX(cont_matrix, z=as.numeric(factor(cell_annotations)), maxIter = 60)$resList$estNativeCounts
     }
-    
   } 
 
   ####################
@@ -117,16 +133,14 @@ get_sample <- function(i, sample_id, method) {
     # whether to run cellbender OR just read in results
     if (config$run_cellbender) {
       # TODO: check for mouse kidney data
-      if (sample_id != "hgmm12k") {
+      if (sample_id != "hgmm12k") 
         input_dir  = paste(files$CellRanger, sample_id, "raw_gene_bc_matrices", "mm10", sep="/")
-        output_dir = paste(files$output, sample_id, sep="/")
-        filename   = paste(sample_id, ".h5", sep="")
-      } else {
+      else if (sample_id == "hgmm12k")
         input_dir  = files$CellRangerMerged
-        output_dir = paste(files$output, sample_id, sep="/")
-        filename   = paste(sample_id, ".h5", sep="")
-      }
 
+      output_dir = paste(files$output, sample_id, sep="/")
+      filename   = paste(sample_id, ".h5", sep="")
+      
       # checks for output dir presense - if it doesnt exist, cellbender wont realise until after its finished executing
       if (!dir.exists(output_dir))
         dir.create(output_dir)
@@ -142,9 +156,12 @@ get_sample <- function(i, sample_id, method) {
 
       system2("cellbender", cellbender_args)
     }
-    
-    decont_matrix <- Read10X_h5(dir,use.names=T)
-    
+
+    if (config$benchmarking)
+      decont_matrix <- Read10X_h5(paste(output_dir, "/", sample_id, "_filtered.h5", sep=""), use.names=T)
+    else
+      decont_matrix <- Read10X_h5(dir, use.names=T)
+
     # formatting cell barcodes to be '<sample id>_<barcode>'
     if (sample_id != "hgmm12k")
       dimnames(decont_matrix)[[2]] = sapply(dimnames(decont_matrix)[[2]], function(x) {paste(sample_id, substring(x, 0, nchar(x)-2), sep="_")}, USE.NAMES=F)
@@ -157,7 +174,7 @@ get_sample <- function(i, sample_id, method) {
     
     # reformatting cell barcodes to match barcodes in cell_annotations
     if (sample_id != "hgmm12k")
-      colnames(temp) = sapply(str_split(colnames(decont_matrix),"_"), function(n) paste(tail(n,1),"-1",sep=""))
+      colnames(decont_matrix) = sapply(str_split(colnames(decont_matrix),"_"), function(n) paste(tail(n,1),"-1",sep=""))
   } 
 
   ####################
@@ -165,9 +182,12 @@ get_sample <- function(i, sample_id, method) {
   ####################
   else {
     # not actually "decontaminated" - however named this way
-    if (sample_id == "mouse_kidney") {
-      filtered = read.csv(dir,header = TRUE,sep = "\t")
-      decont_matrix = as.matrix(filtered)
+    if (sample_id != "hgmm12k") {
+      decont_matrix = Read10X(paste(dir, "filtered_gene_bc_matrices", "mm10", sep="/"))#@assays$RNA@counts
+      
+      # old way:
+      #filtered = read.csv(special_files, header = TRUE, sep = "\t")
+      #decont_matrix = as.matrix(filtered)
     } else if (sample_id == "hgmm12k") {
       decont_matrix = get_filtered_hgmm(files$CellRanger, files$CellAnnotations, config$sample_ids)@assays$RNA@counts 
     }    
@@ -271,7 +291,12 @@ fix_barcodes <- function(seurat) {
 # Creates a tsv for each `sc.decont$toc` object in samples - prior to merging/integration 
 ################################################################################################
 save_matrices <- function(samples) {
-  file_dir = paste(files$output, "/matrices/",sep="")
+  if (config$benchmarking) { # different directories for benchmarking and normal operation
+    file_dir = paste(files$output, sample_id, "matrices/", sep="/")
+    if (!dir.exists(file_dir))
+      dir.create(file_dir)
+  } else
+    file_dir = paste(files$output, "/matrices/",sep="")
 
   lapply(samples, function(x) {
     print(paste("Saving",x$sample_id))
@@ -372,14 +397,4 @@ get_top_n_markers <- function(dir, dataset, sc, n) {
   })
   
   markers_top = markers_top[lengths(markers_top) != 0]
-  return(markers_top)
-}
-
-
-
-################################################################################################
-# Filters the given seurat object to include only the gene and barcode subset given by subset_i and files$subet_dir
-################################################################################################
-subset_seurat <- function () {
-
 }
