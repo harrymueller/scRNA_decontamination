@@ -41,6 +41,11 @@ run_degs_prior_post <- function(prior, post) {
   merged = SplitObject(merged, split.by = "preservation")
   for (pres in c("fresh", "MeOH")) {
     degs = get_DEGs_prior_post(merged[[pres]])
+
+    over = get_over_under_DEGs_prior_post(degs, T)
+    under = get_over_under_DEGs_prior_post(degs, F)
+
+
     save_DEGs_prior_post(degs, paste(config$output_dir, "/", current_method, "/", pres, "_DEGs_between_prior_post.xlsx", sep=""))
   }
 }
@@ -86,9 +91,12 @@ get_DEGs_prior_post <- function(samples) {
   return(DEGs)
 }
 
-save_DEGs_prior_post <- function(DEGs, f_name) {
+save_DEGs_prior_post <- function(DEGs, f_name, summary) {
   wb <- createWorkbook()
   
+  s <- createSheet(wb, "summary")
+  addDataFrame(summary, s, row.names = FALSE, col.names = FALSE)
+
   # DEGs by cell type
   lapply(names(DEGs), function(x) {
     s <- createSheet(wb, x)
@@ -97,3 +105,28 @@ save_DEGs_prior_post <- function(DEGs, f_name) {
   
   saveWorkbook(wb, f_name)
 }
+
+
+get_DEGs_summary <- function(DEGs, b_over) {
+  # filtering only genes over/underexpressed in MeOH samples
+  summary = data.frame("genes" = c(), ">0.5" = c(), "<0.5" = c())
+  sapply(names(DEGs), function(ct) {
+    # looping through CT
+
+    sapply(rownames(DEGs[[ct]]), function(gene) {
+      # looping through genes
+      if (abs(DEGs[[ct]][gene, "avg_logFC"]) > 0.5) {
+        if (gene in summary$genes) {
+          i = if (DEGs[[ct]][gene, "avg_logFC"] > 0.5) 2 else 3
+          summary[gene, i] = summary[gene, i] + 1
+        } else {
+          if (DEGs[[ct]][gene, "avg_logFC"] > 0.5)
+            summary = rbind(summary, c(gene, 1, 0))
+          else if (DEGs[[ct]][gene, "avg_logFC"] < 0.5)
+            summary = rbind(summary, c(gene, 0, 1))
+        }
+      }
+    })
+  })
+}
+

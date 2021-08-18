@@ -36,7 +36,7 @@ if [ $opt = -r ] || [ $opt = --rPackages ]; then
 
 	# FastCar
 	echo "FastCAR"
-	conda install -c conda-forge r-devtools -y
+	conda install -c conda-forge r-devtools r-withr -y
 	Rscript -e 'devtools::install_git("https://git.web.rug.nl/P278949/FastCAR")'
 
 	# others
