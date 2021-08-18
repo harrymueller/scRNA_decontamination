@@ -14,14 +14,13 @@ get_DEGs <- function(samples.combined, save_name=FALSE) {
   for (ct in cell_types) {
     # logfc.threshold = 1
     tryCatch({
-	  # TODO catch < 3 cells prior to error > error now is no DEGs
-	  DEGs[[ct]] <- FindMarkers(samples.combined, ident.1 = paste(ct,"fresh",sep="_"), ident.2 = paste(ct,"MeOH",sep="_"), 
-                              verbose = F, logfc.threshold = 1, min.pct=0.5,test.use = "wilcox")
-	}, error = function(e) {
-		print(e)
-	  log_print(paste(e))
-    DEGs[ct] = 0
-	}) 
+      DEGs[[ct]] <- FindMarkers(samples.combined, ident.1 = paste(ct,"fresh",sep="_"), ident.2 = paste(ct,"MeOH",sep="_"), 
+                                verbose = F, logfc.threshold = 1, min.pct=0.5,test.use = "wilcox")
+    }, error = function(e) {
+      print(e)
+      log_print(paste(e))
+      DEGs[ct] = 0
+    }) 
   }
   
   # adding cell type to individual df and filtering out genes w/ FDR > 0.05

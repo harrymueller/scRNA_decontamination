@@ -6,14 +6,14 @@
 # Loads all required libraries
 ################################################################################################
 load_libraries <- function () {
-  extrafont::loadfonts(device="pdf")
+  #extrafont::loadfonts(device="pdf")
   
   # libs
   required_libs = c(
     c("Seurat", "readxl", "varhandle", "MASS", "dplyr", "tidyverse"),
     if ("decontaminate" %in% config$process) c("SoupX", "celda", "Matrix", "qlcMatrix", "FastCAR") else NULL,
-    if ("analyse" %in% config$process) c("ggplot2", "xlsx", "reshape2","plotly","cowplot","patchwork") else NULL,
-	if ("summarise" %in% config$process) c("ggplot2", "xlsx", "reshape2", "stringr", "ggforce") else NULL
+    if ("analyse" %in% config$process) c("ggplot2", "xlsx", "reshape2","plotly","cowplot","patchwork", "ggrepel") else NULL,
+	  if ("summarise" %in% config$process) c("ggplot2", "xlsx", "reshape2", "stringr", "ggforce") else NULL
   )
   required_libs = unique(required_libs)
 		

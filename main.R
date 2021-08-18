@@ -179,7 +179,8 @@ analyse_samples <- function (samples.combined) {
       if (!dir.exists(paste(files$output, "plots/gene_expression", sep="/")))
         dir.create(paste(files$output, "plots/gene_expression", sep="/"))
     
-      gene_expr_scatter_plots(undecont_seurat, samples.combined)
+      #gene_expr_scatter_plots(undecont_seurat, samples.combined)
+      run_degs_prior_post(undecont_seurat, samples.combined)
     }
     return()
     # Differentially expressed genes
