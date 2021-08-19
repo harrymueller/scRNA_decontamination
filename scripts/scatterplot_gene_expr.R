@@ -41,11 +41,9 @@ run_degs_prior_post <- function(prior, post) {
   for (pres in c("fresh", "MeOH")) {
     degs = get_DEGs_prior_post(merged[[pres]])
 
-    over = get_over_under_DEGs_prior_post(degs, T)
-    under = get_over_under_DEGs_prior_post(degs, F)
+    summary = get_DEGs_summary(degs)
 
-
-    save_DEGs_prior_post(degs, paste(config$output_dir, "/", current_method, "/", pres, "_DEGs_between_prior_post.xlsx", sep=""))
+    save_DEGs_prior_post(degs, summary, paste(config$output_dir, "/", current_method, "/", pres, "_DEGs_between_prior_post.xlsx", sep=""))
   }
 }
 
@@ -90,11 +88,11 @@ get_DEGs_prior_post <- function(samples) {
   return(DEGs)
 }
 
-save_DEGs_prior_post <- function(DEGs, f_name, summary) {
+save_DEGs_prior_post <- function(DEGs, summary, f_name) {
   wb <- createWorkbook()
   
   s <- createSheet(wb, "summary")
-  addDataFrame(summary, s, row.names = FALSE, col.names = FALSE)
+  addDataFrame(summary, s)
 
   # DEGs by cell type
   lapply(names(DEGs), function(x) {
@@ -106,26 +104,35 @@ save_DEGs_prior_post <- function(DEGs, f_name, summary) {
 }
 
 
-get_DEGs_summary <- function(DEGs, b_over) {
+get_DEGs_summary <- function(DEGs) {
   # filtering only genes over/underexpressed in MeOH samples
-  summary = data.frame("genes" = c(), ">0.5" = c(), "<0.5" = c())
-  sapply(names(DEGs), function(ct) {
+  summary = data.frame()
+  for (ct in names(DEGs)) {
     # looping through CT
-
-    sapply(rownames(DEGs[[ct]]), function(gene) {
+    for (gene in rownames(DEGs[[ct]])) {
       # looping through genes
       if (abs(DEGs[[ct]][gene, "avg_logFC"]) > 0.5) {
-        if (gene in summary$genes) {
-          i = if (DEGs[[ct]][gene, "avg_logFC"] > 0.5) 2 else 3
+        if (gene %in% rownames(summary)) {
+          i = if (DEGs[[ct]][gene, "avg_logFC"] > 0.5) 1 else 2
           summary[gene, i] = summary[gene, i] + 1
         } else {
           if (DEGs[[ct]][gene, "avg_logFC"] > 0.5)
-            summary = rbind(summary, c(gene, 1, 0))
-          else if (DEGs[[ct]][gene, "avg_logFC"] < 0.5)
-            summary = rbind(summary, c(gene, 0, 1))
+            n = data.frame(c(1), c(0))
+          else
+            n = data.frame(c(0), c(1))
+          
+          rownames(n) = c(gene)
+          summary = rbind(summary, n)
         }
       }
-    })
-  })
+    }
+  }
+  if (length(names(summary)) > 0) {
+    names(summary) = c("greater_than_0.5", "less_than_0.5")
+    summary = summary[order(summary[,1] + summary[,2], decreasing = T),] # order by largest to smallest
+  } else {
+    summary = data.frame("No DEGs > 0.5 || < 0.5" = "None")
+  }
+  return(summary)
 }
 

@@ -34,14 +34,15 @@ if [ $opt = -r ] || [ $opt = --rPackages ]; then
 	echo "orca"
 	conda install -c plotly plotly-orca -y
 
+	# others
+	echo "Misc"
+	conda install -c conda-forge r-htmlwidgets r-vctrs -y
+	conda install -c bioconda bioconductor-limma -y
+
 	# FastCar
 	echo "FastCAR"
 	conda install -c conda-forge r-devtools r-withr -y
 	Rscript -e 'devtools::install_git("https://git.web.rug.nl/P278949/FastCAR")'
-
-	# others
-	conda install -c conda-forge r-htmlwidgets r-vctrs -y
-	conda install -c bioconda bioconductor-limma -y
 ############################################################
 # CellBender (CPU)
 ############################################################
