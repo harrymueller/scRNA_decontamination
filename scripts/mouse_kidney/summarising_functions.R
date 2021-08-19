@@ -67,8 +67,7 @@ deg_summary <- function () {
     geom_bar(stat="identity", position=position_dodge()) + 
     xlab("Computational Method") + 
     ylab("Number of Differentially Expressed Genes") +
-    labs(fill="Differential Expression in\nMethanol-Fixed Samples\nCompared to Fresh Samples") +
-    theme(text=element_text(size=16, family="TT Times New Roman"))
+    labs(fill="Differential Expression in\nMethanol-Fixed Samples\nCompared to Fresh Samples")
 
   # output
   ggsave(output_path[1],p,width=15, height=8)
@@ -182,8 +181,7 @@ plot_ari_nmi <- function (df) {
            theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
            scale_y_continuous(name="Value", limits=c(NA, NA))+
            labs(fill="Sample set") + 
-           facet_zoom(ylim=c(if (s == "NMI") 0.85 else 0.95,1)) + # facet_zoom provides zoomed in section
-           theme(text=element_text(size=16, family="TT Times New Roman"))
+           facet_zoom(ylim=c(if (s == "NMI") 0.85 else 0.95,1))  # facet_zoom provides zoomed in section
 
     ggsave(output_path[i], p, height = 6, width = 10)
   }
