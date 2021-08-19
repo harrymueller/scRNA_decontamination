@@ -69,6 +69,8 @@ deg_summary <- function () {
     ylab("Number of Differentially Expressed Genes") +
     labs(fill="Differential Expression in\nMethanol-Fixed Samples\nCompared to Fresh Samples")
 
+  if (config$fonts) p = p + theme(text=element_text(size=16, family="TT Times New Roman"))
+
   # output
   ggsave(output_path[1],p,width=15, height=8)
     
@@ -182,6 +184,8 @@ plot_ari_nmi <- function (df) {
            scale_y_continuous(name="Value", limits=c(NA, NA))+
            labs(fill="Sample set") + 
            facet_zoom(ylim=c(if (s == "NMI") 0.85 else 0.95,1))  # facet_zoom provides zoomed in section
+
+    if (config$fonts) p = p + theme(text=element_text(size=16, family="TT Times New Roman"))
 
     ggsave(output_path[i], p, height = 6, width = 10)
   }

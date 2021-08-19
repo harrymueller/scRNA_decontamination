@@ -132,6 +132,11 @@ DEGs_histogram <- function(DEGs) {
     scale_x_discrete(name="Cell Type") + ggtitle("DEGs down-regulated in MeOH samples") + 
     (if (max(sapply(DEGs,function(x) length(x$avg_logFC[x$avg_logFC>0]),USE.NAMES = F)) < 21) ggplot2:::limits(c(0,20),"y"))
 
+  if (config$fonts) {
+    p1 = p1 + theme(text=element_text(size=16, family="TT Times New Roman"))
+    p2 = p2 + theme(text=element_text(size=16, family="TT Times New Roman"))
+  }
+
   p <- p1 + p2
                     
   ggsave(f_name,p,width=9, height=5)

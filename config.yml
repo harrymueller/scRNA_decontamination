@@ -34,6 +34,7 @@ default:
     - "CellBender"
   stability_testing: False
   benchmarking: False
+  fonts: True # adds 'TT Times New Roman' to ggplots - for my ubuntu install
 
 harry_mm: # mousekidney pc
   input_dir: "/data/Perkins/Mouse_Kidney/data"

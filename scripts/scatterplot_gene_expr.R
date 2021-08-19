@@ -25,6 +25,8 @@ gene_expr_scatter_plots = function(prior, post) {
         geom_abline(slope=1, intercept=0) + 
         ylab("Post-Decontamination") + xlab("Pre-Decontamination") 
       
+      if (config$fonts) p = p + theme(text=element_text(size=16, family="TT Times New Roman"))
+
       ggsave(paste(files$output, "/plots/gene_expression/", ct, "_", pres, ".png", sep=""), p, width=8, height=8)
     }
   }

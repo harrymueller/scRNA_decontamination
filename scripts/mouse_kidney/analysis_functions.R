@@ -269,6 +269,8 @@ plot_module_score_hist <- function (seurat, tables, output) {
     titles = c("Fresh", "MeOH")
     plots[[m]] = ggplot(aes(x=values),data = df) + stat_density() + ggtitle(paste(titles[[m]]," (",length(values)," cells changed)", sep="")) +
       xlab(if (m == 1) NULL else "Difference in Module Scores") + ylab("Density")
+
+    if (config$fonts) plots[[m]] = plots[[m]] + theme(text=element_text(size=16, family="TT Times New Roman"))
   }
   
   # getting maximum values (to set axis limits to be equal)
@@ -349,8 +351,12 @@ barplots_ct_props <- function(table, output) {
                       name = "Proportion of barcodes given a\nCT (relative to bar label)",
                       labels=c("Changed to a different CT", "Stayed the same CT","Changed from a different CT", "Stayed the same CT")) +
     geom_text(aes(label=num), size = 3, hjust = 0.5, vjust = 2, position = "stack",color="white") +
-    xlab("Cell Types (and proportions origin)") + ylab("Proportion of Cell Barcodes given a CT") +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+    xlab("Cell Types (and proportions origin)") + ylab("Proportion of Cell Barcodes given a CT")
+
+  if (config$fonts)
+    p = p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, family="TT Times New Roman")) 
+  else
+    p = p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
   # saving plot
   ggsave(output,p,width=14,height=7)
