@@ -173,8 +173,8 @@ fastcar_hgmm: # hgmm12k pc
   run_cellbender: False
 
 harry_hgmm: # hgmm12k pc
-  input_dir: "/data/Perkins/hgmm12k/data"
-  output_dir: "/data/Perkins/hgmm12k/results"
+  input_dir: "../hgmm12k/data"
+  output_dir: "../hgmm12k/results"
   process:
   - "analyse"
   methods: 
