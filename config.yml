@@ -227,6 +227,7 @@ benchmarking:
   original_cell_annotations: "cell_annotations.xlsx"
   gene_signatures: "gene_signatures.xlsx"
   run_cellbender: True
+  cellbender_gpu: True
   benchmarking: True
 
 benchmarking_pc:
