@@ -1,3 +1,6 @@
+################################################################################################
+# RUNS DECONTAMINATION, INTEGRATION, ANALYSIS DEPENDING ON CONFIG
+################################################################################################
 # command line args
 args = commandArgs(trailingOnly=TRUE)
 
@@ -5,20 +8,19 @@ args = commandArgs(trailingOnly=TRUE)
 source("scripts/general_functions.R")
 source("scripts/decontamination_functions.R")
 source("scripts/clustering.R")
+source("scripts/scatterplot_gene_expr.R")
 
 # checking for 'config' pacakge
 if (!requireNamespace('config', quietly=T))
-  stop("R Package 'config' not installed.") # DO NOT LOAD CONFIG - CLASHES W/ SEURAT MERGE
+  stop("R Package 'config' not installed.") # DO NOT LOAD CONFIG - CLASHES W/ SEURAT MERGE - still needs to be installeds
 
 # getting config and loading libs
 print("Getting the config and loading libraries...")
 config <- get_config(args)
 
 # appends index to end of input and output if testing algorithm stability
-if (config$stability_testing) {
-  config$input_dir = paste(config$input_dir, args[[2]], sep="/")
-  config$output_dir = paste(config$output_dir, args[[2]], sep="/")
-}
+if (config$stability_testing)
+  SUBSET_INDEX = args[[2]]
 
 load_libraries()
 print("Config and libraries loaded successfully.")
@@ -103,7 +105,7 @@ decontaminate_samples <- function (current_method) {
   # normalises and finds variable features of individual seurats
   samples.combined <- lapply(X = samples.combined, FUN = function(x) {
     x <- NormalizeData(x)
-    if (config$recluster) x <- reCluster(x, files$GeneSignatures, config$alpha)
+    if (config$recluster) x <- reCluster(x)
     x <- FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
     return(x)
   })
@@ -157,17 +159,30 @@ analyse_samples <- function (samples.combined) {
   if (!dir.exists(paste(files$output, "plots", sep="/")))
     dir.create(paste(files$output, "plots", sep="/"))
 
-  if (config$dataset == "mouse_kidney") # adding metadata
+  if (config$dataset == "mouse_kidney") { # adding metadata
     samples.combined <- adding_metadata(samples.combined)
-  # TODO FIX FOR mouse_kidney
-  # UMAP
-  # Idents(samples.combined) = "celltype"
-  p = DimPlot(samples.combined, reduction = "umap",label=F) + 
-      theme(text=element_text(size=16, family="TT Times New Roman")) # missing a certain package for the default font
-  ggsave(paste(files$output, "/plots/umap_plot.png",sep=""),p,width=9,height=7)
+    Idents(samples.combined) = "celltype"
+  }
 
+  # UMAP
+  p = DimPlot(samples.combined, reduction = "umap",label=F)
+  if (config$fonts) p = p + theme(text=element_text(size=16, family="TT Times New Roman"))
+  ggsave(paste(files$output, "/plots/umap_plot.png",sep=""),p,width=9,height=7)
+  
   # Mouse_Kidney analysis
   if (config$dataset == "mouse_kidney") {
+    # scatterplot of gene expression prior and post decontamination
+    if (current_method != "no_decontamination") {
+      undecont_seurat = load_rda(NULL, "../no_decontamination/Rda/integrated_rd.Rda")
+      Idents(undecont_seurat) = "celltype"
+
+      if (!dir.exists(paste(files$output, "plots/gene_expression", sep="/")))
+        dir.create(paste(files$output, "plots/gene_expression", sep="/"))
+    
+      #gene_expr_scatter_plots(undecont_seurat, samples.combined)
+      run_degs_prior_post(undecont_seurat, samples.combined)
+    }
+    return()
     # Differentially expressed genes
     analyse_DEGs(samples.combined)
 
@@ -196,7 +211,9 @@ analyse_samples <- function (samples.combined) {
       transcripts = combine_transcripts(transcripts_none, transcripts_method)
       summ <- summarise_transcripts(transcripts) 
       save_summary_transcripts(transcripts, summ)
-      plot_transcripts(transcripts)
+      
+      #plot_exo_endo_transcripts(transcripts)
+      plot_before_after_transcripts(transcripts)
     }
   }
 }
@@ -219,7 +236,7 @@ summarise_samples <- function () {
     if (config$recluster) {
       # ARI / NMI -> 1 doc & histograms
       ari_nmi = concat_ari_nmi()
-      plot_ari_nmi()
+      plot_ari_nmi(ari_nmi)
     }
   }
   
@@ -256,7 +273,11 @@ if (length(intersect(c("decontaminate", "integrate", "analyse"), config$process)
     print(paste("Starting",current_method))
     print(paste(rep("#",30),collapse=""))
 
-    files = get_files(config, current_method)
+    if (config$stability_testing)
+      files = get_files(config, current_method, SUBSET_INDEX)
+    else
+      files = get_files(config, current_method)
+
     samples.combined=NULL
 
     # Decontamination

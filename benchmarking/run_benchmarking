@@ -12,6 +12,8 @@ else
 	methods=$2
 fi
 
+GPU='false'
+
 dir=/data/Perkins/benchmarking/output
 
 # START PIDSTAT for RAM AND CPU
@@ -20,6 +22,8 @@ pid_c=$!
 
 nohup pidstat -h -r -u -C R 1 --human >> $dir/r_usage.txt &
 pid_r=$!
+nohup pidstat -h -r -u -C python3 1 --human >> $dir/python.txt &
+pid_c=$!
 
 echo $pid_r >> pid
 echo $pid_c >> pid
@@ -28,18 +32,27 @@ echo "PID METHOD SAMPLE_ID" > $dir/pid.txt
 echo "START" > $dir/output.log
 
 # looping through all methods and samples
-for i in {0..5..1}; do
+for i in {0..0}; do
 	m=${methods[$i]}
 	echo $m
+
 	for id in ${sample_ids[@]}; do
+		# record GPU usage > for cellbender run w/ cuda		
+		if [ $GPU=true ]; then
+			echo $m $id >> $dir/gpu_usage.csv
+			nvidia-smi --query-gpu=utilization.gpu,utilization.memory,memory.total,memory.free,memory.used --format=csv -l 1 >> $dir/gpu_usage.csv
+		fi	
+		
+		# run r script
 		nohup Rscript benchmarking/benchmarking.R $id $m $i >> $dir/output.log &
 
 		pid=$!
 		# record pid
 		echo $pid $m $id >> $dir/pid.txt
+		
 		# wait for it to finish
 		tail --pid=$pid -f /dev/null
-
+		
 		# wait 5 seconds
 		sleep 5
 	done

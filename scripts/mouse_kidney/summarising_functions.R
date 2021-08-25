@@ -49,7 +49,7 @@ deg_summary <- function () {
         if (length(DEGs) > 0) {
           all_degs = append(all_degs, DEGs[[1]])
           counts$nums[i] = counts$nums[i] + lengths(DEGs[DEGs$avg_logFC < 0, 1])[[1]]
-          counts$nums[i+7] = counts$nums[i+7] + lengths(DEGs[DEGs$avg_logFC > 0, 1])[[1]]
+          counts$nums[i+length(methods)] = counts$nums[i+length(methods)] + lengths(DEGs[DEGs$avg_logFC > 0, 1])[[1]]
         }
       }
 
@@ -69,8 +69,10 @@ deg_summary <- function () {
     ylab("Number of Differentially Expressed Genes") +
     labs(fill="Differential Expression in\nMethanol-Fixed Samples\nCompared to Fresh Samples")
 
+  if (config$fonts) p = p + theme(text=element_text(size=16, family="TT Times New Roman"))
+
   # output
-  ggsave(output_path[1],p,width=8, height=4)
+  ggsave(output_path[1],p,width=15, height=8)
     
   
   
@@ -159,9 +161,8 @@ concat_ari_nmi <- function () {
 ################################################################################################
 # Concats ARI & NMI into 1 df and saves it
 ################################################################################################
-plot_ari_nmi <- function (df, output_path) {
+plot_ari_nmi <- function (df) {
   # variables
-  df = ari_nmi
   output_path = c(paste(config$output_dir, "summary", "ARI_Histogram.png", sep="/"),
                   paste(config$output_dir, "summary", "NMI_Histogram.png", sep="/"))
   n = length(df$Method)
@@ -182,8 +183,10 @@ plot_ari_nmi <- function (df, output_path) {
            theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
            scale_y_continuous(name="Value", limits=c(NA, NA))+
            labs(fill="Sample set") + 
-           facet_zoom(ylim=c(if (s == "NMI") 0.85 else 0.95,1)) # facet_zoom provides zoomed in section
-             
+           facet_zoom(ylim=c(if (s == "NMI") 0.85 else 0.95,1))  # facet_zoom provides zoomed in section
+
+    if (config$fonts) p = p + theme(text=element_text(size=16, family="TT Times New Roman"))
+
     ggsave(output_path[i], p, height = 6, width = 10)
   }
 }

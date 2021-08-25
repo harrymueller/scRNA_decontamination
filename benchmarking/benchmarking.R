@@ -39,10 +39,10 @@ files=get_files(config, current_method)
 ################################################################################################
 print("Decontaminating")
 # Creates and saves individual R list objects <- previously used `soupx_processing.R` to create the Rda for each sample
-get_sample(i, sample_id, current_method)
+sample = get_sample(i, sample_id, current_method)
 
 # ensuring formatting of cell barcodes is the same (across all analyses)
 sample$seurat = fix_barcodes(sample$seurat)
 
-save_matrices(list(sample), paste(files$output, "/matrices/",sep=""))
+save_matrices(list(sample))
 print("Completed")

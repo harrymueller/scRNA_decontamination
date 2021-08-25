@@ -1,0 +1,113 @@
+---
+title: "Gene Tracing"
+---
+
+Setup
+```{r}
+# source files
+source("../scripts/general_functions.R")
+
+# template config and files
+config = list("methods" = c("soupx:autoEstCont", "soupx:background_genes", "soupx:top_background_genes", "decontx:no_cell_types", "decontx:with_cell_types", "fastcar", "cellbender"))
+
+load_libraries()
+
+dir = "/data/Perkins/Mouse_Kidney/results/reclus"
+```
+
+### getting un-normalised matrices
+```{r}
+# params
+sample_id = "BG5_BG22C"
+ct = "PT"
+gene = "Gpx3"
+method = "cellbender"
+```
+
+### get data
+```{r}
+no_decont = as.matrix(read.table(paste(dir, "/", "no_decontamination", "/matrices/", sample_id, ".tsv", sep="")))
+cellbender = as.matrix(read.table(paste(dir, "/", method, "/matrices/", sample_id, ".tsv", sep="")))
+```
+
+### read in seurat obj w/ ct
+```{r}
+no_decont_rda = readRDS(paste(dir, "/", "no_decontamination", "/Rda/integrated_rd.Rda", sep=""))
+cellbender_rda = readRDS(paste(dir, "/", method, "/Rda/integrated_rd.Rda", sep=""))
+
+DefaultAssay(no_decont_rda) = "RNA"
+DefaultAssay(cellbender_rda) = "RNA"
+Idents(no_decont_rda) = "celltype"
+Idents(cellbender_rda) = "celltype"
+
+# filtering for sample ID
+no_decont_rda = no_decont_rda[,no_decont_rda$orig.ident == sample_id]
+cellbender_rda = cellbender_rda[,cellbender_rda$orig.ident == sample_id]
+```
+
+### getting barcodes for a CT and a sample
+```{r}
+barcodes = colnames(cellbender_rda)
+barcodes = barcodes[barcodes %in% colnames(cellbender_rda[,cellbender_rda$celltype == "PT"])]
+barcodes = sapply(barcodes, function (x) {
+  paste(substr(x, 11, nchar(x)-2), ".1", sep="")
+})
+names(barcodes) = NULL
+```
+
+# Comparing gene expression
+```{r}
+no_decont_gene = no_decont[, colnames(no_decont) %in% barcodes]
+cellbender_gene = cellbender[, colnames(cellbender) %in% barcodes]
+
+no_decont_gene = no_decont_gene[rownames(no_decont_gene) == gene,]
+cellbender_gene = cellbender_gene[rownames(cellbender_gene) == gene,]
+
+avg_raw_prior = mean(no_decont_gene)
+avg_raw_post = mean(cellbender_gene)
+
+avg_norm_prior = AverageExpression(no_decont_rda[rownames(no_decont_rda) == gene,])$RNA$PT
+avg_norm_post = AverageExpression(cellbender_rda[rownames(cellbender_rda) == gene,])$RNA$PT
+
+df = as.matrix(data.frame(c(avg_raw_prior, avg_raw_post),c(avg_norm_prior,avg_norm_post)))
+colnames(df) = c("Raw", "Normalised")
+rownames(df) = c("Prior-decont", "Post-decont")
+
+print(df)
+```
+
+# DEGs
+```{r}
+# DEGs for normalised data
+norm_degs = FindAllMarkers(cellbender_rda)
+
+# rename raw cellbender barcodes
+new_barcodes = sapply(colnames(cellbender), function (x) {
+  paste("BG5_BG22C_",substr(x, 0, nchar(x)-2), "-1", sep="")
+}, USE.NAMES = F)
+cellbender_degs = cellbender
+colnames(cellbender_degs) = new_barcodes
+
+# create seurat object and add celltypes
+cellbender_degs = CreateSeuratObject(cellbender_degs)
+cellbender_degs@meta.data$celltype = cellbender_rda$celltype[order(match(colnames(cellbender_degs), colnames(cellbender_rda)))]
+
+Idents(cellbender_degs) = "celltype"
+raw_degs = FindAllMarkers(cellbender_degs)
+```
+
+### Genes w/ the largest positive diff prior and post decont are DEGs for PT cells \/ (for cellbender PT BG5_BG22C)
+```{r}
+n = norm_degs[norm_degs$cluster == ct, ]
+n = n[n$p_val_adj < 0.05,]
+n[n$gene %in% c("Gpx3", "Prdx1", "Aldob", "Akr1a1", "Ass1", "Gpx1", "Ftl1", "Akr1c21", "Kap", "Miox"),]
+```
+
+```{r}
+
+```
+
+
+
+
+
