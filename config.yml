@@ -254,4 +254,4 @@ stability_testing:
   original_cell_annotations: "../gem_classification.csv"
   recluster: False
   run_cellbender: True
-  stability_testing: True
+  stability_testing: True # in main.R -> adds index to end of input_dir and output_dir 

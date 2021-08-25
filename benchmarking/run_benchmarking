@@ -17,7 +17,10 @@ GPU='false'
 dir=/data/Perkins/benchmarking/output
 
 # START PIDSTAT for RAM AND CPU
-nohup pidstat -h -r -u -C R 1 --human >> $dir/usage.txt &
+nohup pidstat -h -r -u -G cellbender 1 --human >> $dir/cellbender_usage.txt &
+pid_c=$!
+
+nohup pidstat -h -r -u -C R 1 --human >> $dir/r_usage.txt &
 pid_r=$!
 nohup pidstat -h -r -u -C python3 1 --human >> $dir/python.txt &
 pid_c=$!
