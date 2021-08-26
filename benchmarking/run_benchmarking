@@ -2,7 +2,7 @@
 # nohup ./run_benchmarking > ../benchmarking/log.out &; echo $! > pid
 if [ -z $2 ]; then
 	#methods=("no_decontamination" "soupx:autoEstCont" "soupx:background_genes" "soupx:top_background_genes" "decontx:no_cell_types" "decontx:with_cell_types")
-	methods=("cellbender")
+	methods=("fastcar")
 	if [ -z $1 ]; then
 		sample_ids=("BG1_BG20C" "BG3_BG21C" "BG5_BG22C" "BG52_BG20C_MeOH" "BG54_BG21C_MeOH" "BG56_BG22C_MeOH")
 	else
@@ -34,12 +34,12 @@ for i in {0..0}; do
 	echo $m
 
 	for id in ${sample_ids[@]}; do
-		# record GPU usage > for cellbender run w/ cuda		
 		if [ $GPU=true ]; then
+			# record GPU usage > for cellbender run w/ cuda		
 			echo $m $id >> $dir/gpu_usage.csv
 			nvidia-smi --query-gpu=utilization.gpu,utilization.memory,memory.total,memory.free,memory.used --format=csv -l 1 >> $dir/gpu_usage.csv
-		fi	
-		
+		fi
+
 		# run r script
 		nohup Rscript benchmarking/benchmarking.R $id $m $i >> $dir/output.log &
 

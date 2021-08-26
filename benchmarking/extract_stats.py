@@ -7,13 +7,13 @@ import datetime
 
 # paths
 DIR = "/data/Perkins/benchmarking"
-PID_PATH = DIR + "/all/pid.txt"
-USAGE_PATH = DIR + "/all/usage.txt"
-OUTPUT_PATH = DIR + "/usage_all.xlsx"
+PID_PATH = DIR + "/cellbender_gpu/pid.txt"
+USAGE_PATH = DIR + "/cellbender_gpu/r_usage.txt"
+OUTPUT_PATH = DIR + "/cellbender_gpu_cpu_usage.xlsx"
 
 NUM_CELLS = {"BG1_BG20C": 2356, "BG3_BG21C": 4084, "BG5_BG22C": 5411, "BG52_BG20C_MeOH": 1886, "BG54_BG21C_MeOH": 4672, "BG56_BG22C_MeOH": 5069}
 
-ORDER = ["no_decontamination", "soupx:autoEstCont", "soupx:background_genes", "soupx:top_background_genes", "decontx:no_cell_types", "decontx:with_cell_types"]
+ORDER = ["cellbender"] #["no_decontamination", "soupx:autoEstCont", "soupx:background_genes", "soupx:top_background_genes", "decontx:no_cell_types", "decontx:with_cell_types"]
 
 ####################################
 # FUNCTIONS: used for .apply(...)
