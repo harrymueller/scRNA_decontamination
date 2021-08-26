@@ -173,8 +173,8 @@ fastcar_hgmm: # hgmm12k pc
   run_cellbender: False
 
 harry_hgmm: # hgmm12k pc
-  input_dir: "/data/Perkins/hgmm12k/data"
-  output_dir: "/data/Perkins/hgmm12k/results"
+  input_dir: "../hgmm12k/data"
+  output_dir: "../hgmm12k/results"
   process:
   - "analyse"
   methods: 
@@ -184,6 +184,7 @@ harry_hgmm: # hgmm12k pc
   - "decontx:no_cell_types"
   - "decontx:with_cell_types"
   - "decontx:paper"
+  - "fastcar"
   - "cellbender"
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
@@ -227,6 +228,7 @@ benchmarking:
   original_cell_annotations: "cell_annotations.xlsx"
   gene_signatures: "gene_signatures.xlsx"
   run_cellbender: True
+  cellbender_gpu: True
   benchmarking: True
 
 benchmarking_pc:

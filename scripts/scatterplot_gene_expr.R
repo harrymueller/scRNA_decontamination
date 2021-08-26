@@ -46,14 +46,11 @@ run_degs_prior_post <- function(prior, post) {
   for (pres in c("fresh", "MeOH")) {
     degs = get_DEGs_prior_post(merged[[pres]])
 
-<<<<<<< HEAD
     summary = get_DEGs_summary(degs)
-=======
     #over = get_over_under_DEGs_prior_post(degs, T)
     #under = get_over_under_DEGs_prior_post(degs, F)
->>>>>>> 3590f4fb294cf8c426eafe1a7138fc5d4c254c1c
 
-    save_DEGs_prior_post(degs, summary, paste(config$output_dir, "/", current_method, "/", pres, "_DEGs_between_prior_post.xlsx", sep=""))
+    #save_DEGs_prior_post(degs, summary, paste(config$output_dir, "/", current_method, "/", pres, "_DEGs_between_prior_post.xlsx", sep=""))
   }
 }
 

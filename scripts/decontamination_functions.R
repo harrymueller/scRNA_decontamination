@@ -148,7 +148,7 @@ get_sample <- function(i, sample_id, method) {
       cellbender_args = c("remove-background", "--input", input_dir, 
                           "--output", paste(output_dir, filename, sep="/"),
                           "--expected-cells", dim(cont_matrix)[2],
-                          if (config$cellbender_gpu) "--cuda" else NULL)
+      			  if (config$cellbender_gpu) "--cuda" else NULL)
 
       print("##########")
       print("The arguements for CellBender are:")

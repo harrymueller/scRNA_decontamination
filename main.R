@@ -212,8 +212,8 @@ analyse_samples <- function (samples.combined) {
       summ <- summarise_transcripts(transcripts) 
       save_summary_transcripts(transcripts, summ)
       
-      #plot_exo_endo_transcripts(transcripts)
-      plot_before_after_transcripts(transcripts)
+      plot_exo_endo_transcripts(transcripts)
+      plot_before_after_transcripts(transcripts, current_method)
     }
   }
 }
