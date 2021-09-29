@@ -219,6 +219,31 @@ pawsey_hgmm:
   original_cell_annotations: "gem_classification.csv"
   recluster: False
 
+pawsey_pt_endo_subset:
+  input_dir: "/data/decont_project/mouse_kidney/input_pt_endo"
+  output_dir: "/data/decont_project/mouse_kidney/output_pt_endo"
+  process:
+  - "decontaminate"
+  - "integrate"
+  - "analyse"
+  methods: 
+  - "soupx:autoEstCont"
+  - "soupx:background_genes"
+  - "soupx:top_background_genes"
+  - "decontx:no_cell_types"
+  - "decontx:with_cell_types"
+  - "decontx:paper"
+  - "fastcar"
+  - "cellbender"
+  run_cellbender: True
+  dataset: "mouse_kidney"
+  sample_ids: "BG1_BG20C|BG3_BG21C|BG5_BG22C|BG52_BG20C_MeOH|BG54_BG21C_MeOH|BG56_BG22C_MeOH"
+  original_cell_annotations: "cell_annotations.xlsx"
+  new_cell_annotations: "../mouse_kidney/output_pt_endo/no_decontamination/new_clus.tsv"
+  gene_signatures: "cell_type_gene_signatures.xlsx"
+  ocra_dir: "../mouse_kidney/output_reclus"
+  recluster: True
+
 benchmarking:
   input_dir: "/data/Perkins/data"
   output_dir: "/data/Perkins/benchmarking"

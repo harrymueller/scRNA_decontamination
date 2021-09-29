@@ -7,9 +7,9 @@ import datetime
 
 # paths
 DIR = "/data/Perkins/benchmarking"
-PID_PATH = DIR + "/cellbender_gpu/pid.txt"
-USAGE_PATH = DIR + "/cellbender_gpu/r_usage.txt"
-OUTPUT_PATH = DIR + "/cellbender_gpu_cpu_usage.xlsx"
+PID_PATH = DIR + "/cellbender_cpu_data/pid.txt"
+USAGE_PATH = DIR + "/cellbender_cpu_data/r_usage.txt"
+OUTPUT_PATH = DIR + "/cellbender_cpu_new.xlsx"
 
 NUM_CELLS = {"BG1_BG20C": 2356, "BG3_BG21C": 4084, "BG5_BG22C": 5411, "BG52_BG20C_MeOH": 1886, "BG54_BG21C_MeOH": 4672, "BG56_BG22C_MeOH": 5069}
 
