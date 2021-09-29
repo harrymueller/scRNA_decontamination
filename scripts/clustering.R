@@ -78,7 +78,6 @@ reCluster <- function(seurat) {
           # if bin size does decrease - put it in the log
           message("WARNING: Decreasing number of bins")
           log_print(paste("reCluster error:\nHalving number of bins to ", nbin,"\n",
-                            "Sample ID = ", as.character(unique(samples.combined[[1]]@meta.data$orig.ident)), "\n",
                             "CT = ", ct, sep=""))
           do_break = F
         }, finally = function(e) {
@@ -108,7 +107,6 @@ reCluster <- function(seurat) {
       # if a ct only has 1 sample, cant use AddModuleScore <- so it is added to unknown
       message("WARNING: Number of cells within a new cluster = 1")
       log_print(paste("Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\n",
-                        "Sample ID = ", as.character(unique(samples.combined[[1]]@meta.data$orig.ident)), "\n",
                         "CT = ", ct, sep=""))
       clus = "Unknown"
     } 

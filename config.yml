@@ -225,14 +225,13 @@ pawsey_pt_endo_subset:
   process:
   - "decontaminate"
   - "integrate"
-  - "analyse"
-  methods: 
+  methods:
+  - "no_decontamination" 
   - "soupx:autoEstCont"
   - "soupx:background_genes"
   - "soupx:top_background_genes"
   - "decontx:no_cell_types"
   - "decontx:with_cell_types"
-  - "decontx:paper"
   - "fastcar"
   - "cellbender"
   run_cellbender: True
