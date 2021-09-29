@@ -34,6 +34,7 @@ default:
     - "CellBender"
   stability_testing: False
   benchmarking: False
+  fonts: True # adds 'TT Times New Roman' to ggplots - for my ubuntu install
 
 harry_mm: # mousekidney pc
   input_dir: "/data/Perkins/Mouse_Kidney/data"
@@ -42,10 +43,10 @@ harry_mm: # mousekidney pc
     - "analyse"
   methods: 
   #- "no_decontamination"
-  - "soupx:autoEstCont"
-  - "soupx:background_genes"
-  - "soupx:top_background_genes"
-  - "decontx:with_cell_types"
+  #- "soupx:autoEstCont"
+  #- "soupx:background_genes"
+  #- "soupx:top_background_genes"
+  #- "decontx:with_cell_types"
   - "decontx:no_cell_types"
   - "fastcar"
   - "cellbender"
@@ -56,14 +57,14 @@ harry_mm: # mousekidney pc
   ocra_dir: "../../Mouse_Kidney/results"
   recluster: True
 
-pawsey: # mousekidney pc
-  input_dir: "/data/decont_project/mouse_kidney/input"
-  output_dir: "/data/decont_project/mouse_kidney/output_reclus"
+windows: # mousekidney pc
+  input_dir: "../reclus"
+  output_dir: "../reclus"
   process:
     - "analyse"
   methods: 
   #- "no_decontamination"
-  - "soupx:autoEstCont"
+  #- "soupx:autoEstCont"
   - "soupx:background_genes"
   - "soupx:top_background_genes"
   - "decontx:with_cell_types"
@@ -72,9 +73,9 @@ pawsey: # mousekidney pc
   - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
-  new_cell_annotations: "../mouse_kidney/output_reclus/no_decontamination/new_clus.tsv"
+  new_cell_annotations: "../reclus/no_decontamination/new_clus.tsv"
   gene_signatures: "cell_type_gene_signatures.xlsx"
-  ocra_dir: "../mouse_kidney/output_reclus"
+  ocra_dir: "../reclus"
   recluster: True
 
 pawsey2: # mousekidney pc
@@ -172,8 +173,8 @@ fastcar_hgmm: # hgmm12k pc
   run_cellbender: False
 
 harry_hgmm: # hgmm12k pc
-  input_dir: "/data/Perkins/hgmm12k/data"
-  output_dir: "/data/Perkins/hgmm12k/results"
+  input_dir: "../hgmm12k/data"
+  output_dir: "../hgmm12k/results"
   process:
   - "analyse"
   methods: 
@@ -183,6 +184,7 @@ harry_hgmm: # hgmm12k pc
   - "decontx:no_cell_types"
   - "decontx:with_cell_types"
   - "decontx:paper"
+  - "fastcar"
   - "cellbender"
   dataset: "hgmm12k"
   sample_ids: "hg19|mm10"
@@ -217,15 +219,41 @@ pawsey_hgmm:
   original_cell_annotations: "gem_classification.csv"
   recluster: False
 
+pawsey_pt_endo_subset:
+  input_dir: "/data/decont_project/mouse_kidney/input_pt_endo"
+  output_dir: "/data/decont_project/mouse_kidney/output_pt_endo"
+  process:
+  - "decontaminate"
+  - "integrate"
+  - "analyse"
+  methods: 
+  - "soupx:autoEstCont"
+  - "soupx:background_genes"
+  - "soupx:top_background_genes"
+  - "decontx:no_cell_types"
+  - "decontx:with_cell_types"
+  - "decontx:paper"
+  - "fastcar"
+  - "cellbender"
+  run_cellbender: True
+  dataset: "mouse_kidney"
+  sample_ids: "BG1_BG20C|BG3_BG21C|BG5_BG22C|BG52_BG20C_MeOH|BG54_BG21C_MeOH|BG56_BG22C_MeOH"
+  original_cell_annotations: "cell_annotations.xlsx"
+  new_cell_annotations: "../mouse_kidney/output_pt_endo/no_decontamination/new_clus.tsv"
+  gene_signatures: "cell_type_gene_signatures.xlsx"
+  ocra_dir: "../mouse_kidney/output_reclus"
+  recluster: True
+
 benchmarking:
   input_dir: "/data/Perkins/data"
   output_dir: "/data/Perkins/benchmarking"
   process: "decontaminate"
-  methods: "cellbender"
+  methods: "fastcar"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
   gene_signatures: "gene_signatures.xlsx"
   run_cellbender: True
+  cellbender_gpu: True
   benchmarking: True
 
 benchmarking_pc:
@@ -253,4 +281,4 @@ stability_testing:
   original_cell_annotations: "../gem_classification.csv"
   recluster: False
   run_cellbender: True
-  stability_testing: True
+  stability_testing: True # in main.R -> adds index to end of input_dir and output_dir 

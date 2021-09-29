@@ -124,15 +124,18 @@ DEGs_histogram <- function(DEGs) {
     geom_bar(stat = "identity") +
     coord_flip() + ylab("Number of DEGs") +
     scale_x_discrete(name="Cell Type") + ggtitle("DEGs up-regulated in MeOH samples") + 
-    (if (max(sapply(DEGs,function(x) length(x$avg_logFC[x$avg_logFC<0]),USE.NAMES = F)) < 21) ggplot2:::limits(c(0,20),"y")) +
-    theme(text=element_text(size=12, family="TT Times New Roman"))
+    (if (max(sapply(DEGs,function(x) length(x$avg_logFC[x$avg_logFC<0]),USE.NAMES = F)) < 21) ggplot2:::limits(c(0,20),"y"))
   
   p2<- ggplot(data.frame(table(DEGs.c[DEGs.c$avg_logFC > 0,]$cell_type)), aes(x = Var1, y = Freq)) +
     geom_bar(stat = "identity") +
     coord_flip() + ylab("Number of DEGs") +
     scale_x_discrete(name="Cell Type") + ggtitle("DEGs down-regulated in MeOH samples") + 
-    (if (max(sapply(DEGs,function(x) length(x$avg_logFC[x$avg_logFC>0]),USE.NAMES = F)) < 21) ggplot2:::limits(c(0,20),"y")) + 
-    theme(text=element_text(size=12, family="TT Times New Roman"))
+    (if (max(sapply(DEGs,function(x) length(x$avg_logFC[x$avg_logFC>0]),USE.NAMES = F)) < 21) ggplot2:::limits(c(0,20),"y"))
+
+  if (config$fonts) {
+    p1 = p1 + theme(text=element_text(size=16, family="TT Times New Roman"))
+    p2 = p2 + theme(text=element_text(size=16, family="TT Times New Roman"))
+  }
 
   p <- p1 + p2
                     
@@ -173,9 +176,9 @@ DEGs_dotplot_over_under_expression <- function(samples.combined, f_name, order_p
   
   levels(samples.combined) <- l
   # genes from paper dotplot
-  p1 <- DotPlot(samples.combined,idents=order_paper,features = genes_paper, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=s), axis.text.x = element_text(size=s, angle = 60, hjust = 1)) + ggtitle("A. DEGs detected in the paper;\n   Expression in fresh samples after decontamination") + theme(text=element_text(size=12, family="TT Times New Roman"))
+  p1 <- DotPlot(samples.combined,idents=order_paper,features = genes_paper, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=s), axis.text.x = element_text(size=s, angle = 60, hjust = 1)) + ggtitle("A. DEGs detected in the paper;\n   Expression in fresh samples after decontamination")
   # DEGs from this analysis dotplot
-  p3 <- DotPlot(samples.combined,idents=order_paper,features = c(genes.under,genes.over), cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + ggtitle("B. DEGs detected after decontamination;\n   Expression in fresh samples after decontamination") + theme(text=element_text(size=12, family="TT Times New Roman"))
+  p3 <- DotPlot(samples.combined,idents=order_paper,features = c(genes.under,genes.over), cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + ggtitle("B. DEGs detected after decontamination;\n   Expression in fresh samples after decontamination")
 	
   # Expression in MEOH
   Idents(samples.combined) <- "celltype.meoh"
@@ -185,9 +188,9 @@ DEGs_dotplot_over_under_expression <- function(samples.combined, f_name, order_p
   levels(samples.combined) <- l
 
   # genes from paper dotplot
-  p2 <- DotPlot(samples.combined,idents=order_paper,features = genes_paper, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + ggtitle("C. DEGs detected in the paper;\n   Expression in MeOH samples after decontamination") + theme(text=element_text(size=12, family="TT Times New Roman"))
+  p2 <- DotPlot(samples.combined,idents=order_paper,features = genes_paper, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + ggtitle("C. DEGs detected in the paper;\n   Expression in MeOH samples after decontamination")
   # degs from this analysis dotplot
-  p4 <- DotPlot(samples.combined,idents=order_paper,features = c(genes.under, genes.over), cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=20), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + ggtitle("D. DEGs detected after decontamination;\n   Expression in MeOH samples after decontamination") + theme(text=element_text(size=12, family="TT Times New Roman"))
+  p4 <- DotPlot(samples.combined,idents=order_paper,features = c(genes.under, genes.over), cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + xlab("DEGs") + ylab("Cell Type") + theme(axis.text.y = element_text(size=20), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + ggtitle("D. DEGs detected after decontamination;\n   Expression in MeOH samples after decontamination")
   
   p <- (p1+p2)/(p3+p4)
 

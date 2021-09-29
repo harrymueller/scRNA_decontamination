@@ -268,7 +268,9 @@ plot_module_score_hist <- function (seurat, tables, output) {
     
     titles = c("Fresh", "MeOH")
     plots[[m]] = ggplot(aes(x=values),data = df) + stat_density() + ggtitle(paste(titles[[m]]," (",length(values)," cells changed)", sep="")) +
-      xlab(if (m == 1) NULL else "Difference in Module Scores") + ylab("Density") + theme(text=element_text(size=16, family="TT Times New Roman"))
+      xlab(if (m == 1) NULL else "Difference in Module Scores") + ylab("Density")
+
+    if (config$fonts) plots[[m]] = plots[[m]] + theme(text=element_text(size=16, family="TT Times New Roman"))
   }
   
   # getting maximum values (to set axis limits to be equal)
@@ -278,7 +280,7 @@ plot_module_score_hist <- function (seurat, tables, output) {
                       ggplot_build(plots[[2]])$layout$panel_scales_y[[1]]$range$range))
   
   plots[[3]] = plots[[1]] / plots[[2]] + 
-    plot_annotation(title="Density plots of differences in module score for cells that changed annotation", theme = theme(text=element_text(size=14, family="TT Times New Roman"))) & 
+    plot_annotation(title="Density plots of differences in module score for cells that changed annotation") & 
     xlim(0, x_max) & ylim(0,y_max)
   
   ggsave(output,plots[[3]],width=7,height=6)
@@ -349,8 +351,12 @@ barplots_ct_props <- function(table, output) {
                       name = "Proportion of barcodes given a\nCT (relative to bar label)",
                       labels=c("Changed to a different CT", "Stayed the same CT","Changed from a different CT", "Stayed the same CT")) +
     geom_text(aes(label=num), size = 3, hjust = 0.5, vjust = 2, position = "stack",color="white") +
-    xlab("Cell Types (and proportions origin)") + ylab("Proportion of Cell Barcodes given a CT") +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), text=element_text(size=16, family="TT Times New Roman"))
+    xlab("Cell Types (and proportions origin)") + ylab("Proportion of Cell Barcodes given a CT")
+
+  if (config$fonts)
+    p = p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, family="TT Times New Roman")) 
+  else
+    p = p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
   # saving plot
   ggsave(output,p,width=14,height=7)

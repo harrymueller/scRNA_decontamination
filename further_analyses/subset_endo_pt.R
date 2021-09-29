@@ -20,10 +20,10 @@ cellranger <- function(sample_id, type) {
     # add clusters
     cell_annotations = get_clusters(cell_annotations, sample_id, False)
     Idents(sample) <- cell_annotations
-
+    print(sample)
     # subset
     sample = sample[, Idents(sample) == "PT" || Idents(sample) == "Endo"]
-
+    print(sample)
     # output
     writeMM(sample@assays$RNA@counts, paste(dir, "matrix.mtx", sep="/"))
 

@@ -147,7 +147,8 @@ get_sample <- function(i, sample_id, method) {
 
       cellbender_args = c("remove-background", "--input", input_dir, 
                           "--output", paste(output_dir, filename, sep="/"),
-                          "--expected-cells", dim(cont_matrix)[2])
+                          "--expected-cells", dim(cont_matrix)[2],
+      			  if (config$cellbender_gpu) "--cuda" else NULL)
 
       print("##########")
       print("The arguements for CellBender are:")
@@ -345,7 +346,7 @@ get_markers <- function(dir_or_seurat, dataset, n=FALSE, b_compress=FALSE) {
     })
   } else if (dataset == "hgmm12k") {
     # Find markers
-    raw_markers = FindMarkers(dir_or_seurat, ident.1 = "hg19", ident.2 = "mm10", verbose = F, logfc.threshold = 1, min.pct=0.5,test.use = "wilcox")
+    raw_markers = FindMarkers(dir_or_seurat, ident.1 = "hg19", ident.2 = "mm10", verbose = F, logfc.threshold = 1, min.pct=0.5, test.use = "wilcox")
     
     # filter markers
     raw_markers = raw_markers[raw_markers$p_val_adj < 0.05,]

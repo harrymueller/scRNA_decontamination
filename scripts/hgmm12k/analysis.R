@@ -282,14 +282,31 @@ plot_exo_endo_transcripts <- function (transcripts) {
   ggsave(paste(files$output, "plots/UMI_plots_combined.png", sep="/"), all / (human / mouse), width=12, height=20)
 }
 
-plot_before_after_transcripts <- function (transcripts) {
+plot_before_after_transcripts <- function (transcripts, m) {
+	new_names = list("soupx:autoEstCont" = "SoupX with AutoEstCont",
+					 "soupx:background_genes" = "SoupX with 3 Marker Genes per CT",
+					 "soupx:top_background_genes" = "SoupX with Top 25 Markers",
+					 "decontx:no_cell_types" = "DecontX without Cell Types",
+					 "decontx:with_cell_types" = "DecontX with Cell Types",
+					 "decontx:paper" = "DecontX with Parameters from the Publication",
+					 "fastcar" = "FastCAR",
+					 "cellbender" = "CellBender")
+  		 
   # plot of ONLY human cells (with mouse UMIs <= 1000) - will remove some cells
   all = ggplot(transcripts, aes(x=exo_counts_before, y=exo_counts_after, color=celltype)) +
-                  geom_point(alpha = 0.5) + ggtitle("Comparison of Exogenous UMIs Post- and Prior-Decontamination") + geom_abline(slope=1, intercept=0) +
+                  geom_point(alpha = 0.5) + ggtitle(new_names[[m]]) + 
+				  geom_abline(slope=1, intercept=0) +
+				  scale_color_manual(labels = c("Mouse Cells", "Human Cells"), values = c("red", "blue")) + 
                   ylab("Exogenous UMI Counts Post-Decontamination") + xlab("Exogenous UMI Counts Prior-Decontamination") +
-                  theme(text=element_text(size=16, family="TT Times New Roman")) + 
-                  ylim(0, 4000) + xlim(0,4000) # Limit to ensure all plots are same size for comparison <- should be dynamic NOT hardcoded
-
+                  theme(text=element_text(size=32)) + 
+                  #ylim(0, 4000) + xlim(0,4000) + # Limit to ensure all plots are same size for comparison <- should be dynamic NOT hardcoded
+				  labs(color = "Cell Type")
+				  
+  subset = all + ylim(0, 1000) + xlim(0, 1000)
+  all = all + ylim(0, 4000) + xlim(0, 4000)
   # save plots
   ggsave(paste(files$output, "plots/UMI_plot_of_exo_post_prior.png", sep="/"), all, width=12, height=10)
+  
+  
+  ggsave(paste(files$output, "plots/UMI_plot_of_exo_post_prior_small.png", sep="/"), subset, width=12, height=10)
 }
