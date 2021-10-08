@@ -8,7 +8,9 @@ source("scripts/clustering.R")
 
 # cannabilised from /other/merge_hgmm.R
 input_dir = "/data/decont_project/mouse_kidney/input_pt_endo"
+#input_dir = "/data/Perkins/Mouse_Kidney/data_endo_pt"
 cell_annotations = "/data/decont_project/mouse_kidney/input_pt_endo/new_clus.tsv"
+#cell_annotations = "/data/Perkins/Mouse_Kidney/data_endo_pt/new_clus.tsv"
 sample_ids = c("BG1_BG20C", "BG3_BG21C", "BG5_BG22C", "BG52_BG20C_MeOH", "BG54_BG21C_MeOH", "BG56_BG22C_MeOH")
 
 cellranger <- function(sample_id, type) {
@@ -40,8 +42,27 @@ cellranger <- function(sample_id, type) {
     write.table(genes, paste(dir, "genes.tsv", sep="/"), col.names=F, row.names=F, quote=F, sep="\t")
 }
 
+matrices <- function(sample_id) {
+    dir = paste(input_dir, "Filtered_Feature_Barcode_Matrices", paste(sample_id, ".txt", sep=""), sep="/")
+    sample = as.matrix(read.csv(dir, header = TRUE, sep = "\t"))
+
+    # add clusters
+    cell_annotations = get_clusters(cell_annotations, sample_id, FALSE)
+
+    to_delete = names(cell_annotations[cell_annotations != "PT" & cell_annotations != "Endo"])
+    to_delete = sapply(to_delete, function(x) {
+        paste(sample_id, strsplit(c(x), "-", fixed=T)[[1]][1], sep = "_")
+    })
+    names(to_delete) = NULL
+    sample = sample[, !colnames(sample) %in% to_delete]
+
+    write.table(as.matrix(sample), file=dir, quote=FALSE, sep="\t")
+}
+
 for (s in sample_ids) {
     for (t in c("filtered", "raw")) {
-        cellranger(s, t)
+        #cellranger(s, t)
     }
+    print(s)
+    matrices(s)
 }
