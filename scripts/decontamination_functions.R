@@ -95,7 +95,8 @@ get_sample <- function(i, sample_id, method) {
   # DECONTX
   ####################
   else if (substring(method,0,7) == "decontx") {
-    if (sample_id == "mouse_kidney") {
+    print(config$dataset)
+	  if (config$dataset == "mouse_kidney") {
       filtered = read.csv(dir,header = TRUE,sep = "\t")
       cont_matrix = as.matrix(filtered)
     } else if (sample_id == "hgmm12k") {

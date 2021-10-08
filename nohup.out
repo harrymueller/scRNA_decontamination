@@ -1,0 +1,2410 @@
+[1] "Getting the config and loading libraries..."
+Registered S3 method overwritten by 'rvest':
+  method            from
+  read_xml.response xml2
+[1] "Config and libraries loaded successfully."
+[1] "##############################"
+[1] "Starting no_decontamination"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+[1] "Starting BG3_BG21C"
+[1] "Starting BG5_BG22C"
+[1] "Starting BG52_BG20C_MeOH"
+[1] "Starting BG54_BG21C_MeOH"
+[1] "Starting BG56_BG22C_MeOH"
+[1] "Saving BG1_BG20C"
+[1] "Saving BG3_BG21C"
+[1] "Saving BG5_BG22C"
+[1] "Saving BG52_BG20C_MeOH"
+[1] "Saving BG54_BG21C_MeOH"
+[1] "Saving BG56_BG22C_MeOH"
+[1] "Combining seurat objects"
+[1] "Processing prior to integration"
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "fresh"
+WARNING: Number of cells within a new cluster = 1
+Error in unique(samples.combined[[1]]@meta.data$orig.ident) : 
+  trying to get slot "meta.data" from an object of a basic class ("NULL") with no slots
+Calls: decontaminate_samples ... FUN -> reCluster -> log_print -> print -> paste -> unique
+Execution halted
+[1] "Getting the config and loading libraries..."
+Registered S3 method overwritten by 'rvest':
+  method            from
+  read_xml.response xml2
+[1] "Config and libraries loaded successfully."
+[1] "##############################"
+[1] "Starting no_decontamination"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+[1] "Starting BG3_BG21C"
+[1] "Starting BG5_BG22C"
+[1] "Starting BG52_BG20C_MeOH"
+[1] "Starting BG54_BG21C_MeOH"
+[1] "Starting BG56_BG22C_MeOH"
+[1] "Saving BG1_BG20C"
+[1] "Saving BG3_BG21C"
+[1] "Saving BG5_BG22C"
+[1] "Saving BG52_BG20C_MeOH"
+[1] "Saving BG54_BG21C_MeOH"
+[1] "Saving BG56_BG22C_MeOH"
+[1] "Combining seurat objects"
+[1] "Processing prior to integration"
+$BG1_BG20C
+An object of class Seurat 
+13608 features across 1731 samples within 1 assay 
+Active assay: RNA (13608 features, 0 variable features)
+
+$BG3_BG21C
+An object of class Seurat 
+13608 features across 2725 samples within 1 assay 
+Active assay: RNA (13608 features, 0 variable features)
+
+$BG5_BG22C
+An object of class Seurat 
+13608 features across 3792 samples within 1 assay 
+Active assay: RNA (13608 features, 0 variable features)
+
+$BG52_BG20C_MeOH
+An object of class Seurat 
+13608 features across 1435 samples within 1 assay 
+Active assay: RNA (13608 features, 0 variable features)
+
+$BG54_BG21C_MeOH
+An object of class Seurat 
+13608 features across 3383 samples within 1 assay 
+Active assay: RNA (13608 features, 0 variable features)
+
+$BG56_BG22C_MeOH
+An object of class Seurat 
+13608 features across 3905 samples within 1 assay 
+Active assay: RNA (13608 features, 0 variable features)
+
+Error in print(samples.combined@meta.data) : 
+  trying to get slot "meta.data" from an object of a basic class ("list") with no slots
+Calls: decontaminate_samples -> print
+Execution halted
+[1] "Getting the config and loading libraries..."
+Registered S3 method overwritten by 'rvest':
+  method            from
+  read_xml.response xml2
+[1] "Config and libraries loaded successfully."
+[1] "##############################"
+[1] "Starting no_decontamination"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+[1] "Starting BG3_BG21C"
+[1] "Starting BG5_BG22C"
+[1] "Starting BG52_BG20C_MeOH"
+[1] "Starting BG54_BG21C_MeOH"
+[1] "Starting BG56_BG22C_MeOH"
+[1] "Saving BG1_BG20C"
+[1] "Getting the config and loading libraries..."
+Registered S3 method overwritten by 'rvest':
+  method            from
+  read_xml.response xml2
+[1] "Config and libraries loaded successfully."
+[1] "##############################"
+[1] "Starting no_decontamination"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+[1] "Starting BG3_BG21C"
+[1] "Starting BG5_BG22C"
+[1] "Starting BG52_BG20C_MeOH"
+[1] "Starting BG54_BG21C_MeOH"
+[1] "Starting BG56_BG22C_MeOH"
+[1] "Saving BG1_BG20C"
+[1] "Saving BG3_BG21C"
+[1] "Saving BG5_BG22C"
+[1] "Saving BG52_BG20C_MeOH"
+[1] "Saving BG54_BG21C_MeOH"
+[1] "Saving BG56_BG22C_MeOH"
+[1] "Combining seurat objects"
+[1] "Processing prior to integration"
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "fresh"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = fresh"
+[1] "MPH"
+[1] "0.290838655332837"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.290838655332837"
+[1] "0.439009732954405"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.439009732954405"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "716"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 716"
+[1] "DCT_CNT"
+[1] "NK"
+[1] "aLOH"
+[1] "-0.219056048933743"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.219056048933743"
+[1] "-0.00844841874158453"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.00844841874158453"
+[1] "MPH"
+WARNING: Decreasing number of bins
+[1] "reCluster error:\nHalving number of bins to 10\nCT = MPH"
+[1] "CD_IC"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "aLOH"
+[1] "DCT_CNT"
+[1] "B"
+[1] "MPH"
+[1] "-0.209827845126772"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.209827845126772"
+[1] "Fib"
+[1] "0.0333713108077349"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0333713108077349"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "aLOH"
+[1] "MeOH"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = MeOH"
+[1] "CD_IC"
+[1] "DCT_CNT"
+WARNING: Decreasing number of bins
+[1] "reCluster error:\nHalving number of bins to 10\nCT = DCT_CNT"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "MPH"
+WARNING: Decreasing number of bins
+[1] "reCluster error:\nHalving number of bins to 10\nCT = MPH"
+[1] "DCT_CNT"
+[1] "aLOH"
+[1] "NK"
+[1] "0.0302646026608663"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0302646026608663"
+[1] "1.06451119556908"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 1.06451119556908"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "DCT_CNT"
+[1] "PT"
+[1] "Endo"
+[1] "MPH"
+[1] "CD_IC"
+[1] "aLOH"
+[1] "CD_PC"
+[1] "0.28758608995167"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.28758608995167"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "Completed decontamination"
+[1] "Decontamination completed"
+[1] "Integrating"
+[1] "Finding integration anchors"
+Computing 2000 integration features
+Scaling features for provided objects
+Finding all pairwise anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6599 anchors
+Filtering anchors
+	Retained 2917 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7322 anchors
+Filtering anchors
+	Retained 2727 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9535 anchors
+Filtering anchors
+	Retained 4102 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5263 anchors
+Filtering anchors
+	Retained 2564 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5928 anchors
+Filtering anchors
+	Retained 2992 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6449 anchors
+Filtering anchors
+	Retained 3136 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7096 anchors
+Filtering anchors
+	Retained 2304 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9063 anchors
+Filtering anchors
+	Retained 3090 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11223 anchors
+Filtering anchors
+	Retained 3690 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6350 anchors
+Filtering anchors
+	Retained 2235 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7243 anchors
+Filtering anchors
+	Retained 2062 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9530 anchors
+Filtering anchors
+	Retained 2823 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11978 anchors
+Filtering anchors
+	Retained 3556 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6376 anchors
+Filtering anchors
+	Retained 1927 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11595 anchors
+Filtering anchors
+	Retained 3585 anchors
+[1] "Integrating"
+Merging dataset 4 into 3
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 1 into 2
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 2 1 into 3 4
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 5 into 3 4 2 1
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 6 into 3 4 2 1 5
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Warning: Adding a command log without an assay associated with it
+[1] "Dimension reduction"
+Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric
+To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'
+This message will be shown once per session
+07:32:29 UMAP embedding parameters a = 0.9922 b = 1.112
+07:32:29 Read 16971 rows and found 30 numeric columns
+07:32:29 Using Annoy for neighbor search, n_neighbors = 30
+07:32:29 Building Annoy index with metric = cosine, n_trees = 50
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+07:32:31 Writing NN index file to temp file /tmp/RtmpM7WT1T/file4e5ea6dc42c4b
+07:32:31 Searching Annoy index using 1 thread, search_k = 3000
+07:32:37 Annoy recall = 100%
+07:32:37 Commencing smooth kNN distance calibration using 1 thread
+07:32:40 Initializing from normalized Laplacian + noise
+07:32:41 Commencing optimization for 200 epochs, with 836862 positive edges
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+07:32:49 Optimization finished
+[1] "Saving RDA"
+[1] "Integration completed"
+[1] "Analysing"
+Error in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  : 
+  invalid font type
+Calls: analyse_samples ... drawDetails -> drawDetails.text -> grid.Call.graphics
+In addition: There were 50 or more warnings (use warnings() to see the first 50)
+Execution halted
+[1] "Getting the config and loading libraries..."
+Registered S3 method overwritten by 'rvest':
+  method            from
+  read_xml.response xml2
+[1] "Config and libraries loaded successfully."
+[1] "##############################"
+[1] "Starting no_decontamination"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+[1] "Starting BG3_BG21C"
+[1] "Starting BG5_BG22C"
+[1] "Starting BG52_BG20C_MeOH"
+[1] "Starting BG54_BG21C_MeOH"
+[1] "Starting BG56_BG22C_MeOH"
+[1] "Saving BG1_BG20C"
+[1] "Saving BG3_BG21C"
+[1] "Saving BG5_BG22C"
+[1] "Saving BG52_BG20C_MeOH"
+[1] "Saving BG54_BG21C_MeOH"
+[1] "Saving BG56_BG22C_MeOH"
+[1] "Combining seurat objects"
+[1] "Processing prior to integration"
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "fresh"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = fresh"
+[1] "MPH"
+[1] "0.290838655332837"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.290838655332837"
+[1] "0.439009732954405"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.439009732954405"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "716"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 716"
+[1] "DCT_CNT"
+[1] "NK"
+[1] "aLOH"
+[1] "-0.219056048933743"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.219056048933743"
+[1] "-0.00844841874158453"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.00844841874158453"
+[1] "MPH"
+WARNING: Decreasing number of bins
+[1] "reCluster error:\nHalving number of bins to 10\nCT = MPH"
+[1] "CD_IC"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "aLOH"
+[1] "DCT_CNT"
+[1] "B"
+[1] "MPH"
+[1] "-0.209827845126772"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.209827845126772"
+[1] "Fib"
+[1] "0.0333713108077349"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0333713108077349"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "aLOH"
+[1] "MeOH"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = MeOH"
+[1] "CD_IC"
+[1] "DCT_CNT"
+WARNING: Decreasing number of bins
+[1] "reCluster error:\nHalving number of bins to 10\nCT = DCT_CNT"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "MPH"
+WARNING: Decreasing number of bins
+[1] "reCluster error:\nHalving number of bins to 10\nCT = MPH"
+[1] "DCT_CNT"
+[1] "aLOH"
+[1] "NK"
+[1] "0.0302646026608663"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0302646026608663"
+[1] "1.06451119556908"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 1.06451119556908"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "DCT_CNT"
+[1] "PT"
+[1] "Endo"
+[1] "MPH"
+[1] "CD_IC"
+[1] "aLOH"
+[1] "CD_PC"
+[1] "0.28758608995167"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.28758608995167"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "Completed decontamination"
+[1] "Decontamination completed"
+[1] "Integrating"
+[1] "Finding integration anchors"
+Computing 2000 integration features
+Scaling features for provided objects
+Finding all pairwise anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6599 anchors
+Filtering anchors
+	Retained 2917 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7322 anchors
+Filtering anchors
+	Retained 2727 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9535 anchors
+Filtering anchors
+	Retained 4102 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5263 anchors
+Filtering anchors
+	Retained 2564 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5928 anchors
+Filtering anchors
+	Retained 2992 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6449 anchors
+Filtering anchors
+	Retained 3136 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7096 anchors
+Filtering anchors
+	Retained 2304 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9063 anchors
+Filtering anchors
+	Retained 3090 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11223 anchors
+Filtering anchors
+	Retained 3690 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6350 anchors
+Filtering anchors
+	Retained 2235 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7243 anchors
+Filtering anchors
+	Retained 2062 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9530 anchors
+Filtering anchors
+	Retained 2823 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11978 anchors
+Filtering anchors
+	Retained 3556 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6376 anchors
+Filtering anchors
+	Retained 1927 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11595 anchors
+Filtering anchors
+	Retained 3585 anchors
+[1] "Integrating"
+Merging dataset 4 into 3
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 1 into 2
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 2 1 into 3 4
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 5 into 3 4 2 1
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 6 into 3 4 2 1 5
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Warning: Adding a command log without an assay associated with it
+[1] "Dimension reduction"
+Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric
+To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'
+This message will be shown once per session
+07:55:43 UMAP embedding parameters a = 0.9922 b = 1.112
+07:55:43 Read 16971 rows and found 30 numeric columns
+07:55:43 Using Annoy for neighbor search, n_neighbors = 30
+07:55:43 Building Annoy index with metric = cosine, n_trees = 50
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+07:55:45 Writing NN index file to temp file /tmp/RtmpIIkpfj/file4e6817c8a9a0b
+07:55:45 Searching Annoy index using 1 thread, search_k = 3000
+07:55:50 Annoy recall = 100%
+07:55:51 Commencing smooth kNN distance calibration using 1 thread
+07:55:53 Initializing from normalized Laplacian + noise
+07:55:53 Commencing optimization for 200 epochs, with 836862 positive edges
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+07:56:01 Optimization finished
+[1] "Saving RDA"
+[1] "Integration completed"
+[1] "##############################"
+[1] "Starting soupx:autoEstCont"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+Error in file(file, "rt") : cannot open the connection
+Calls: decontaminate_samples -> get_sample -> get_clusters -> read.table -> file
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file '/data/decont_project/mouse_kidney/input_pt_endo/../mouse_kidney/output_pt_endo/no_decontamination/new_clus.tsv': No such file or directory
+Execution halted
+[1] "Getting the config and loading libraries..."
+Registered S3 method overwritten by 'rvest':
+  method            from
+  read_xml.response xml2
+[1] "Config and libraries loaded successfully."
+[1] "##############################"
+[1] "Starting soupx:autoEstCont"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+197 genes passed tf-idf cut-off and 29 soup quantile filter.  Taking the top 29.
+Using 147 independent estimates of rho.
+Estimated global rho of 0.09
+Expanding counts from 7 clusters to 1731 cells.
+[1] "Starting BG3_BG21C"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+92 genes passed tf-idf cut-off and 24 soup quantile filter.  Taking the top 24.
+Using 166 independent estimates of rho.
+Estimated global rho of 0.06
+Expanding counts from 10 clusters to 2725 cells.
+[1] "Starting BG5_BG22C"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+86 genes passed tf-idf cut-off and 30 soup quantile filter.  Taking the top 30.
+Using 206 independent estimates of rho.
+Estimated global rho of 0.06
+Expanding counts from 10 clusters to 3792 cells.
+[1] "Starting BG52_BG20C_MeOH"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+131 genes passed tf-idf cut-off and 27 soup quantile filter.  Taking the top 27.
+Using 111 independent estimates of rho.
+Estimated global rho of 0.06
+Expanding counts from 6 clusters to 1435 cells.
+[1] "Starting BG54_BG21C_MeOH"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+92 genes passed tf-idf cut-off and 41 soup quantile filter.  Taking the top 41.
+Using 279 independent estimates of rho.
+Estimated global rho of 0.06
+Expanding counts from 9 clusters to 3383 cells.
+[1] "Starting BG56_BG22C_MeOH"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+86 genes passed tf-idf cut-off and 36 soup quantile filter.  Taking the top 36.
+Using 201 independent estimates of rho.
+Estimated global rho of 0.07
+Expanding counts from 8 clusters to 3905 cells.
+[1] "Saving BG1_BG20C"
+[1] "Saving BG3_BG21C"
+[1] "Saving BG5_BG22C"
+[1] "Saving BG52_BG20C_MeOH"
+[1] "Saving BG54_BG21C_MeOH"
+[1] "Saving BG56_BG22C_MeOH"
+[1] "Combining seurat objects"
+[1] "Processing prior to integration"
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "MPH"
+[1] "decont"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = decont"
+[1] "-0.126636598995981"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.126636598995981"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "714"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 714"
+[1] "DCT_CNT"
+[1] "NK"
+[1] "aLOH"
+[1] "-0.23795236027772"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.23795236027772"
+[1] "0.00678628440740359"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.00678628440740359"
+[1] "MPH"
+[1] "CD_IC"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "aLOH"
+[1] "DCT_CNT"
+[1] "MPH"
+[1] "0.662264675508458"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.662264675508458"
+[1] "-0.409117947976797"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.409117947976797"
+[1] "Fib"
+[1] "0.0329215150793962"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0329215150793962"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "aLOH"
+[1] "MeOH"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = MeOH"
+[1] "DCT_CNT"
+[1] "CD_IC"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "MPH"
+[1] "DCT_CNT"
+[1] "aLOH"
+[1] "NK"
+[1] "0.0390838547875087"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0390838547875087"
+[1] "1.10229821054359"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 1.10229821054359"
+[1] "0.154657343975941"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.154657343975941"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "DCT_CNT"
+[1] "PT"
+[1] "Endo"
+[1] "MPH"
+[1] "CD_IC"
+[1] "aLOH"
+[1] "CD_PC"
+[1] "0.28311676241288"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.28311676241288"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "Completed decontamination"
+[1] "Decontamination completed"
+[1] "Integrating"
+[1] "Finding integration anchors"
+Computing 2000 integration features
+Scaling features for provided objects
+Finding all pairwise anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6497 anchors
+Filtering anchors
+	Retained 3013 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7188 anchors
+Filtering anchors
+	Retained 2780 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9321 anchors
+Filtering anchors
+	Retained 4044 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5176 anchors
+Filtering anchors
+	Retained 2451 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5879 anchors
+Filtering anchors
+	Retained 2856 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6407 anchors
+Filtering anchors
+	Retained 3313 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6987 anchors
+Filtering anchors
+	Retained 2208 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 8974 anchors
+Filtering anchors
+	Retained 3020 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11152 anchors
+Filtering anchors
+	Retained 3629 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6315 anchors
+Filtering anchors
+	Retained 2252 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7145 anchors
+Filtering anchors
+	Retained 1923 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9349 anchors
+Filtering anchors
+	Retained 2786 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11977 anchors
+Filtering anchors
+	Retained 3678 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6388 anchors
+Filtering anchors
+	Retained 1974 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11534 anchors
+Filtering anchors
+	Retained 3749 anchors
+[1] "Integrating"
+Merging dataset 4 into 3
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 1 into 2
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 2 1 into 3 4
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 5 into 6
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 6 5 into 3 4 2 1
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Warning: Adding a command log without an assay associated with it
+[1] "Dimension reduction"
+Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric
+To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'
+This message will be shown once per session
+08:19:30 UMAP embedding parameters a = 0.9922 b = 1.112
+08:19:30 Read 16971 rows and found 30 numeric columns
+08:19:30 Using Annoy for neighbor search, n_neighbors = 30
+08:19:30 Building Annoy index with metric = cosine, n_trees = 50
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+08:19:32 Writing NN index file to temp file /tmp/RtmpLHpkzU/file4e6d97a33fa45
+08:19:32 Searching Annoy index using 1 thread, search_k = 3000
+08:19:37 Annoy recall = 100%
+08:19:38 Commencing smooth kNN distance calibration using 1 thread
+08:19:39 Initializing from normalized Laplacian + noise
+08:19:40 Commencing optimization for 200 epochs, with 837404 positive edges
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+08:19:48 Optimization finished
+[1] "Saving RDA"
+[1] "Integration completed"
+[1] "##############################"
+[1] "Starting soupx:background_genes"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Estimated global contamination fraction of 25.84%
+Expanding counts from 7 clusters to 1731 cells.
+[1] "Starting BG3_BG21C"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Estimated global contamination fraction of 28.98%
+Expanding counts from 10 clusters to 2725 cells.
+[1] "Starting BG5_BG22C"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Estimated contamination is very high (0.31).
+Estimated global contamination fraction of 31.22%
+Expanding counts from 10 clusters to 3792 cells.
+[1] "Starting BG52_BG20C_MeOH"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Estimated contamination is very high (0.45).
+Estimated global contamination fraction of 44.98%
+Expanding counts from 6 clusters to 1435 cells.
+[1] "Starting BG54_BG21C_MeOH"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Estimated contamination is very high (0.49).
+Estimated global contamination fraction of 48.56%
+Expanding counts from 9 clusters to 3383 cells.
+[1] "Starting BG56_BG22C_MeOH"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Estimated contamination is very high (0.42).
+Estimated global contamination fraction of 42.42%
+Expanding counts from 8 clusters to 3905 cells.
+[1] "Saving BG1_BG20C"
+[1] "Saving BG3_BG21C"
+[1] "Saving BG5_BG22C"
+[1] "Saving BG52_BG20C_MeOH"
+[1] "Saving BG54_BG21C_MeOH"
+[1] "Saving BG56_BG22C_MeOH"
+[1] "Combining seurat objects"
+[1] "Processing prior to integration"
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "fresh"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = fresh"
+[1] "MPH"
+[1] "0.314056088732857"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.314056088732857"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "712"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 712"
+[1] "CD_IC"
+[1] "DCT_CNT"
+[1] "NK"
+[1] "aLOH"
+[1] "0.209848097933855"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.209848097933855"
+[1] "-0.0271347214796603"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.0271347214796603"
+[1] "MPH"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "aLOH"
+[1] "DCT_CNT"
+[1] "MPH"
+[1] "-0.125097889330227"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.125097889330227"
+[1] "-0.0756122578359069"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.0756122578359069"
+[1] "Fib"
+[1] "0.0446298793033593"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0446298793033593"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "aLOH"
+[1] "CD_IC"
+[1] "MPH"
+[1] "-0.150914880510548"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.150914880510548"
+[1] "0.0979496494067278"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0979496494067278"
+[1] "0.284020468522519"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.284020468522519"
+[1] "DCT_CNT"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "MPH"
+[1] "DCT_CNT"
+[1] "NK"
+[1] "aLOH"
+[1] "0.115525560079904"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.115525560079904"
+[1] "1.35811281263667"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 1.35811281263667"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "DCT_CNT"
+[1] "PT"
+[1] "Endo"
+[1] "MPH"
+[1] "CD_IC"
+[1] "aLOH"
+[1] "NK"
+[1] "CD_PC"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "Completed decontamination"
+[1] "Decontamination completed"
+[1] "Integrating"
+[1] "Finding integration anchors"
+Computing 2000 integration features
+Scaling features for provided objects
+Finding all pairwise anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6488 anchors
+Filtering anchors
+	Retained 3490 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7247 anchors
+Filtering anchors
+	Retained 3329 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9694 anchors
+Filtering anchors
+	Retained 4785 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5193 anchors
+Filtering anchors
+	Retained 2856 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5962 anchors
+Filtering anchors
+	Retained 3352 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6405 anchors
+Filtering anchors
+	Retained 3623 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7055 anchors
+Filtering anchors
+	Retained 2825 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9282 anchors
+Filtering anchors
+	Retained 3636 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11419 anchors
+Filtering anchors
+	Retained 4567 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6326 anchors
+Filtering anchors
+	Retained 2588 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7248 anchors
+Filtering anchors
+	Retained 2628 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9575 anchors
+Filtering anchors
+	Retained 3400 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11878 anchors
+Filtering anchors
+	Retained 4124 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6398 anchors
+Filtering anchors
+	Retained 2311 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11701 anchors
+Filtering anchors
+	Retained 4258 anchors
+[1] "Integrating"
+Merging dataset 4 into 3
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 1 into 2
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 2 1 into 3 4
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 5 into 3 4 2 1
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 6 into 3 4 2 1 5
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Warning: Adding a command log without an assay associated with it
+[1] "Dimension reduction"
+08:40:17 UMAP embedding parameters a = 0.9922 b = 1.112
+08:40:17 Read 16971 rows and found 30 numeric columns
+08:40:17 Using Annoy for neighbor search, n_neighbors = 30
+08:40:17 Building Annoy index with metric = cosine, n_trees = 50
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+08:40:19 Writing NN index file to temp file /tmp/RtmpLHpkzU/file4e6d91fda14e9
+08:40:19 Searching Annoy index using 1 thread, search_k = 3000
+08:40:24 Annoy recall = 100%
+08:40:25 Commencing smooth kNN distance calibration using 1 thread
+08:40:27 Initializing from normalized Laplacian + noise
+08:40:28 Commencing optimization for 200 epochs, with 835590 positive edges
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+08:40:36 Optimization finished
+[1] "Saving RDA"
+[1] "Integration completed"
+[1] "##############################"
+[1] "Starting soupx:top_background_genes"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Estimated contamination is very high (0.36).
+Estimated global contamination fraction of 35.90%
+Expanding counts from 7 clusters to 1731 cells.
+[1] "Starting BG3_BG21C"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Estimated global contamination fraction of 29.00%
+Expanding counts from 10 clusters to 2725 cells.
+[1] "Starting BG5_BG22C"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Estimated contamination is very high (0.32).
+Estimated global contamination fraction of 32.12%
+Expanding counts from 10 clusters to 3792 cells.
+[1] "Starting BG52_BG20C_MeOH"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Extremely high contamination estimated (0.54).  This likely represents a failure in estimating the contamination fraction.  Set forceAccept=TRUE to proceed with this value.
+Estimated global contamination fraction of 53.86%
+Expanding counts from 6 clusters to 1435 cells.
+[1] "Starting BG54_BG21C_MeOH"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Extremely high contamination estimated (0.62).  This likely represents a failure in estimating the contamination fraction.  Set forceAccept=TRUE to proceed with this value.
+Estimated global contamination fraction of 62.50%
+Expanding counts from 9 clusters to 3383 cells.
+[1] "Starting BG56_BG22C_MeOH"
+Loading raw count data
+Loading cell-only count data
+Loading extra analysis data where available
+Estimated contamination is very high (0.44).
+Estimated global contamination fraction of 44.15%
+Expanding counts from 8 clusters to 3905 cells.
+[1] "Saving BG1_BG20C"
+[1] "Saving BG3_BG21C"
+[1] "Saving BG5_BG22C"
+[1] "Saving BG52_BG20C_MeOH"
+[1] "Saving BG54_BG21C_MeOH"
+[1] "Saving BG56_BG22C_MeOH"
+[1] "Combining seurat objects"
+[1] "Processing prior to integration"
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "fresh"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = fresh"
+[1] "MPH"
+[1] "0.350639717878898"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.350639717878898"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "712"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 712"
+[1] "CD_IC"
+[1] "DCT_CNT"
+[1] "NK"
+[1] "aLOH"
+[1] "0.214288829435674"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.214288829435674"
+[1] "-0.0310061407942658"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.0310061407942658"
+[1] "MPH"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "CD_IC"
+[1] "Endo"
+[1] "aLOH"
+[1] "DCT_CNT"
+[1] "MPH"
+[1] "-0.146813761006725"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.146813761006725"
+[1] "-0.0834109897041115"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.0834109897041115"
+[1] "Fib"
+[1] "0.0433763474623586"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0433763474623586"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "aLOH"
+[1] "CD_IC"
+[1] "B"
+[1] "0.157250216530373"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.157250216530373"
+[1] "-0.132675073060679"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.132675073060679"
+[1] "0.299435301540415"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.299435301540415"
+[1] "DCT_CNT"
+[1] "-0.0724251598395866"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.0724251598395866"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "MeOH"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = MeOH"
+[1] "MPH"
+[1] "DCT_CNT"
+[1] "NK"
+[1] "aLOH"
+[1] "B"
+[1] "-0.0478548731647128"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.0478548731647128"
+[1] "-0.130238036886675"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.130238036886675"
+[1] "-0.120179410650734"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.120179410650734"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "DCT_CNT"
+[1] "PT"
+[1] "Endo"
+[1] "MPH"
+[1] "CD_IC"
+[1] "aLOH"
+[1] "0.0614394453338998"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0614394453338998"
+[1] "CD_PC"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "Completed decontamination"
+[1] "Decontamination completed"
+[1] "Integrating"
+[1] "Finding integration anchors"
+Computing 2000 integration features
+Scaling features for provided objects
+Finding all pairwise anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6503 anchors
+Filtering anchors
+	Retained 3262 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7258 anchors
+Filtering anchors
+	Retained 3129 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9744 anchors
+Filtering anchors
+	Retained 4853 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5129 anchors
+Filtering anchors
+	Retained 2973 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5895 anchors
+Filtering anchors
+	Retained 3383 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6379 anchors
+Filtering anchors
+	Retained 3787 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7068 anchors
+Filtering anchors
+	Retained 2998 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9393 anchors
+Filtering anchors
+	Retained 3944 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11359 anchors
+Filtering anchors
+	Retained 4770 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6318 anchors
+Filtering anchors
+	Retained 2854 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7216 anchors
+Filtering anchors
+	Retained 2632 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9564 anchors
+Filtering anchors
+	Retained 3414 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11856 anchors
+Filtering anchors
+	Retained 4350 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6332 anchors
+Filtering anchors
+	Retained 2387 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11619 anchors
+Filtering anchors
+	Retained 4760 anchors
+[1] "Integrating"
+Merging dataset 4 into 3
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 1 into 2
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 2 1 into 3 4
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 5 into 3 4 2 1
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 6 into 3 4 2 1 5
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Warning: Adding a command log without an assay associated with it
+[1] "Dimension reduction"
+09:01:05 UMAP embedding parameters a = 0.9922 b = 1.112
+09:01:05 Read 16971 rows and found 30 numeric columns
+09:01:05 Using Annoy for neighbor search, n_neighbors = 30
+09:01:05 Building Annoy index with metric = cosine, n_trees = 50
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+09:01:07 Writing NN index file to temp file /tmp/RtmpLHpkzU/file4e6d914e66f7d
+09:01:07 Searching Annoy index using 1 thread, search_k = 3000
+09:01:12 Annoy recall = 100%
+09:01:13 Commencing smooth kNN distance calibration using 1 thread
+09:01:15 Initializing from normalized Laplacian + noise
+09:01:15 Commencing optimization for 200 epochs, with 838750 positive edges
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+09:01:24 Optimization finished
+[1] "Saving RDA"
+[1] "Integration completed"
+[1] "##############################"
+[1] "Starting decontx:no_cell_types"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+Error in decontX(cont_matrix) : object 'cont_matrix' not found
+Calls: decontaminate_samples ... with_preserve_seed -> .decontX -> .decontXoneBatch -> .checkCountsDecon
+In addition: There were 18 warnings (use warnings() to see them)
+Execution halted
+[1] "Getting the config and loading libraries..."
+Registered S3 method overwritten by 'rvest':
+  method            from
+  read_xml.response xml2
+[1] "Config and libraries loaded successfully."
+[1] "##############################"
+[1] "Starting decontx:no_cell_types"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+[1] "BG1_BG20C"
+Error in decontX(cont_matrix) : object 'cont_matrix' not found
+Calls: decontaminate_samples ... with_preserve_seed -> .decontX -> .decontXoneBatch -> .checkCountsDecon
+Execution halted
+[1] "Getting the config and loading libraries..."
+Registered S3 method overwritten by 'rvest':
+  method            from
+  read_xml.response xml2
+[1] "Config and libraries loaded successfully."
+[1] "##############################"
+[1] "Starting decontx:no_cell_types"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+[1] "mouse_kidney"
+Error in file(file, "rt") : cannot open the connection
+Calls: decontaminate_samples -> get_sample -> read.csv -> read.table -> file
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file '/data/decont_project/mouse_kidney/input_pt_endo/Filtered_Feature_Barcode_Matrices/BG1_BG20C.txt': No such file or directory
+Execution halted
+[1] "Getting the config and loading libraries..."
+Registered S3 method overwritten by 'rvest':
+  method            from
+  read_xml.response xml2
+[1] "Config and libraries loaded successfully."
+[1] "##############################"
+[1] "Starting fastcar"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+[1] "Starting BG3_BG21C"
+[1] "Starting BG5_BG22C"
+[1] "Starting BG52_BG20C_MeOH"
+[1] "Starting BG54_BG21C_MeOH"
+[1] "Starting BG56_BG22C_MeOH"
+[1] "Saving BG1_BG20C"
+[1] "Saving BG3_BG21C"
+[1] "Saving BG5_BG22C"
+[1] "Saving BG52_BG20C_MeOH"
+[1] "Saving BG54_BG21C_MeOH"
+[1] "Saving BG56_BG22C_MeOH"
+[1] "Combining seurat objects"
+[1] "Processing prior to integration"
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "CD_IC"
+[1] "Endo"
+[1] "aLOH"
+[1] "MPH"
+[1] "0.375222940561692"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.375222940561692"
+[1] "DCT_CNT"
+[1] "0.236688473988249"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.236688473988249"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "B"
+[1] "MC"
+[1] "CD_IC"
+[1] "DCT_CNT"
+[1] "NK"
+[1] "aLOH"
+[1] "-0.0943646004693253"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.0943646004693253"
+[1] "0.0790414027075287"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0790414027075287"
+[1] "MPH"
+[1] "-0.171252352606054"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.171252352606054"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "CD_IC"
+[1] "DCT_CNT"
+[1] "Endo"
+[1] "MPH"
+[1] "aLOH"
+[1] "-0.131394603921659"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.131394603921659"
+[1] "Fib"
+[1] "0.0583269922020355"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0583269922020355"
+[1] "-0.091997754639677"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.091997754639677"
+[1] "0.122660110502647"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.122660110502647"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "aLOH"
+[1] "CD_PC"
+[1] "-0.163835686843535"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.163835686843535"
+[1] "MPH"
+[1] "DCT_CNT"
+[1] "B"
+[1] "-0.0339523117215883"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.0339523117215883"
+[1] "0.0924752681749096"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0924752681749096"
+[1] "-0.0305429501848811"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.0305429501848811"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "PT"
+[1] "Endo"
+[1] "B"
+[1] "CD_IC"
+[1] "MPH"
+WARNING: Decreasing number of bins
+[1] "reCluster error:\nHalving number of bins to 10\nCT = MPH"
+[1] "DCT_CNT"
+[1] "CD_PC"
+WARNING: Decreasing number of bins
+[1] "reCluster error:\nHalving number of bins to 10\nCT = CD_PC"
+[1] "aLOH"
+[1] "-0.0894450646237081"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = -0.0894450646237081"
+[1] "NK"
+[1] "0.0299870888092703"
+WARNING: Number of cells within a new cluster = 1
+[1] "Number of cells within a cluster = 1:\nAdding barcode to unknown cluster\nCT = 0.0299870888092703"
+[1] "Fib"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Performing log-normalization
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "DCT_CNT"
+[1] "PT"
+[1] "Endo"
+[1] "CD_IC"
+[1] "MPH"
+[1] "aLOH"
+[1] "CD_PC"
+[1] "B"
+[1] "NK"
+[1] "T"
+[1] "Podo"
+[1] "Fib"
+[1] "MC"
+Calculating gene variances
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating feature variances of standardized and clipped values
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+[1] "Completed decontamination"
+[1] "Decontamination completed"
+[1] "Integrating"
+[1] "Finding integration anchors"
+Computing 2000 integration features
+Scaling features for provided objects
+Finding all pairwise anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6587 anchors
+Filtering anchors
+	Retained 3460 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7262 anchors
+Filtering anchors
+	Retained 2971 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9468 anchors
+Filtering anchors
+	Retained 4033 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5285 anchors
+Filtering anchors
+	Retained 2318 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 5954 anchors
+Filtering anchors
+	Retained 2190 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6473 anchors
+Filtering anchors
+	Retained 2444 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7045 anchors
+Filtering anchors
+	Retained 1904 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 8941 anchors
+Filtering anchors
+	Retained 2340 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 10975 anchors
+Filtering anchors
+	Retained 2527 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6336 anchors
+Filtering anchors
+	Retained 2714 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 7132 anchors
+Filtering anchors
+	Retained 1947 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 9381 anchors
+Filtering anchors
+	Retained 2216 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11680 anchors
+Filtering anchors
+	Retained 2401 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 6396 anchors
+Filtering anchors
+	Retained 2564 anchors
+Running CCA
+Merging objects
+Finding neighborhoods
+Finding anchors
+	Found 11564 anchors
+Filtering anchors
+	Retained 4635 anchors
+[1] "Integrating"
+Merging dataset 1 into 2
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 4 into 5
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 3 into 2 1
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 6 into 5 4
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Merging dataset 2 1 3 into 5 4 6
+Extracting anchors for merged samples
+Finding integration vectors
+Finding integration vector weights
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Integrating data
+Warning: Adding a command log without an assay associated with it
+[1] "Dimension reduction"
+Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric
+To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'
+This message will be shown once per session
+01:07:10 UMAP embedding parameters a = 0.9922 b = 1.112
+01:07:10 Read 16971 rows and found 30 numeric columns
+01:07:10 Using Annoy for neighbor search, n_neighbors = 30
+01:07:10 Building Annoy index with metric = cosine, n_trees = 50
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+01:07:12 Writing NN index file to temp file /tmp/RtmpCmnaEp/file504d63d272dad
+01:07:12 Searching Annoy index using 1 thread, search_k = 3000
+01:07:17 Annoy recall = 100%
+01:07:18 Commencing smooth kNN distance calibration using 1 thread
+01:07:20 Initializing from normalized Laplacian + noise
+01:07:21 Commencing optimization for 200 epochs, with 851598 positive edges
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+01:07:29 Optimization finished
+[1] "Saving RDA"
+[1] "Integration completed"
+[1] "##############################"
+[1] "Starting cellbender"
+[1] "##############################"
+[1] "Decontaminating"
+[1] "Starting BG1_BG20C"
+Error in file(file, "rt") : cannot open the connection
+Calls: decontaminate_samples -> get_sample -> read.csv -> read.table -> file
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file '/data/decont_project/mouse_kidney/input_pt_endo/Filtered_Feature_Barcode_Matrices/BG1_BG20C.txt': No such file or directory
+Execution halted
