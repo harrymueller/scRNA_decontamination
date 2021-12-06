@@ -145,12 +145,12 @@ get_sample <- function(i, sample_id, method) {
       # checks for output dir presense - if it doesnt exist, cellbender wont realise until after its finished executing
       if (!dir.exists(output_dir))
         dir.create(output_dir)
-
+      
       cellbender_args = c("remove-background", "--input", input_dir, 
                           "--output", paste(output_dir, filename, sep="/"),
                           "--expected-cells", dim(cont_matrix)[2],
       			  if (config$cellbender_gpu) "--cuda" else NULL)
-
+      
       print("##########")
       print("The arguements for CellBender are:")
       print(cellbender_args)
@@ -162,8 +162,8 @@ get_sample <- function(i, sample_id, method) {
     if (config$benchmarking)
       decont_matrix <- Read10X_h5(paste(output_dir, "/", sample_id, "_filtered.h5", sep=""), use.names=T)
     else
-      decont_matrix <- Read10X_h5(dir, use.names=T)
-
+      decont_matrix <- Read10X_h5(paste(paste(files$output, sample_id, sample_id, sep="/"), "_filtered.h5", sep=""), use.names=T)
+    
     # formatting cell barcodes to be '<sample id>_<barcode>'
     if (sample_id != "hgmm12k")
       dimnames(decont_matrix)[[2]] = sapply(dimnames(decont_matrix)[[2]], function(x) {paste(sample_id, substring(x, 0, nchar(x)-2), sep="_")}, USE.NAMES=F)
