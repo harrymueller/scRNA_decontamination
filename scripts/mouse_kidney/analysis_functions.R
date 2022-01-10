@@ -67,14 +67,15 @@ analyse_DEGs <- function(samples.combined) {
   genes.under <- get_genes_de(DEGs.under, 8) #DEGs.selected, num_cells
 
   ### Saving DEGs to excel file
-  save_DEGs(DEGs, paste(files$output,"/DEGs.xlsx",sep=""), genes.over, genes.under) #DEGs, f_name, genes.over, genes.under
-
+  #save_DEGs(DEGs, paste(files$output,"/DEGs.xlsx",sep=""), genes.over, genes.under) #DEGs, f_name, genes.over, genes.under
+  
   ## Plotting DEGs
   print("Plotting DEGs")
-  DEGs_histogram(DEGs) #DEGs, f_name
-  DEGs_dotplot_over_under_expression(samples.combined, paste(files$output,"/plots/DEG_higher_expression_9_celltypes.png",sep=""), 
-                                     config$ct_order_dotplots, config$genes_ct_dotplots,
-                                     genes.over, genes.under)
+  #DEGs_histogram(DEGs) #DEGs, f_name
+  DEGs_dotplot_specific(samples.combined, paste(files$output, "plots", sep="/"), genes.over, genes.under)
+  #DEGs_dotplot_over_under_expression(samples.combined, paste(files$output,"/plots/DEG_higher_expression_9_celltypes.png",sep=""), 
+  #                                   config$ct_order_dotplots, config$genes_ct_dotplots,
+  #                                   genes.over, genes.under)
 }
 
 

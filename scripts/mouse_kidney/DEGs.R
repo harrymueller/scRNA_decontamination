@@ -196,3 +196,8 @@ DEGs_dotplot_over_under_expression <- function(samples.combined, f_name, order_p
 
   ggsave(f_name,p,width=16, height=12)
 }
+
+
+DEGs_dotplot_specific <- function(samples.combined, output_dir, genes.over, genes.under) {
+  
+}

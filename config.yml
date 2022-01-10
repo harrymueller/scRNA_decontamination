@@ -37,8 +37,8 @@ default:
   fonts: True # adds 'TT Times New Roman' to ggplots - for my ubuntu install
 
 harry_mm: # mousekidney pc
-  input_dir: "/data/Perkins/Mouse_Kidney/data"
-  output_dir: "/data/Perkins/Mouse_Kidney/results/reclus"
+  input_dir: "/data/Perkins/Decont Project/Mouse_Kidney/data"
+  output_dir: "/data/Perkins/Decont Project/Mouse_Kidney/results/reclus-fastcar"
   process:
     - "analyse"
   methods: 
@@ -46,13 +46,13 @@ harry_mm: # mousekidney pc
   #- "soupx:autoEstCont"
   #- "soupx:background_genes"
   #- "soupx:top_background_genes"
-  #- "decontx:with_cell_types"
-  - "decontx:no_cell_types"
-  - "fastcar"
-  - "cellbender"
+  - "decontx:with_cell_types"
+  #- "decontx:no_cell_types"
+  #- "fastcar"
+  #- "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
-  new_cell_annotations: "../new_results/reclus/no_decontamination/new_clus.tsv"
+  new_cell_annotations: "../new_results/reclus-fastcar/no_decontamination/new_clus.tsv"
   gene_signatures: "cell_type_gene_signatures.xlsx"
   ocra_dir: "../../Mouse_Kidney/results"
   recluster: True
