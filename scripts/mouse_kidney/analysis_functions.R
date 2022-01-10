@@ -72,7 +72,7 @@ analyse_DEGs <- function(samples.combined) {
   ## Plotting DEGs
   print("Plotting DEGs")
   #DEGs_histogram(DEGs) #DEGs, f_name
-  DEGs_dotplot_specific(samples.combined, paste(files$output, "plots", sep="/"), genes.over, genes.under)
+  DEGs_dotplot_specific(samples.combined,config$ct_order_dotplots, paste(files$output, "plots", sep="/"), DEGs.over, DEGs.under)
   #DEGs_dotplot_over_under_expression(samples.combined, paste(files$output,"/plots/DEG_higher_expression_9_celltypes.png",sep=""), 
   #                                   config$ct_order_dotplots, config$genes_ct_dotplots,
   #                                   genes.over, genes.under)

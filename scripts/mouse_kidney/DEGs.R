@@ -197,7 +197,78 @@ DEGs_dotplot_over_under_expression <- function(samples.combined, f_name, order_p
   ggsave(f_name,p,width=16, height=12)
 }
 
+# separate dot plots for under and over expr in MeOH
+# about 5-10 -> include num of ct req.
+# + under expr >= 9ct
+DEGs_dotplot_specific <- function(samples.combined, order_paper, output_dir, DEGs.over, DEGs.under) {
+  Idents(samples.combined) <- "celltype"
+  s=20 # text size
+  num_ct = length(unique(Idents(samples.combined)))
 
-DEGs_dotplot_specific <- function(samples.combined, output_dir, genes.over, genes.under) {
+  # order of ct for dotplot
+  order_paper = order_paper[which(order_paper %in% levels(samples.combined))]
+
+  # plot DEGs over expr in meoh
+  genes.over = degs_opt_ct(DEGs.over, num_ct)
+  genes.over.n = genes.over[1]
+  genes.over = genes.over[seq(2, length(genes.over))]
+
+  # celltype.fresh <- normal ct for fresh sample | ct_meoh for rest <- selects only fresh
+  Idents(samples.combined) <- "celltype.fresh" 
+  p1 = DotPlot(samples.combined, idents=order_paper, features = genes.over, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + 
+    xlab("DEGs") + ylab("Cell Type") + 
+    theme(text = element_text(size=s+2), axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + 
+    ggtitle(paste0("DEGs Over-Expressed in MeOH\n>= ", genes.over.n, " Celltypes\nFresh Cells"))
+  Idents(samples.combined) <- "celltype.meoh"
+  p2 = DotPlot(samples.combined, idents=order_paper, features = genes.over, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + 
+    xlab("DEGs") + ylab("Cell Type") + 
+    theme(text = element_text(size=s+2), axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + 
+    ggtitle(paste0("MeOH Cells"))
+  ggsave(paste(output_dir,"/DEG_higher_expression_MeOH.png",sep=""),
+    p1/p2,width=10, height=14)
+
+  # plot DEGs under expr in MeOH
+  genes.under = degs_opt_ct(DEGs.under, num_ct)
+  genes.under.n = genes.under[1]
+  genes.under = genes.under[seq(2, length(genes.under))]
+
+  Idents(samples.combined) <- "celltype.fresh" 
+  p1 = DotPlot(samples.combined, idents=order_paper, features = genes.under, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + 
+    xlab("DEGs") + ylab("Cell Type") + 
+    theme(text = element_text(size=s+2), axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + 
+    ggtitle(paste0("DEGs Under-Expressed in MeOH\n>= ", genes.under.n, " Celltypes\nFresh Cells"))
+  Idents(samples.combined) <- "celltype.meoh" 
+  p1 = DotPlot(samples.combined, idents=order_paper, features = genes.under, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + 
+    xlab("DEGs") + ylab("Cell Type") + 
+    theme(text = element_text(size=s+2), axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + 
+    ggtitle(paste0("MeOH Cells"))
+  ggsave(paste(output_dir,"/DEG_lower_expression_MeOH.png",sep=""),
+    p1/p2,width=10, height=14)
+
+  # under expr in meoh in >= 9ct
+  genes.nine.under = get_genes_de(DEGs.under, 8) # >= 9
+
+  Idents(samples.combined) <- "celltype.fresh" 
+  p1 = DotPlot(samples.combined, idents=order_paper, features = genes.nine.under, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + 
+    xlab("DEGs") + ylab("Cell Type") + 
+    theme(text = element_text(size=s+2), axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + 
+    ggtitle(paste0("DEGs Under-Expressed in MeOH\n>= ", 9, " Celltypes\nFresh Cells"))
+  Idents(samples.combined) <- "celltype.meoh" 
+  p2 = DotPlot(samples.combined, idents=order_paper, features = genes.nine.under, cols="RdYlBu", dot.scale = 5,cluster.idents = F, scale.min=0, scale.max=100) + 
+    xlab("DEGs") + ylab("Cell Type") + 
+    theme(text = element_text(size=s+2), axis.text.y = element_text(size=s), axis.text.x = element_text(size=s,angle = 60, hjust = 1)) + 
+    ggtitle(paste0("MeOH Cells"))
+  ggsave(paste(output_dir,"/DEG_lower_expression_9_MeOH.png",sep=""),
+    p1/p2,width=10, height=14)
   
+  Idents(samples.combined) <- "celltype"
+}
+
+# loop through number of ct to find num degs between 7 and 10
+degs_opt_ct <- function(DEGs, num_ct) {
+  for (i in seq(num_ct)) {
+    genes <- get_genes_de(DEGs, i)
+    if (length(genes) > 7 && length(genes) <= 10) return(c(i, genes))
+  }
+  return(c(2, get_genes_de(DEGs, 2)))
 }
