@@ -42,7 +42,7 @@ harry_mm: # mousekidney pc
   process:
     - "analyse"
   methods: 
-  - "no_decontamination"
+  #- "no_decontamination"
   - "soupx:autoEstCont"
   - "soupx:background_genes"
   - "soupx:top_background_genes"
@@ -52,7 +52,7 @@ harry_mm: # mousekidney pc
   - "cellbender"
   dataset: "mouse_kidney"
   original_cell_annotations: "cell_annotations.xlsx"
-  new_cell_annotations: "../new_results/reclus/no_decontamination/new_clus.tsv"
+  new_cell_annotations: "../results/reclus/no_decontamination/new_clus.tsv"
   gene_signatures: "cell_type_gene_signatures.xlsx"
   ocra_dir: "../../Mouse_Kidney/results"
   recluster: True

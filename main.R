@@ -184,11 +184,11 @@ analyse_samples <- function (samples.combined) {
     }
     
     # Differentially expressed genes
-    analyse_DEGs(samples.combined)
-    return()
+    #analyse_DEGs(samples.combined)
+    
     # Plotting pie charts of cell types
-    plot_pie_ct(samples.combined, current_method, "preservation")
-    plot_pie_ct(samples.combined, current_method, "method")
+    #plot_pie_ct(samples.combined, current_method, "preservation")
+    #plot_pie_ct(samples.combined, current_method, "method")
 
     # Reclustered plots / tables / etc.
     if (config$recluster == T)
