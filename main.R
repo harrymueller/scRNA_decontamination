@@ -184,8 +184,8 @@ analyse_samples <- function (samples.combined) {
     }
     
     # Differentially expressed genes
-    #analyse_DEGs(samples.combined)
-    
+    analyse_DEGs(samples.combined)
+    return()
     # Plotting pie charts of cell types
     #plot_pie_ct(samples.combined, current_method, "preservation")
     #plot_pie_ct(samples.combined, current_method, "method")
