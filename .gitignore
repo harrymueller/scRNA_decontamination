@@ -6,3 +6,4 @@ log_files
 .RData
 .Rhistory
 CellBender
+.DS_Store

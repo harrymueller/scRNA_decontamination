@@ -6,12 +6,13 @@
 ### Adds some metadata to the combined seurat object
 ################################################################################################
 adding_metadata <- function(samples.combined) {
-  # assumes Idents is celltype and contains $preservation
-  if (!("celltype" %in% colnames(samples.combined@meta.data))) {
+
+  # changing ct annotations of CD_Trans to unknown
+  if (any(Idents(samples.combined)=="CD_Trans"))
+    Idents(samples.combined)[which(Idents(samples.combined)=="CD_Trans")] = "Unknown"
+    
+  if (!("celltype" %in% colnames(samples.combined@meta.data)))
     samples.combined@meta.data$celltype = Idents(samples.combined)
-    # celltype_method
-    samples.combined@meta.data$celltype_method = paste(samples.combined$celltype, samples.combined$preservation, sep="_")
-  }
   
   if (F) {
     # LEGACY CODE
@@ -25,10 +26,12 @@ adding_metadata <- function(samples.combined) {
   
   Idents(samples.combined) = "celltype"
   
-  # changing ct annotations of CD_Trans to unknown
-  if (any(Idents(samples.combined)=="CD_Trans"))
-    Idents(samples.combined)[which(Idents(samples.combined)=="CD_Trans")] = "Unknown"
   
+  # assumes Idents is celltype and contains $preservation
+  if (!("celltype_method" %in% colnames(samples.combined@meta.data))) {
+    # celltype_method
+    samples.combined@meta.data["celltype_method"] = paste(samples.combined$celltype, samples.combined$preservation, sep="_")
+  }
   order_paper = config$ct_order_dotplots[which(config$ct_order_dotplots %in% levels(samples.combined))]
   
   #samples.combined <- readRDS(paste(output, "samples_integrated_rd.Rda", sep="/"))
