@@ -67,14 +67,15 @@ analyse_DEGs <- function(samples.combined) {
   genes.under <- get_genes_de(DEGs.under, 8) #DEGs.selected, num_cells
 
   ### Saving DEGs to excel file
-  save_DEGs(DEGs, paste(files$output,"/DEGs.xlsx",sep=""), genes.over, genes.under) #DEGs, f_name, genes.over, genes.under
-
+  #save_DEGs(DEGs, paste(files$output,"/DEGs.xlsx",sep=""), genes.over, genes.under) #DEGs, f_name, genes.over, genes.under
+  
   ## Plotting DEGs
   print("Plotting DEGs")
-  DEGs_histogram(DEGs) #DEGs, f_name
-  DEGs_dotplot_over_under_expression(samples.combined, paste(files$output,"/plots/DEG_higher_expression_9_celltypes.png",sep=""), 
-                                     config$ct_order_dotplots, config$genes_ct_dotplots,
-                                     genes.over, genes.under)
+  #DEGs_histogram(DEGs) #DEGs, f_name
+  DEGs_dotplot_specific(samples.combined,config$ct_order_dotplots, paste(files$output, "plots", sep="/"), DEGs.over, DEGs.under)
+  #DEGs_dotplot_over_under_expression(samples.combined, paste(files$output,"/plots/DEG_higher_expression_9_celltypes.png",sep=""), 
+  #                                   config$ct_order_dotplots, config$genes_ct_dotplots,
+  #                                   genes.over, genes.under)
 }
 
 
@@ -187,18 +188,29 @@ contigency_table_ct <- function (all_sample_ids, cell_annotations_path, new_clus
   addDataFrame(t(stat_df), s, row.names = T, col.names = F)
   
   # adding fresh contigency table
+  notes_df = data.frame(
+    "1"="*Cell types on the top are the cell types after reclustering post-decontamination",
+    "2"="*Cell types on the left are the original cell types",
+    "3"="Changed% Column is the percentage of cells that changed annotation from the given cell type relative to the starting number of cells within that cell type.",
+    "4"="Changed% Row is the percentage of cells that changed annotation to the given cell type relative to the number of cells that kept the same annotation for the cell type.",
+    "5"="Changed% x Changed% is the percentage of cells that changed annotation relative to the total count of cells"
+  )
+
   s <- createSheet(wb, "Fresh")
   addDataFrame(
-    t(data.frame("1"="*Cell types on the top are the cell types after reclustering post-decontamination", "2"="*Cell types on the left are the original cell types")),s, row.names=F, col.names=F
+    t(notes_df),s, row.names=F, col.names=F
   )
-  addDataFrame(data.frame(rbind(fresh$tab)), s, row.names = T, col.names = T,startRow = 4)
+
+  f = add_percent_changed_clus_cont(fresh)
+  addDataFrame(f, s, row.names = T, col.names = T,startRow = 7)
   
   # adding meoh contigency table
   s <- createSheet(wb, "MeOH")
   addDataFrame(
-    t(data.frame("1"="*Cell types on the top are the cell types after reclustering post-decontamination", "2"="*Cell types on the left are the original cell types")),s, row.names=F, col.names=F
+    t(notes_df),s, row.names=F, col.names=F
   )
-  addDataFrame(data.frame(rbind(meoh$tab)), s, row.names = T, col.names = T,startRow = 4)
+  f = add_percent_changed_clus_cont(meoh)
+  addDataFrame(f, s, row.names = T, col.names = T,startRow = 7)
   
   # save workbook
   saveWorkbook(wb, output_file)
@@ -206,6 +218,31 @@ contigency_table_ct <- function (all_sample_ids, cell_annotations_path, new_clus
   return(list(fresh=fresh, meoh=meoh))
 }
 
+add_percent_changed_clus_cont <- function (tab) {
+  data = data.frame(rbind(tab$tab))
+  l = length(names(data))-1
+
+  data[["Changed%"]] = rep(0,l+1)
+  data = rbind(data, rep(0, l+1))
+  rownames(data)[l+2] = "Changed%"
+
+  total_changed = 0
+
+  for (ct in names(data)[seq(l)]) {
+    ct_new = data["Sum", rownames(data) == ct]
+    ct_stayed = data[ct, rownames(data) == ct]
+    ct_orig = data$Sum[rownames(data) == ct]
+
+    data[["Changed%"]][rownames(data) == ct] = paste0(round((ct_orig - ct_stayed) / ct_orig,3),"%")
+    data["Changed%", rownames(data) == ct] = paste0(round((ct_new - ct_stayed) / ct_stayed,3),"%")
+
+    total_changed = total_changed + (ct_orig - ct_stayed)
+  }
+
+  data["Changed%","Changed%"] = paste0(round(total_changed / data["Sum", "Sum"],3),"%")
+
+  return(data)
+}
 
 
 ################################################################################################
@@ -247,7 +284,7 @@ get_cont_table <- function (all_sample_ids, cell_annotations_path, new_clus_path
   ReclusteredCellTypes = factor(unfactor(ReclusteredCellTypes), levels=levels(OriginalCellTypes))
   names(ReclusteredCellTypes) = new_cts$id
   tab = addmargins(xtabs(~ OriginalCellTypes + ReclusteredCellTypes,))
-  
+
   return(list(
     table=tab, o_ct=OriginalCellTypes, r_ct=ReclusteredCellTypes
   ))

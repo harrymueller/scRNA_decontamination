@@ -172,7 +172,7 @@ analyse_samples <- function (samples.combined) {
   # Mouse_Kidney analysis
   if (config$dataset == "mouse_kidney") {
     # scatterplot of gene expression prior and post decontamination
-    if (current_method != "no_decontamination") {
+    if (current_method != "no_decontamination" && F) {
       undecont_seurat = load_rda(NULL, "../no_decontamination/Rda/integrated_rd.Rda")
       Idents(undecont_seurat) = "celltype"
 
@@ -182,13 +182,13 @@ analyse_samples <- function (samples.combined) {
       #gene_expr_scatter_plots(undecont_seurat, samples.combined)
       run_degs_prior_post(undecont_seurat, samples.combined)
     }
-    return()
+    
     # Differentially expressed genes
     analyse_DEGs(samples.combined)
-
+    return()
     # Plotting pie charts of cell types
-    plot_pie_ct(samples.combined, current_method, "preservation")
-    plot_pie_ct(samples.combined, current_method, "method")
+    #plot_pie_ct(samples.combined, current_method, "preservation")
+    #plot_pie_ct(samples.combined, current_method, "method")
 
     # Reclustered plots / tables / etc.
     if (config$recluster == T)

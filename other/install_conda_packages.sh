@@ -30,7 +30,7 @@ if [ $opt = -r ] || [ $opt = --rPackages ]; then
 	echo "ggplot2, xlsx, reshape2"
 	conda install -c r r-ggplot2 r-xlsx r-reshape2 -y
 	echo "plotly, cowplot, patchwork"
-	conda install -c conda-forge r-plotly r-cowplot r-patchwork -y
+	conda install -c conda-forge r-plotly r-cowplot r-patchwork r-aricode -y
 	echo "orca"
 	conda install -c plotly plotly-orca -y
 
