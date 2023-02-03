@@ -223,7 +223,7 @@ pawsey_pt_endo_subset:
   input_dir: "/data/decont_project/mouse_kidney/input_pt_endo"
   output_dir: "/data/decont_project/mouse_kidney/output_pt_endo"
   process:
-  - "decontaminate"
+          #- "decontaminate"
   - "integrate"
   methods:
           #- "no_decontamination" 
@@ -232,7 +232,7 @@ pawsey_pt_endo_subset:
           #- "soupx:top_background_genes"
           #- "decontx:no_cell_types"
           #- "decontx:with_cell_types"
-  - "fastcar"
+          #- "fastcar"
   - "cellbender"
   run_cellbender: True
   dataset: "mouse_kidney"
@@ -242,6 +242,7 @@ pawsey_pt_endo_subset:
   gene_signatures: "cell_type_gene_signatures.xlsx"
   ocra_dir: "../mouse_kidney/output_reclus"
   recluster: True
+  cellbender_gpu: False
 
 benchmarking:
   input_dir: "/data/Perkins/data"
