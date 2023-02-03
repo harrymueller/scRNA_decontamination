@@ -46,13 +46,12 @@ for (ct in c("hg19", "mm10")) {
   for (col in c("exo_removed")){#, "exo_remaining", "endo_removed")) {
     data["Y"] = data[col]
     p = ggplot(data, aes(x = method, y = Y)) + 
-      geom_violin(width = 1, fill = alpha('blue', 1.0), color = alpha('black', 0.5)) +
+      geom_violin(width = 1, fill = alpha(if (ct == "hg19") '#5D3A9B' else "#E66100", 1.0), color = alpha('black', 0.5)) +
       #ggtitle(paste("Proportion of Exogenous UMIs Removed from", if (ct == "hg19") "Human" else "Mouse" ,"\nCells for each Decontamination Method")) +
       ggtitle(paste("", if (ct == "hg19") "A. Human" else "B. Mouse" ,"Cells")) +
-	  #ylab(paste(col, "%"))  + #scale_y_continuous(limits=c(0, 3)) + 
-	  xlab("Decontamination Method") + 
-	  ylab("Exogenous UMIs Removed (%)") + 
-	  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), text = element_text(size = 20))
-    ggsave(paste(output_dir, "/violin_plot_", ct, "_", m, "_", col, ".png", sep=""), p, width = 7, height = 7)
+  	  xlab("") + 
+  	  ylab("Exogenous UMIs Removed (%)") + 
+  	  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), text = element_text(size = 20))
+    ggsave(paste(output_dir, "/violin_plot_", ct, "_", col, ".png", sep=""), p, width = 7, height = 7)
   }
 }
