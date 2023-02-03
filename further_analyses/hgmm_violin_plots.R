@@ -1,11 +1,11 @@
 # source files
-source("scripts/general_functions.R")
+source("/data/decont_project/scripts/develop/scripts/general_functions.R")
 
 config = list("methods" = c("soupx:autoEstCont", "soupx:background_genes", "soupx:top_background_genes", "decontx:no_cell_types", "decontx:with_cell_types", "decontx:paper", "fastcar", "cellbender"))
 load_libraries()
 
-dir = "../hgmm12k/results"
-output_dir = "../violin_plots"
+dir = "/data/decont_project/analyses/hgmm12k/results"
+output_dir = "/data/decont_project/analyses/hgmm12k/manuscript/violin"
 
 new_names = list("soupx:autoEstCont" = "SoupX w/\nAutoEstCont",
 				 "soupx:background_genes" = "SoupX w/ 3 Marker\nGenes per CT",
@@ -15,6 +15,15 @@ new_names = list("soupx:autoEstCont" = "SoupX w/\nAutoEstCont",
 				 "decontx:paper" = "DecontX with\nParameters from\nthe Publication",
 				 "fastcar" = "FastCAR",
 				 "cellbender" = "CellBender")
+
+new_names = list("soupx:autoEstCont" = "SoupX 1",
+                 "soupx:background_genes" = "SoupX 2",
+                 "soupx:top_background_genes" = "SoupX 3",
+                 "decontx:no_cell_types" = "DecontX 1",
+                 "decontx:with_cell_types" = "DecontX 2",
+                 "decontx:paper" = "DecontX 3",
+                 "fastcar" = "FastCAR",
+                 "cellbender" = "CellBender")
 
 # read in data
 for (ct in c("hg19", "mm10")) {
@@ -37,7 +46,7 @@ for (ct in c("hg19", "mm10")) {
   for (col in c("exo_removed")){#, "exo_remaining", "endo_removed")) {
     data["Y"] = data[col]
     p = ggplot(data, aes(x = method, y = Y)) + 
-      geom_violin(width = 1, fill = alpha('blue', 0.2), color = alpha('black', 0.5)) +
+      geom_violin(width = 1, fill = alpha('blue', 1.0), color = alpha('black', 0.5)) +
       #ggtitle(paste("Proportion of Exogenous UMIs Removed from", if (ct == "hg19") "Human" else "Mouse" ,"\nCells for each Decontamination Method")) +
       ggtitle(paste("", if (ct == "hg19") "A. Human" else "B. Mouse" ,"Cells")) +
 	  #ylab(paste(col, "%"))  + #scale_y_continuous(limits=c(0, 3)) + 
