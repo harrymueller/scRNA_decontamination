@@ -10,3 +10,7 @@ CellBender
 run_fastcar.sh
 .gitignore
 benchmarking/temp.csv
+benchmarking/run_benchmarking_BAK
+benchmarking/record_mem
+manuscript_prep/mouse_kidney/gen_latex_dotplots.py
+scripts/run_cellbender.sh
