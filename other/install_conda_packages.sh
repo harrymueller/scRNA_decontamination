@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # Getting input
 [ -z "$1" ] && opt=-h || opt=$1
 
@@ -10,7 +10,7 @@ if [ $opt = -r ] || [ $opt = --rPackages ]; then
 	echo "r-base & r-essentials"
 	conda install -c r r-base r-essentials -y
 	echo "varhandle & config"
-	conda install -c conda-forge r-varhandle r-config -y
+	conda install -c conda-forge r-varhandle r-config r-spatstat=1.64_01 r-hdf5r -y
 
 	# Seurat
 	echo "seurat"
@@ -30,12 +30,19 @@ if [ $opt = -r ] || [ $opt = --rPackages ]; then
 	echo "ggplot2, xlsx, reshape2"
 	conda install -c r r-ggplot2 r-xlsx r-reshape2 -y
 	echo "plotly, cowplot, patchwork"
-	conda install -c conda-forge r-plotly r-cowplot r-patchwork -y
+	conda install -c conda-forge r-plotly r-cowplot r-patchwork r-aricode -y
 	echo "orca"
 	conda install -c plotly plotly-orca -y
 
 	# others
+	echo "Misc"
 	conda install -c conda-forge r-htmlwidgets r-vctrs -y
+	conda install -c bioconda bioconductor-limma -y
+
+	# FastCar
+	echo "FastCAR"
+	conda install -c conda-forge r-devtools r-withr -y
+	Rscript -e 'devtools::install_git("https://git.web.rug.nl/P278949/FastCAR")'
 ############################################################
 # CellBender (CPU)
 ############################################################

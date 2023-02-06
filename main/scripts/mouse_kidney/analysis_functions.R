@@ -3,40 +3,82 @@
 
 
 ################################################################################################
+### Adds some metadata to the combined seurat object
+################################################################################################
+adding_metadata <- function(samples.combined) {
+
+  # changing ct annotations of CD_Trans to unknown
+  if (any(Idents(samples.combined)=="CD_Trans"))
+    Idents(samples.combined)[which(Idents(samples.combined)=="CD_Trans")] = "Unknown"
+    
+  if (!("celltype" %in% colnames(samples.combined@meta.data)))
+    samples.combined@meta.data$celltype = Idents(samples.combined)
+  
+  if (F) {
+    # LEGACY CODE
+    samples.combined$celltype_method <- Idents(samples.combined)
+    
+    samples.combined$celltype <- sapply(samples.combined$celltype_method, function(annotation) {
+      split = c(str_split(annotation, "_", simplify = T))
+      return(paste(split[1:length(split)-1], collapse="_"))
+    }, simplify = TRUE)
+  }
+  
+  Idents(samples.combined) = "celltype"
+  
+  
+  # assumes Idents is celltype and contains $preservation
+  if (!("celltype_method" %in% colnames(samples.combined@meta.data))) {
+    # celltype_method
+    samples.combined@meta.data["celltype_method"] = paste(samples.combined$celltype, samples.combined$preservation, sep="_")
+  }
+  order_paper = config$ct_order_dotplots[which(config$ct_order_dotplots %in% levels(samples.combined))]
+  
+  #samples.combined <- readRDS(paste(output, "samples_integrated_rd.Rda", sep="/"))
+  DefaultAssay(samples.combined) <- "RNA"
+  
+  if (!("celltype.fresh" %in% colnames(samples.combined@meta.data))) {
+    Idents(samples.combined) = samples.combined$celltype_method
+    # Following relates to plotting the dotplots
+    samples.combined$celltype.fresh = unlist(lapply(samples.combined$celltype_method, function(x) {
+      end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="fresh")
+      x <- if (end) str_sub(x,end=-7) else x
+    }))
+    samples.combined$celltype.meoh = unlist(lapply(samples.combined$celltype_method, function(x) {
+      end <- (tail(c(str_split(x, fixed("_"),simplify=T)),n=1)=="MeOH")
+      x <- if (end) str_sub(x,end=-6) else x
+    }))}
+  return(samples.combined)
+}
+
+
+################################################################################################
 # Plots of differentially expressed genes
 ################################################################################################
-analyse_DEGs <- function(config, files, samples.combined) {
+analyse_DEGs <- function(samples.combined) {
+  Idents(samples.combined) <- "celltype_method"
+
   # Getting DEGs
   DEGs = get_DEGs(samples.combined, paste(files$output,"/Rda/DEGs_per_celltype.Rda",sep=""))
 
   # Seperating all DEGs into overexpressed and underexpressed
   DEGs.over = get_over_under_DEGs(DEGs, TRUE)   #DEGs, bool_whether_overexpressed
   DEGs.under = get_over_under_DEGs(DEGs, FALSE) #DEGs, bool_whether_overexpressed
-  
+
   # Identify which DEGs are over/under expressed in at least 9 cell types
   genes.over <- get_genes_de(DEGs.over, 8)   #DEGs.selected, num_cells
   genes.under <- get_genes_de(DEGs.under, 8) #DEGs.selected, num_cells
-  
-  ### Saving DEGs to excel file
-  save_DEGs(DEGs, paste(files$output,"/DEGs.xlsx",sep=""), genes.over, genes.under) #DEGs, f_name, genes.over, genes.under
 
+  ### Saving DEGs to excel file
+  #save_DEGs(DEGs, paste(files$output,"/DEGs.xlsx",sep=""), genes.over, genes.under) #DEGs, f_name, genes.over, genes.under
+  
   ## Plotting DEGs
   print("Plotting DEGs")
-  DEGs_histogram(DEGs, paste(files$output,"/plots/DEG_histograms.png",sep=""), config$ct_order_dotplots) #DEGs, f_name
-  DEGs_dotplot_over_under_expression(samples.combined, paste(files$output,"/plots/DEG_higher_expression_9_celltypes.png",sep=""), 
-                                     config$ct_order_dotplots, config$genes_ct_dotplots,
-                                     genes.over, genes.under)
-}
-
-
-
-################################################################################################
-# UMAP plots
-################################################################################################
-analyse_UMAPs <- function(files, samples.combined) {
-  Idents(samples.combined) = "celltype"
-  p = DimPlot(samples.combined, reduction = "umap",label=F)
-  ggsave(paste(files$output, "/plots/umap_plot.png",sep=""),p,width=9,height=7)
+  #DEGs_histogram(DEGs) #DEGs, f_name
+  DEGs_dotplot_specific(samples.combined,config$ct_order_dotplots, paste(files$output, "plots", sep="/"), DEGs.over, DEGs.under)
+  #DEGs_dotplot_over_under_expression(samples.combined, paste(files$output,"/plots/DEG_higher_expression_9_celltypes.png",sep=""), 
+  #                                   config$ct_order_dotplots, config$genes_ct_dotplots,
+  #                                   genes.over, genes.under)
 }
 
 
@@ -44,7 +86,7 @@ analyse_UMAPs <- function(files, samples.combined) {
 ################################################################################################
 # Plots related to reclustering
 ################################################################################################
-analyse_recluster <- function(config, files, samples.combined, current_method) {
+analyse_recluster <- function(samples.combined, current_method) {
   print("Plotting CT after reclustering")
   # save & get contingency table of ct numbers
   tables = contigency_table_ct(config$sample_ids, files$CellAnnotations, 
@@ -69,7 +111,10 @@ analyse_recluster <- function(config, files, samples.combined, current_method) {
 # Plots a pie chart showing the relative proportions of cell-types within all samples
 # Plots a pie chart for each preservation method
 ################################################################################################
-plot_pie_ct <- function (samples, method, output, plot_cts, ident_name) {
+plot_pie_ct <- function (samples, method, ident_name) {
+  output = files$OcraRelDir
+  plot_cts = config$pie_plot_cts
+
   # plotting pie charts for each preservation technique
   Idents(samples) = ident_name
   samples <- SplitObject(samples)
@@ -77,38 +122,44 @@ plot_pie_ct <- function (samples, method, output, plot_cts, ident_name) {
 	
   lapply(samples, function(x) {
     type=unique(x@meta.data[[ident_name]])
-    df = data.frame(xtabs(~x@meta.data$celltype))
-	  
-    df$labels = unfactor(df[,1])
-    df[,1]=NULL
+    if (type != "decont") {
+      df = data.frame(xtabs(~x@meta.data$celltype))
+      
+      df$labels = unfactor(df[,1])
+      df[,1]=NULL
 
-    # creates a new category for other, containing all cts not in plot_cts
-    df = rbind(df[which(df$labels %in% plot_cts),], c(sum(df$Freq[which(!(df$labels %in% plot_cts))]),"Other"))
-    
-    df$Freq = as.integer(df$Freq)
-    
-    # proportions
-    df$prop = df$Freq / sum(df$Freq) *100
-    
-    # ordering cts - for comparing different analyses
-    df = df[order(match(df$labels, c(plot_cts, "Other"))),]
+      # creates a new category for other, containing all cts not in plot_cts
+      df = rbind(df[which(df$labels %in% plot_cts),], c(sum(df$Freq[which(!(df$labels %in% plot_cts))]),"Other"))
+      
+      df$Freq = as.integer(df$Freq)
+      
+      # proportions
+      df$prop = df$Freq / sum(df$Freq) *100
+      
+      # ordering cts - for comparing different analyses
+      df = df[order(match(df$labels, c(plot_cts, "Other"))),]
 
-    df$labels = c(plot_cts, "Other")
-    
-    # Labels 
-    df$labels = factor(df$labels, levels=df$labels)
+      df$labels = c(plot_cts, "Other")
+      
+      # Labels 
+      df$labels = factor(df$labels, levels=df$labels)
 
-    # plotting
-    fig <- plot_ly(df, labels = ~labels, values = ~prop, type = 'pie',textinfo = 'label+percent', sort=F, textfont = list(size = 20))
-    fig <- fig %>% layout(#title = paste(method, " (", type,"); Cell type proportions", sep=""),
-                          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-                          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-                          margin=list(l=50, r=50, t=150, b=50),
-                          showlegend = F)
+      # plotting
+      fig <- plot_ly(df, labels = ~labels, values = ~prop, type = 'pie',textinfo = 'label+percent', sort=F, textfont = list(size = 20))
+      fig <- fig %>% layout(#title = paste(method, " (", type,"); Cell type proportions", sep=""),
+                            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                            margin=list(l=50, r=50, t=150, b=50),
+                            showlegend = F)
 
-    # using ocra to save as image
-    # always displays error - even though it saves
-    orca(fig, file=paste(output, "/plots/", ident_name, "_", method, "_", type, "_ct_pie.png",sep=""),scale=3)
+      # using ocra to save as image
+      # always displays error - even though it saves
+      library("processx")
+      tryCatch(expr = {
+        # orca would only work on my PC by turning on debug mode - then closing the HTML popup
+        orca(fig, file=paste(output, "/plots/", ident_name, "_", method, "_", type, "_ct_pie.png",sep=""),scale=3, verbose = TRUE, debug = T)
+      })
+    }
   })
 }
 
@@ -140,18 +191,29 @@ contigency_table_ct <- function (all_sample_ids, cell_annotations_path, new_clus
   addDataFrame(t(stat_df), s, row.names = T, col.names = F)
   
   # adding fresh contigency table
+  notes_df = data.frame(
+    "1"="*Cell types on the top are the cell types after reclustering post-decontamination",
+    "2"="*Cell types on the left are the original cell types",
+    "3"="Changed% Column is the percentage of cells that changed annotation from the given cell type relative to the starting number of cells within that cell type.",
+    "4"="Changed% Row is the percentage of cells that changed annotation to the given cell type relative to the number of cells that kept the same annotation for the cell type.",
+    "5"="Changed% x Changed% is the percentage of cells that changed annotation relative to the total count of cells"
+  )
+
   s <- createSheet(wb, "Fresh")
   addDataFrame(
-    t(data.frame("1"="*Cell types on the top are the cell types after reclustering post-decontamination", "2"="*Cell types on the left are the original cell types")),s, row.names=F, col.names=F
+    t(notes_df),s, row.names=F, col.names=F
   )
-  addDataFrame(data.frame(rbind(fresh$tab)), s, row.names = T, col.names = T,startRow = 4)
+
+  f = add_percent_changed_clus_cont(fresh)
+  addDataFrame(f, s, row.names = T, col.names = T,startRow = 7)
   
   # adding meoh contigency table
   s <- createSheet(wb, "MeOH")
   addDataFrame(
-    t(data.frame("1"="*Cell types on the top are the cell types after reclustering post-decontamination", "2"="*Cell types on the left are the original cell types")),s, row.names=F, col.names=F
+    t(notes_df),s, row.names=F, col.names=F
   )
-  addDataFrame(data.frame(rbind(meoh$tab)), s, row.names = T, col.names = T,startRow = 4)
+  f = add_percent_changed_clus_cont(meoh)
+  addDataFrame(f, s, row.names = T, col.names = T,startRow = 7)
   
   # save workbook
   saveWorkbook(wb, output_file)
@@ -159,6 +221,31 @@ contigency_table_ct <- function (all_sample_ids, cell_annotations_path, new_clus
   return(list(fresh=fresh, meoh=meoh))
 }
 
+add_percent_changed_clus_cont <- function (tab) {
+  data = data.frame(rbind(tab$tab))
+  l = length(names(data))-1
+
+  data[["Changed%"]] = rep(0,l+1)
+  data = rbind(data, rep(0, l+1))
+  rownames(data)[l+2] = "Changed%"
+
+  total_changed = 0
+
+  for (ct in names(data)[seq(l)]) {
+    ct_new = data["Sum", rownames(data) == ct]
+    ct_stayed = data[ct, rownames(data) == ct]
+    ct_orig = data$Sum[rownames(data) == ct]
+
+    data[["Changed%"]][rownames(data) == ct] = paste0(round((ct_orig - ct_stayed) / ct_orig,3),"%")
+    data["Changed%", rownames(data) == ct] = paste0(round((ct_new - ct_stayed) / ct_stayed,3),"%")
+
+    total_changed = total_changed + (ct_orig - ct_stayed)
+  }
+
+  data["Changed%","Changed%"] = paste0(round(total_changed / data["Sum", "Sum"],3),"%")
+
+  return(data)
+}
 
 
 ################################################################################################
@@ -200,7 +287,7 @@ get_cont_table <- function (all_sample_ids, cell_annotations_path, new_clus_path
   ReclusteredCellTypes = factor(unfactor(ReclusteredCellTypes), levels=levels(OriginalCellTypes))
   names(ReclusteredCellTypes) = new_cts$id
   tab = addmargins(xtabs(~ OriginalCellTypes + ReclusteredCellTypes,))
-  
+
   return(list(
     table=tab, o_ct=OriginalCellTypes, r_ct=ReclusteredCellTypes
   ))
@@ -222,6 +309,8 @@ plot_module_score_hist <- function (seurat, tables, output) {
     titles = c("Fresh", "MeOH")
     plots[[m]] = ggplot(aes(x=values),data = df) + stat_density() + ggtitle(paste(titles[[m]]," (",length(values)," cells changed)", sep="")) +
       xlab(if (m == 1) NULL else "Difference in Module Scores") + ylab("Density")
+
+    if (config$fonts) plots[[m]] = plots[[m]] + theme(text=element_text(size=16, family="TT Times New Roman"))
   }
   
   # getting maximum values (to set axis limits to be equal)
@@ -297,13 +386,17 @@ barplots_ct_props <- function(table, output) {
   # plotting
   p <- ggplot(melted, aes(x = CellTypes, y = value, fill = variable)) + 
     geom_bar(stat = 'identity', position = 'stack') +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
     facet_grid(~ labels) + 
     scale_fill_manual(values = c("red3", "blue3", "orangered1","royalblue2"), 
                       name = "Proportion of barcodes given a\nCT (relative to bar label)",
                       labels=c("Changed to a different CT", "Stayed the same CT","Changed from a different CT", "Stayed the same CT")) +
     geom_text(aes(label=num), size = 3, hjust = 0.5, vjust = 2, position = "stack",color="white") +
     xlab("Cell Types (and proportions origin)") + ylab("Proportion of Cell Barcodes given a CT")
+
+  if (config$fonts)
+    p = p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, family="TT Times New Roman")) 
+  else
+    p = p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
   # saving plot
   ggsave(output,p,width=14,height=7)
