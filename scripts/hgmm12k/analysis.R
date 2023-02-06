@@ -1,5 +1,3 @@
-# TODO comment this file
-
 # native_counts = endogenous UMI counts
 # non_native = exogenous
 # fractions = UMI proportions

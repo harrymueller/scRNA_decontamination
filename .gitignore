@@ -7,3 +7,6 @@ log_files
 .Rhistory
 CellBender
 .DS_Store
+run_fastcar.sh
+.gitignore
+benchmarking/temp.csv
